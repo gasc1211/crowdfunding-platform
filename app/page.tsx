@@ -8,6 +8,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import Cartas from "./ui/cartas";
+import Mision from "./ui/mision";
 
 const user = {
   name: 'Tom Cook',
@@ -43,6 +44,7 @@ export default function Example() {
         <body class="h-full">
         ```
       */}
+      
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-lime-700">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -184,7 +186,7 @@ export default function Example() {
         <main className="flex min-h-screen flex-col p-6">
               
               <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-                <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
+                <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 bg-opacity-30 px-6 py-10 md:w-2/5 md:px-20">
                 <div/>
                   <p 
                     className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}>
@@ -213,7 +215,7 @@ export default function Example() {
                     src="/productor.webp" 
                     width={1000} 
                     height={760} 
-                    className="hidden md:block" 
+                    className="hidden md:block"
                     alt="Screenshots of the dashboard project showing desktop version"
                   />
                   <Image 
@@ -225,7 +227,9 @@ export default function Example() {
                   />
                 </div>
               </div>
-              <div><Cartas /></div>
+              <div className="bg-transparent"><Cartas /></div>
+              <br /><br />
+              <div><Mision /></div>
               
         </main>
         

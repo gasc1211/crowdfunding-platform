@@ -69,17 +69,17 @@ const posts = [
   
   export default function Cartas() {
     return (
-      <div className="bg-white py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row">
+      <div className="bg-black bg-opacity-20 py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Campañas Exitosas</h2>
-            <p className="mt-2 text-lg leading-8 text-gray-600">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Campañas Exitosas</h2>
+            <p className="mt-2 text-lg leading-8 text-white">
               Vea algunos de los increíbles proyectos que se han financiado a través de AgroSmart.
             </p>
           </div>
           <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             {posts.map((post) => (
-              <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <div className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <a href="#">
                     <img className="rounded-t-lg" src={post.author.imageUrl} style={{width: 250, height:200, display: 'block', margin: '0 auto'}} alt="" />
                 </a>
@@ -101,17 +101,17 @@ const posts = [
         </div>
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center">Productores Destacados</h2>
-            <p className="mt-2 text-lg leading-8 text-gray-600 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-center">Productores Destacados</h2>
+            <p className="mt-2 text-lg leading-8 text-white text-center">
               Conozca a algunos de los increíbles pequeños agricultores y productores que forman parte de la comunidad AgroSmart.
             </p>
           </div>
           <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             {personas.map((post) => (
-              <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <div className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div className="mx-auto grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <a href="#">
-                    <img className="rounded-t-lg" src={post.author.imageUrl} style={{height:200, display: 'flex'}} alt="" />
+                    <img className="rounded-t-lg" src={post.author.imageUrl} style={{width: 'auto', height:200, display: 'flex'}} alt="" />
                 </a>
                 <div className="flex items-center justify-center h-full">
                 <p className="font-semibold text-gray-900 text-center">
