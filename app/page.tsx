@@ -86,7 +86,7 @@ export default function Example() {
                         <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
-                          <Image alt="Profile" src={user!.imageUrl} className="h-8 w-8 rounded-full" width={50} height={50} />
+                          <Image alt="Profile" src={user?.imageUrl as string} className="h-8 w-8 rounded-full" width={50} height={50} />
                         </MenuButton>
                       </div>
                       <MenuItems
