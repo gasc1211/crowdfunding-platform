@@ -3,80 +3,73 @@
 const posts = [
     {
       id: 1,
-      title: 'Boost your conversion rate',
+      title: 'Granja de Hortalizas Orgánicas',
       href: '#',
       description:
-        'Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.',
-      date: 'Mar 16, 2020',
-      datetime: '2020-03-16',
-      category: { title: 'Marketing', href: '#' },
+        'Ayúdenos a expandir nuestra granja sostenible y llevar productos frescos a nuestra comunidad local',
       author: {
         name: 'Michael Foster',
         role: 'Co-Founder / CTO',
         href: '#',
         imageUrl:
-          'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+          'https://i0.wp.com/agronoticias.com.mx/wp-content/uploads/2017/04/22872869-campo-de-hortalizas-org-nicas-curvo-chiang-mai-tailandia-foto-de-archivo.jpg?resize=500%2C280&ssl=1',
       },
     },
     {
         id: 2,
-        title: 'Boost your conversion rate',
+        title: 'Miel Artesanal',
         href: '#',
         description:
-          'Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.',
-        date: 'Mar 16, 2020',
-        datetime: '2020-03-16',
-        category: { title: 'Marketing', href: '#' },
+          'Ayúdanos a expandir nuestras colonias de abejas y traer más miel deliciosa y sustentable a nuestra comunidad',
         author: {
           name: 'Michael Foster',
           role: 'Co-Founder / CTO',
           href: '#',
           imageUrl:
-            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezVIe8TdGn6igPfvzLQPhaKB4pO-yKyBRgg&amp;s',
         },
       },
 
-      {
-        id: 3,
-        title: 'Boost your conversion rate',
+      
+    // More posts...
+  ]
+
+  const personas = [
+    {
+      id: 1,
+      title: 'Granja de Hortalizas Orgánicas',
+      href: '#',
+      description:
+        'Soy un pequeño agricultor dedicado a cultivar los mejores productos orgánicos para mi comunidad',
+      author: {
+        name: 'Gabriel Suazo',
+        href: '#',
+        imageUrl:
+          'https://us.images.westend61.de/0001600533pw/male-farmer-standing-with-garden-hoe-examining-tomatoes-at-agricultural-field-VEGF04902.jpg',
+      },
+    },
+    {
+        id: 2,
+        title: 'Miel Artesanal',
         href: '#',
         description:
-          'Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.',
-        date: 'Mar 16, 2020',
-        datetime: '2020-03-16',
-        category: { title: 'Marketing', href: '#' },
+          'Soy una apicultura apasionada, dedicada a producir miel de manera sostenible, de la más alta calidad',
         author: {
-          name: 'Michael Foster',
-          role: 'Co-Founder / CTO',
+          name: 'Ada Pinto',
           href: '#',
           imageUrl:
-            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            'https://arqueotrip.com/wp-content/uploads/2022/06/ApicultorTiedra01.jpeg',
         },
       },
-      {
-        id: 4,
-        title: 'Boost your conversion rate',
-        href: '#',
-        description:
-          'Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.',
-        date: 'Mar 16, 2020',
-        datetime: '2020-03-16',
-        category: { title: 'Marketing', href: '#' },
-        author: {
-          name: 'Michael Foster',
-          role: 'Co-Founder / CTO',
-          href: '#',
-          imageUrl:
-            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-      },
+
+     
       
     // More posts...
   ]
   
   export default function Cartas() {
     return (
-      <div className="bg-white py-24 sm:py-32">
+      <div className="bg-white py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Campañas Exitosas</h2>
@@ -84,42 +77,64 @@ const posts = [
               Vea algunos de los increíbles proyectos que se han financiado a través de AgroSmart.
             </p>
           </div>
-          <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-4">
+          <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             {posts.map((post) => (
-              <article key={post.id} className="flex max-w-xl flex-col items-start justify-between">
-                <div className="flex items-center gap-x-4 text-xs">
-                  <time dateTime={post.datetime} className="text-gray-500">
-                    {post.date}
-                  </time>
-                  <a
-                    href={post.category.href}
-                    className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
-                  >
-                    {post.category.title}
-                  </a>
-                </div>
+              <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <a href="#">
+                    <img className="rounded-t-lg" src={post.author.imageUrl} style={{width: 250, height:200, display: 'block', margin: '0 auto'}} alt="" />
+                </a>
+                <article key={post.id} className="flex max-w-xl flex-col items-start justify-between text-center">
                 <div className="group relative">
-                  <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                  <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600 text-center">
                     <a href={post.href}>
-                      <span className="absolute inset-0" />
+                      <span className="absolute inset-0 inline" />
                       {post.title}
                     </a>
                   </h3>
-                  <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">{post.description}</p>
+                  <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600" style={{padding:20}}>{post.description}</p>
                 </div>
-                <div className="relative mt-8 flex items-center gap-x-4">
-                  <img alt="" src={post.author.imageUrl} className="h-10 w-10 rounded-full bg-gray-50" />
-                  <div className="text-sm leading-6">
-                    <p className="font-semibold text-gray-900">
+                <br />
+              </article>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:mx-0">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center">Productores Destacados</h2>
+            <p className="mt-2 text-lg leading-8 text-gray-600 text-center">
+              Conozca a algunos de los increíbles pequeños agricultores y productores que forman parte de la comunidad AgroSmart.
+            </p>
+          </div>
+          <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+            {personas.map((post) => (
+              <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div className="mx-auto grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+                <a href="#">
+                    <img className="rounded-t-lg" src={post.author.imageUrl} style={{height:200, display: 'flex'}} alt="" />
+                </a>
+                <div className="flex items-center justify-center h-full">
+                <p className="font-semibold text-gray-900 text-center">
                       <a href={post.author.href}>
                         <span className="absolute inset-0" />
                         {post.author.name}
                       </a>
                     </p>
-                    <p className="text-gray-600">{post.author.role}</p>
-                  </div>
+                    </div>
+                    </div>
+                <article key={post.id} className="flex max-w-xl flex-col items-start justify-between">
+                <div className="group relative">
+                  <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600 text-center">
+                    <a href={post.href}>
+                      <span className="absolute inset-0" />
+                      {post.title}
+                    </a>
+                  </h3>
+                  <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600" style={{padding:20}}>{post.description}</p>
+                  <br />
                 </div>
               </article>
+              </div>
             ))}
           </div>
         </div>
