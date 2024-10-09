@@ -32,6 +32,19 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+interface Post {
+  id: number;
+  title: string;
+}
+
+export default async function Page({
+  params
+}: {
+  params: { user: string }
+}): Promise<JSX.Element> {
+  // Consulta a la base de datos utilizando el usuario proporcionado
+  const { rows } = await sql`SELECT * from CARTS where user_id=${params.user}`;
+
 export default function Example() {
   return (
     <>
@@ -224,6 +237,15 @@ export default function Example() {
                     alt="Screenshot of the dashboard project showing desktop version"
                   />
                 </div>
+                <div className="flex grow flex-col gap-4">
+              <div className="grid grow grid-cols-1 gap-4 lg:grid-cols-2">
+                { }
+                {rows.map((rows) => (
+        <div key={row.id}>{row.quantity}</div> 
+      ))}
+
+              </div>
+            </div>
               </div>
               <div><Cartas /></div>
               
