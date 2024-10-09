@@ -8,6 +8,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import Cartas from "./ui/cartas";
+import { Navbar } from "./ui/Navbar";
 
 const user = {
   name: 'Tom Cook',
@@ -44,6 +45,8 @@ export default function Example() {
         ```
       */}
       <div className="min-h-full">
+      <Navbar />
+
         <Disclosure as="nav" className="bg-lime-700">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
