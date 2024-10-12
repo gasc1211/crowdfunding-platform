@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 
 
 const posts = [
@@ -79,7 +80,7 @@ export default function Cartas() {
         </div>
         <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           {posts.map((post) => (
-            <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div key={post.id} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <a href="#">
                 <img className="rounded-t-lg" src={post.author.imageUrl} style={{ width: 250, height: 200, display: 'block', margin: '0 auto' }} alt="" />
               </a>
@@ -108,7 +109,7 @@ export default function Cartas() {
         </div>
         <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           {personas.map((post) => (
-            <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div key={post.id} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="mx-auto grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <a href="#">
                   <img className="rounded-t-lg" src={post.author.imageUrl} style={{ height: 200, display: 'flex' }} alt="" />

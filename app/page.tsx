@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import Link from 'next/link';
 import Image from "next/image";
@@ -27,7 +28,7 @@ const userNavigation = [
   { name: 'Iniciar Sesión', href: '#' },
 ]
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
@@ -85,7 +86,7 @@ export default function Example() {
                         <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
-                          <img alt="" src={user?.imageUrl} className="h-8 w-8 rounded-full" />
+                          <Image alt="Profile" src={user?.imageUrl as string} className="h-8 w-8 rounded-full" width={50} height={50} />
                         </MenuButton>
                       </div>
                       <MenuItems
@@ -149,11 +150,11 @@ export default function Example() {
                 {isSignedIn &&
                   <div>
                     <div className="flex-shrink-0">
-                      <img alt="" src={user.imageUrl} className="h-10 w-10 rounded-full" />
+                      <Image alt="Profile" src={user.imageUrl} className="h-10 w-10 rounded-full" width={50} height={50} />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">{user?.username}</div>
-                      <div className="text-sm font-medium leading-none text-gray-400">{user?.emailAddresses}</div>
+                      <div className="text-base font-medium leading-none text-white">{user!.username}</div>
+                      {/* <div className="text-sm font-medium leading-none text-gray-400">{user!.emailAddresses}</div> */}
                     </div>
                   </div>
                 }
