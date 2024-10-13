@@ -62,9 +62,6 @@ const personas = [
         'https://arqueotrip.com/wp-content/uploads/2022/06/ApicultorTiedra01.jpeg',
     },
   },
-
-
-
   // More posts...
 ]
 
