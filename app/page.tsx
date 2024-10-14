@@ -6,11 +6,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import Cartas from "./ui/cartas";
-<<<<<<< HEAD
-import { Navbar } from "./ui/Navbar";
-=======
 import { SignedOut, SignedIn, SignInButton, SignOutButton, useUser } from '@clerk/nextjs';
->>>>>>> dev
+import { Navbar } from './ui/Navbar';
 
 // const user = {
 //   name: 'Tom Cook',
