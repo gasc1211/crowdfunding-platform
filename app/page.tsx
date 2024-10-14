@@ -1,20 +1,19 @@
-import AcmeLogo from "./ui/acme-logo";
-import  styles  from "./ui/home.module.css";
+'use client';
 import Link from 'next/link';
 import Image from "next/image";
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { lusitana } from "./ui/fonts";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import Cartas from "./ui/cartas";
+import { SignedOut, SignedIn, SignInButton, SignOutButton, useUser } from '@clerk/nextjs';
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
+// const user = {
+//   name: 'Tom Cook',
+//   email: 'tom@example.com',
+//   imageUrl:
+//     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+// }
 const navigation = [
   { name: 'Explorar', href: '#', current: false },
   { name: 'Empezar una Campaña', href: '#', current: false },
@@ -46,16 +45,11 @@ export default async function Page({
   const { rows } = await sql`SELECT * from CARTS where user_id=${params.user}`;
 
 export default function Example() {
+
+  const { isSignedIn, user } = useUser();
+
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-lime-700">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -88,40 +82,50 @@ export default function Example() {
               </div>
               <div className="hidden md:block">
                 <div className="ml-4 flex items-center md:ml-6">
-                  <button
-                    type="button"
-                    className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  >
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon aria-hidden="true" className="h-6 w-6" />
-                  </button>
-
-                  {/* Profile dropdown */}
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">Open user menu</span>
-                        <img alt="" src={user.imageUrl} className="h-8 w-8 rounded-full" />
-                      </MenuButton>
-                    </div>
-                    <MenuItems
-                      transition
-                      className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  <SignedIn>
+                    <button
+                      type="button"
+                      className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                     >
-                      {userNavigation.map((item) => (
-                        <MenuItem key={item.name}>
-                          <a
-                            href={item.href}
-                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                          >
-                            {item.name}
-                          </a>
+                      <span className="absolute -inset-1.5" />
+                      <span className="sr-only">View notifications</span>
+                      <BellIcon aria-hidden="true" className="h-6 w-6" />
+                    </button>
+
+                    {/* Profile dropdown */}
+                    <Menu as="div" className="relative ml-3">
+                      <div>
+                        <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                          <span className="absolute -inset-1.5" />
+                          <span className="sr-only">Open user menu</span>
+                          <img alt="" src={user?.imageUrl} className="h-8 w-8 rounded-full" />
+                        </MenuButton>
+                      </div>
+                      <MenuItems
+                        transition
+                        className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                      >
+                        {userNavigation.map((item) => (
+                          <MenuItem key={item.name}>
+                            <a
+                              href={item.href}
+                              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                            >
+                              {item.name}
+                            </a>
+                          </MenuItem>
+                        ))}
+                        <MenuItem>
+                          <SignOutButton />
                         </MenuItem>
-                      ))}
-                    </MenuItems>
-                  </Menu>
+                      </MenuItems>
+                    </Menu>
+                  </SignedIn>
+                  <SignedOut>
+                    <div className="inline px-4 py-2 ml-2 text-sm text-white bg-black rounded-full">
+                      <SignInButton />
+                    </div>
+                  </SignedOut>
                 </div>
               </div>
               <div className="-mr-2 flex md:hidden">
@@ -155,13 +159,17 @@ export default function Example() {
             </div>
             <div className="border-t border-gray-700 pb-3 pt-4">
               <div className="flex items-center px-5">
-                <div className="flex-shrink-0">
-                  <img alt="" src={user.imageUrl} className="h-10 w-10 rounded-full" />
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                  <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
-                </div>
+                {isSignedIn &&
+                  <div>
+                    <div className="flex-shrink-0">
+                      <img alt="" src={user.imageUrl} className="h-10 w-10 rounded-full" />
+                    </div>
+                    <div className="ml-3">
+                      <div className="text-base font-medium leading-none text-white">{user?.username}</div>
+                      <div className="text-sm font-medium leading-none text-gray-400">{user?.emailAddresses}</div>
+                    </div>
+                  </div>
+                }
                 <button
                   type="button"
                   className="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -185,7 +193,7 @@ export default function Example() {
               </div>
             </div>
           </DisclosurePanel>
-        </Disclosure>
+        </Disclosure >
 
         {/*<header className="bg-white shadow">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -194,63 +202,54 @@ export default function Example() {
         </header>*/}
 
 
-        <main className="flex min-h-screen flex-col p-6">
-              
-              <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-                <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-                <div/>
-                  <p 
-                    className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-                    <strong>HAGA REALIDAD SUS IDEAS CON NUESTRA PLATAFORMA DE FINANCIACIÓN COLECTIVA.</strong> 
-                  </p>
-                  <p>
-                    Lanza y gestiona fácilmente tu campaña de crowdfunding. Conéctese con patrocinadores, realice un seguimiento del progreso y convierta su visión en realidad.
-                    <br />
-                    Además, puedes convertirte también en un patrocinador
-                  </p>
-                  <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
-                  <Link
-                    href="/login"
-                    className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base">
-                    <span>Empezar Campaña</span>
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base">
-                    <span>Explorar y Donar</span>
-                  </Link>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-                  <Image 
-                    src="/productor.webp" 
-                    width={1000} 
-                    height={760} 
-                    className="hidden md:block" 
-                    alt="Screenshots of the dashboard project showing desktop version"
-                  />
-                  <Image 
-                    src="/productor.webp" 
-                    width={560} 
-                    height={620} 
-                    className="block md:hidden" 
-                    alt="Screenshot of the dashboard project showing desktop version"
-                  />
-                </div>
-                <div className="flex grow flex-col gap-4">
-              <div className="grid grow grid-cols-1 gap-4 lg:grid-cols-2">
-                { }
-                {rows.map((rows) => (
-        <div key={row.id}>{row.quantity}</div> 
-      ))}
+        < main className="flex min-h-screen flex-col p-6" >
 
+          <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
+            <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
+              <div />
+              <p
+                className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}>
+                <strong>HAGA REALIDAD SUS IDEAS CON NUESTRA PLATAFORMA DE FINANCIACIÓN COLECTIVA.</strong>
+              </p>
+              <p>
+                Lanza y gestiona fácilmente tu campaña de crowdfunding. Conéctese con patrocinadores, realice un seguimiento del progreso y convierta su visión en realidad.
+                <br />
+                Además, puedes convertirte también en un patrocinador
+              </p>
+              <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
+                <Link
+                  href="/login"
+                  className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base">
+                  <span>Empezar Campaña</span>
+                </Link>
+                <Link
+                  href="/login"
+                  className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base">
+                  <span>Explorar y Donar</span>
+                </Link>
               </div>
             </div>
-              </div>
-              <div><Cartas /></div>
-              
+            <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
+              <Image
+                src="/productor.webp"
+                width={1000}
+                height={760}
+                className="hidden md:block"
+                alt="Screenshots of the dashboard project showing desktop version"
+              />
+              <Image
+                src="/productor.webp"
+                width={560}
+                height={620}
+                className="block md:hidden"
+                alt="Screenshot of the dashboard project showing desktop version"
+              />
+            </div>
+          </div>
+          <div className='z-50'>
+            <Cartas />
+          </div>
         </main>
-        
       </div>
     </>
   )
