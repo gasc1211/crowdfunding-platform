@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from "next/image";
 import { lusitana } from './ui/fonts';
 import Cartas from "./ui/components/Cartas";
+import Mision from "./ui/components/mision";
 
 export default function HomePage() {
   return (
@@ -9,7 +10,7 @@ export default function HomePage() {
       <div className="min-h-full">
         < main className="flex min-h-screen flex-col p-6" >
           <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-            <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
+            <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 bg-opacity-30 px-6 py-10 md:w-2/5 md:px-20">
               <div />
               <p
                 className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}>
@@ -40,6 +41,7 @@ export default function HomePage() {
                 height={760}
                 className="hidden md:block"
                 alt="Screenshots of the dashboard project showing desktop version"
+                priority= {true}
               />
               <Image
                 src="/productor.webp"
@@ -47,11 +49,15 @@ export default function HomePage() {
                 height={620}
                 className="block md:hidden"
                 alt="Screenshot of the dashboard project showing desktop version"
+                priority= {true}
               />
             </div>
           </div>
           <div className='z-50'>
+            <br /><br />
             <Cartas />
+            <br /><br />
+            <Mision />
           </div>
         </main>
       </div>
