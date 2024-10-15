@@ -1,19 +1,11 @@
-import { Pool } from 'pg'; // Importa el tipo Pool de 'pg'
-import dotenv from 'dotenv';
+import { Pool } from 'pg';
 
-dotenv.config();
-
-
-if (!process.env.POSTGRES_URL) {
-  throw new Error('POSTGRES_URL is not defined in the environment variables.');
-}
-
-const pool: Pool = new Pool({
-  
-  connectionString: process.env.POSTGRES_URL,
-  // ssl: {
-  //   rejectUnauthorized: false
-  // }
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 export default pool;
