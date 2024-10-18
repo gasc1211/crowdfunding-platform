@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-
+import Image from "next/image"
 
 const posts = [
   {
@@ -13,7 +13,7 @@ const posts = [
       role: 'Co-Founder / CTO',
       href: '#',
       imageUrl:
-        'https://i0.wp.com/agronoticias.com.mx/wp-content/uploads/2017/04/22872869-campo-de-hortalizas-org-nicas-curvo-chiang-mai-tailandia-foto-de-archivo.jpg?resize=500%2C280&ssl=1',
+        '/hortaliza.webp',
     },
   },
   {
@@ -27,7 +27,7 @@ const posts = [
       role: 'Co-Founder / CTO',
       href: '#',
       imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezVIe8TdGn6igPfvzLQPhaKB4pO-yKyBRgg&amp;s',
+        '/images.jpg',
     },
   },
 
@@ -46,7 +46,7 @@ const personas = [
       name: 'Gabriel Suazo',
       href: '#',
       imageUrl:
-        'https://us.images.westend61.de/0001600533pw/male-farmer-standing-with-garden-hoe-examining-tomatoes-at-agricultural-field-VEGF04902.jpg',
+        '/male-farmer.jpg',
     },
   },
   {
@@ -59,7 +59,7 @@ const personas = [
       name: 'Ada Pinto',
       href: '#',
       imageUrl:
-        'https://arqueotrip.com/wp-content/uploads/2022/06/ApicultorTiedra01.jpeg',
+        '/apicultor.jpeg',
     },
   },
   // More posts...
@@ -69,11 +69,11 @@ const personas = [
 
 export default function Cartas() {
   return (
-    <div className="bg-black bg-opacity-20 py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row">
+    <div className="bg-black bg-opacity-20 py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row rounded-3xl">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Campañas Exitosas</h2>
-          <p className="mt-2 text-lg leading-8 text-white">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-center">Campañas Exitosas</h2>
+          <p className="mt-2 text-lg leading-8 text-white text-center">
             Vea algunos de los increíbles proyectos que se han financiado a través de AgroSmart.
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function Cartas() {
           {posts.map((post) => (
             <div key={post.id} className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <a href="#">
-                <img className="rounded-t-lg" src={post.author.imageUrl} style={{ width: 250, height:200, display: 'block', margin: '0 auto' }} alt="" />
+                <Image className="rounded-t-lg w-[250px] h-[200px] m-auto mt-5" src={post.author.imageUrl} width= {250}  height={200}  alt="" />
               </a>
               <article key={post.id} className="flex max-w-xl flex-col items-start justify-between text-center">
                 <div className="group relative">
@@ -111,7 +111,7 @@ export default function Cartas() {
             <div key={post.id} className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="mx-auto grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <a href="#">
-                  <img className="rounded-t-lg" src={post.author.imageUrl} style={{ width:'auto', height: 200, display: 'flex' }} alt="" />
+                  <Image className="rounded-t-lg  w-[250px] h-[200px] ml-5 mt-5" src={post.author.imageUrl} width= {250}  height={200} alt="" />
                 </a>
                 <div className="flex items-center justify-center h-full">
                   <p className="font-semibold text-gray-900 text-center">
