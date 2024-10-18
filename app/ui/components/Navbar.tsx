@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { SignedOut, SignedIn, SignInButton, UserButton, useUser } from '@clerk/nextjs';
 
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
+import { Button, Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { type NavigationItem, mainNavigationItems, userNavigationItems } from "@/lib/definitions";
 
@@ -12,7 +12,7 @@ export default function Navbar() {
 
   return (
     <Disclosure as="nav" className="bg-lime-700">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -29,10 +29,10 @@ export default function Navbar() {
                     aria-current={item.current ? 'page' : undefined}
                     className={
                       'rounded-md px-3 py-2 text-sm fon?t-medium' +
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        item.current ? 'text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                     }
                   >
-                    {item.name}
+                    <button className={'bg-black rounded-xl p-1.5 bg-opacity-40'}>{item.name}</button>
                   </Link>
                 ))}
               </div>
