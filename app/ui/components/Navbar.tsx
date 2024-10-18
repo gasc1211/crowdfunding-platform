@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { SignedOut, SignedIn, SignInButton, UserButton, useUser } from '@clerk/nextjs';
 
-import { Button, Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { type NavigationItem, mainNavigationItems, userNavigationItems } from "@/lib/definitions";
 
