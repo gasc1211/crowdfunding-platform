@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from "next/image"
+import Link from "next/link"
 
 const posts = [
   {
@@ -80,16 +81,16 @@ export default function Cartas() {
         <div className="mx-auto mt-10 grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           {posts.map((post) => (
             <div key={post.id} className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-              <a href="#">
+              <Link href="#">
                 <Image className="rounded-t-lg w-[250px] h-[200px] m-auto mt-5" src={post.author.imageUrl} width= {250}  height={200}  alt="" />
-              </a>
+              </Link>
               <article key={post.id} className="flex max-w-xl flex-col items-start justify-between text-center">
                 <div className="group relative">
                   <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600 text-center">
-                    <a href={post.href}>
+                    <Link href={post.href}>
                       <span className="absolute inset-0 inline" />
                       {post.title}
-                    </a>
+                    </Link>
                   </h3>
                   <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600" style={{ padding: 20 }}>{post.description}</p>
                 </div>
@@ -110,25 +111,25 @@ export default function Cartas() {
           {personas.map((post) => (
             <div key={post.id} className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="mx-auto grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-                <a href="#">
+                <Link href="#">
                   <Image className="rounded-t-lg  w-[250px] h-[200px] ml-5 mt-5" src={post.author.imageUrl} width= {250}  height={200} alt="" />
-                </a>
+                </Link>
                 <div className="flex items-center justify-center h-full">
                   <p className="font-semibold text-gray-900 text-center">
-                    <a href={post.author.href}>
+                    <Link href={post.author.href}>
                       <span className="inset-0" />
                       {post.author.name}
-                    </a>
+                    </Link>
                   </p>
                 </div>
               </div>
               <article key={post.id} className="flex max-w-xl flex-col items-start justify-between">
                 <div className="group relative">
                   <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600 text-center">
-                    <a href={post.href}>
+                    <Link href={post.href}>
                       <span className="inset-0" />
                       {post.title}
-                    </a>
+                    </Link>
                   </h3>
                   <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600" style={{ padding: 20 }}>{post.description}</p>
                   <br />
