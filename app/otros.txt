@@ -30,3 +30,36 @@
 
               <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
 
+
+
+
+              import Image from "next/image"
+
+
+
+export default function Page() {
+
+    return (
+        
+
+<div className="min-h-screen bg-gray-100">
+    <div className="relative w/screen h-[25vh] overflow-hidden">
+                <Image 
+                    src="/dashboard-plant2.png"
+                    alt="Dashboard plant"
+                    fill
+                    className="object-cover"
+                    sizes="100vw"
+                    priority
+                    />
+    </div>
+</div>
+
+
+
+
+
+    )
+    
+}
+
