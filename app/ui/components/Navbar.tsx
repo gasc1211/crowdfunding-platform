@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import { SignedOut, SignedIn, SignInButton, UserButton, useUser } from '@clerk/nextjs';
+import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
