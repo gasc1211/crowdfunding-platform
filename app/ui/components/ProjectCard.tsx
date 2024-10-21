@@ -13,7 +13,7 @@ export default function ProjectCard({ project }: { project: ProjectInversor }) {
             <Image
                 src={project.image}
                 alt={project.title}
-                className="w-full md:w-40 h-auto md:h-28 object-cover rounded-md mb-4 md:mb-0 md:mr-4"
+                className="w-full md:w-40 h-auto md:h-28 rounded-md mb-4 md:mb-0 md:mr-4"
                 width={100}
                 height={150} 
             />
@@ -22,7 +22,7 @@ export default function ProjectCard({ project }: { project: ProjectInversor }) {
                 <p className="text-gray-600 mb-4">{project.description}</p>
                 <div className="flex items-center justify-between">
                     <div className="w-2/3 mr-4">
-                        <Progress value={project.progress} className="w-full" />
+                        <Progress value={project.progress} className="w-full h-4" />
                     </div>
                     <Button
                         variant="default"

@@ -5,7 +5,7 @@ import ProjectDetails from "@/app/ui/components/ProjectDetails";
 export default function DetalleProyecto() {
     return (
         <>
-            <div className="bg-white h-screen">
+            <div className="bg-gray-100 h-screen">
                 <Banner />
                 <main className="flex-grow container mx-auto p-4 md:flex md:space-x-4">
                     <Sidebar/>

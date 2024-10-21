@@ -1,5 +1,5 @@
-import { Progress } from "@radix-ui/react-progress";
-import { Button } from "@headlessui/react";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 
 export default function ProjectDetails() {
     return (
@@ -20,7 +20,7 @@ export default function ProjectDetails() {
                         $800.00
                     </span>
                 </div>
-                <Progress value={80} className="mb-4" />
+                <Progress value={50} className="mb-4 h-4" />
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <h3 className="font-bold mb-2">
