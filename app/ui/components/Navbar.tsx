@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import { SignedOut, SignedIn, SignInButton, UserButton, useUser } from '@clerk/nextjs';
+import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -40,14 +40,16 @@ export default function Navbar() {
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6">
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-              <SignedOut>
-                <div className="inline px-4 py-2 ml-2 text-sm text-white bg-black rounded-full">
-                  <SignInButton />
-                </div>
-              </SignedOut>
+              {user ? (
+                  <div>
+                      <UserButton />
+                  </div>
+              ) : (
+                  <div className="hidden lg:flex lg:gap-x-12">
+                      <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href='/ui/sign-up'>Sign up</Link>
+                      <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white py-2 px-4 border border-yellow-500 hover:border-transparent rounded" href='/ui/sign-in'>Sign in</Link>
+                  </div>
+              )}
             </div>
           </div>
           <div className="-mr-2 flex md:hidden">

@@ -1,0 +1,36 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4caf50; /* Color verde similar al de tu imagen */
+    height: 100%;
+    padding-right: 2.5rem;
+}
+
+.logo {
+    margin-left: 1px !important;
+    height: 100%;
+}
+
+.logo img {
+    height: 100%;    
+}
+
+.navLinks {
+    display: flex;
+    list-style: none;
+}
+
+.navLinks li {
+    margin-left: 2rem;
+}
+
+.navLinks li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.navLinks li a:hover {
+    text-decoration: underline;
+}
