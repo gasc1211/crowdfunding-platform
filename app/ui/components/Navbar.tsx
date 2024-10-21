@@ -1,4 +1,5 @@
 'use client'
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
 
@@ -9,6 +10,7 @@ import { type NavigationItem, mainNavigationItems, userNavigationItems } from "@
 export default function Navbar() {
 
   const { user } = useUser();
+  const pathname = usePathname();
 
   return (
     <Disclosure as="nav" className="bg-lime-700">
@@ -41,14 +43,15 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6">
               {user ? (
-                  <div>
-                      <UserButton />
-                  </div>
-              ) : (
-                  <div className="hidden lg:flex lg:gap-x-12">
-                      <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href='/ui/sign-up'>Sign up</Link>
-                      <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white py-2 px-4 border border-yellow-500 hover:border-transparent rounded" href='/ui/sign-in'>Sign in</Link>
-                  </div>
+                <div>
+                  <UserButton />
+                </div>
+              ) : (!(pathname === '/sign-up' || pathname === '/sign-in') ?
+                <div className="hidden lg:flex lg:gap-x-12">
+                  <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href='/sign-up'>Sign up</Link>
+                  <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white py-2 px-4 border border-yellow-500 hover:border-transparent rounded" href='/sign-in'>Sign in</Link>
+                </div> : <div></div>
+
               )}
             </div>
           </div>
