@@ -3,7 +3,6 @@ import Image from "next/image";
 import { lusitana } from "./ui/fonts";
 import Cartas from "./ui/components/Cartas";
 import Mision from "./ui/components/mision";
-import Footer from "./ui/components/Footer";
 
 export default function HomePage() {
     return (
@@ -73,7 +72,6 @@ export default function HomePage() {
                         <Mision />
                     </div>
                 </main>
-                <Footer />
             </div>
         </>
     );
