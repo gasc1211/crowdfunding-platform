@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import {ProjectInversor} from "@/lib/definitions"
+
+
 import Image from "next/image";
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project }: { project: ProjectInversor }) {
+    
     return (
         <Card className="flex flex-col md:flex-row items-center p-4 mb-4">
             <Image
