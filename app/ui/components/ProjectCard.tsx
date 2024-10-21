@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { ProjectCardData } from "@/lib/definitions";
 import Image from "next/image";
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard(project: ProjectCardData) {
     return (
         <Card className="flex flex-col md:flex-row items-center p-4 mb-4">
             <Image
@@ -11,7 +12,7 @@ export default function ProjectCard({ project }) {
                 alt={project.title}
                 className="w-full md:w-40 h-auto md:h-28 object-cover rounded-md mb-4 md:mb-0 md:mr-4"
                 width={100}
-                height={150} 
+                height={150}
             />
             <div className="flex-grow">
                 <h3 className="text-xl font-semibold mb-2">{project.title}</h3>

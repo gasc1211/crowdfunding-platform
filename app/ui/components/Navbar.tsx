@@ -1,7 +1,7 @@
 'use client'
+import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -28,10 +28,10 @@ export default function Navbar() {
                     key={item.name}
                     href={item.href}
 
-                    aria-current={item.current ? 'page' : undefined}
+                    aria-current={pathname === item.href ? 'page' : undefined}
                     className={
                       'rounded-md px-3 py-2 text-sm fon?t-medium' +
-                        item.current ? 'text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        pathname === item.href ? 'text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                     }
                   >
                     <button className={'bg-black rounded-xl p-1.5 bg-opacity-40'}>{item.name}</button>
@@ -74,10 +74,10 @@ export default function Navbar() {
               key={item.name}
               as="a"
               href={item.href}
-              aria-current={item.current ? 'page' : undefined}
+              aria-current={pathname === item.href ? 'page' : undefined}
               className={
                 'block rounded-md px-3 py-2 text-base font-medium' +
-                  item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  pathname === item.href ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
               }
             >
               {item.name}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { lusitana } from "./ui/fonts";
 import Cartas from "./ui/components/Cartas";
-import Mision from "./ui/components/mision";
+import Mision from "./ui/components/Mision";
 import Footer from "./ui/components/Footer";
 
 export default function HomePage() {
