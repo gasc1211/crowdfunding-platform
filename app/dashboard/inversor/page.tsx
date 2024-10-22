@@ -34,7 +34,7 @@ export default function InversorDashboard() {
                     <Hero />
                     <div className="container mx-auto py-8 px-4">
                         {projects.map((project, index) => (
-                            <ProjectCard key={index} project={project} />
+                            <ProjectCard key={index} progress={project.progress} title={project.title} description={project.description} image={project.image} id={0} />
                         ))}
                     </div>
                 </main>
