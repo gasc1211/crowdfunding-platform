@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Sidebar() {
     return (
-        <aside className="md:w-1/4 bg-red-100 p-4 rounded-lg mb-4 md:mb-0">
+        <aside className="w- bg-red-100 p-4 rounded-lg mb-4 md:mb-0">
             <div className="text-center">
                 <h2 className="text-xl font-bold">Juan Ramirez</h2>
                 <Image
