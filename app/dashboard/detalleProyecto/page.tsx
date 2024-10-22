@@ -8,7 +8,7 @@ export default function DetalleProyecto() {
             <div className="bg-gray-100 h-screen">
                 <Banner />
                 <main className="flex-grow container mx-auto p-4 md:flex md:space-x-4">
-                    <Sidebar/>
+                    <Sidebar />
                     <ProjectDetails/>
                 </main>
             </div>
