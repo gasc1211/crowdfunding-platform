@@ -7,7 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Database } from "@/database.types";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseKey: string = process.env.NEXT_PUBLIC_SUPABASE_KEY as string;
+const supabaseKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
 // Sync supabase in events of user creation, update and deletion
 export async function syncDatabase(evt: UserWebhookEvent) {
