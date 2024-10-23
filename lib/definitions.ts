@@ -38,3 +38,10 @@ export type Project = {
   info: string;
   progress: number;
 };
+
+export type ProjectInversor = {
+  title: string;
+  description: string;
+  image: string;
+  progress: number;
+};
