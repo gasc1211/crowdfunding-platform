@@ -16,3 +16,25 @@ export const userNavigationItems: NavigationItem[] = [
   { name: "Opciones", href: "#" },
   { name: "Iniciar Sesión", href: "#" },
 ];
+
+export type UsuarioProductor = {
+  idusuario: number;
+  descripcion: string;
+  nombre: string;
+  fechaNacimiento: Date;
+  email: string;
+}
+
+export type Project = {
+  id: number;
+  name: string;
+  info: string;
+  progress: number;
+}
+
+export type ProjectInversor = {
+  title: string;
+  description: string;
+  image: string;
+  progress: number;
+}
