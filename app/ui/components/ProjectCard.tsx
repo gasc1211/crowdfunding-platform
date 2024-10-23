@@ -7,7 +7,7 @@ import {ProjectInversor} from "@/lib/definitions"
 import Image from "next/image";
 
 export default function ProjectCard({ project }: { project: ProjectInversor }) {
-    
+
     return (
         <Card className="flex flex-col md:flex-row items-center p-4 mb-4">
             <Image
@@ -15,7 +15,7 @@ export default function ProjectCard({ project }: { project: ProjectInversor }) {
                 alt={project.title}
                 className="w-full md:w-40 h-auto md:h-28 rounded-md mb-4 md:mb-0 md:mr-4"
                 width={100}
-                height={150} 
+                height={150}
             />
             <div className="flex-grow">
                 <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
