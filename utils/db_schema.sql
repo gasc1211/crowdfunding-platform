@@ -2,8 +2,8 @@ CREATE TABLE "users" (
   "user_id" uuid primary key default gen_random_uuid(),
   "auth_id" varchar unique not null,
   "username" varchar unique not null,
-  "first_name" varchar,
-  "last_name" varchar,
+  "first_name" varchar not null,
+  "last_name" varchar not null,
   "email" varchar unique not null
 );
 
