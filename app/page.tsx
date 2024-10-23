@@ -4,7 +4,6 @@ import { apfel_regular, ortica } from "./ui/fonts";
 
 import Cartas from "./ui/components/Cartas";
 import Mision from "./ui/components/Mision";
-import Footer from "./ui/components/Footer";
 
 export default function HomePage() {
     return (
