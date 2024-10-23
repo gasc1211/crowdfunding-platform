@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
+import { WebhookEvent, UserWebhookEvent } from "@clerk/nextjs/server";
 import { syncDatabase } from "@/utils/supabase/sync";
 
 export async function POST(req: Request) {
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
   }
 
   // TODO: Save or modify the user on the database
-  await syncDatabase(evt.data as UserJSON);
+  await syncDatabase(evt as UserWebhookEvent);
 
   // For this guide, you simply log the payload to the console
   const { id } = evt.data;
