@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+import { apfel_regular, ortica } from "./ui/fonts";
+
 import Cartas from "./ui/components/Cartas";
 import Mision from "./ui/components/Mision";
 import Footer from "./ui/components/Footer";
-import { apfel_regular, ortica } from "./ui/fonts";
 
 export default function HomePage() {
     return (
@@ -59,7 +60,6 @@ export default function HomePage() {
                         <Mision />
                     </div>
                 </main>
-                <Footer />
             </div>
         </>
     );
