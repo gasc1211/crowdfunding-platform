@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from "next/image";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { lusitana } from "./ui/fonts";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -52,6 +53,11 @@ import { lusitana } from './ui/fonts';
 import Cartas from "./ui/components/Cartas";
 import Mision from "./ui/components/mision";
 >>>>>>> dev
+=======
+import { lusitana } from './ui/fonts';
+import Cartas from "./ui/components/Cartas";
+import Mision from "./ui/components/mision";
+>>>>>>> 67dfc3a6e4addb031e42607e993967116528eab4
 
 export default function HomePage() {
   return (
@@ -108,8 +114,11 @@ export default function HomePage() {
             <br /><br />
             <Mision />
           </div>
-        </main>
-      </div>
-    </>
-  )
+        </div>
+        <div className="z-50">
+          <Cartas />
+        </div>
+      </main>
+    </div>
+  );
 }
