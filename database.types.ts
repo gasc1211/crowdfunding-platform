@@ -155,37 +155,40 @@ export type Database = {
           description: string | null
           expected_finish_date: string | null
           finish_date: string | null
-          investement_goal: unknown | null
-          name: string | null
+          investment_goal: number
+          name: string
           producer_id: string | null
+          progress: number | null
           project_banner_url: string | null
           project_id: string
           start_date: string | null
-          total_invested: unknown | null
+          total_invested: number
         }
         Insert: {
           description?: string | null
           expected_finish_date?: string | null
           finish_date?: string | null
-          investement_goal?: unknown | null
-          name?: string | null
+          investment_goal?: number
+          name: string
           producer_id?: string | null
+          progress?: number | null
           project_banner_url?: string | null
           project_id?: string
           start_date?: string | null
-          total_invested?: unknown | null
+          total_invested?: number
         }
         Update: {
           description?: string | null
           expected_finish_date?: string | null
           finish_date?: string | null
-          investement_goal?: unknown | null
-          name?: string | null
+          investment_goal?: number
+          name?: string
           producer_id?: string | null
+          progress?: number | null
           project_banner_url?: string | null
           project_id?: string
           start_date?: string | null
-          total_invested?: unknown | null
+          total_invested?: number
         }
         Relationships: [
           {
@@ -265,6 +268,7 @@ export type Database = {
       users: {
         Row: {
           auth_id: string
+          birth_date: string | null
           email: string
           first_name: string
           last_name: string
@@ -273,6 +277,7 @@ export type Database = {
         }
         Insert: {
           auth_id: string
+          birth_date?: string | null
           email: string
           first_name: string
           last_name: string
@@ -281,6 +286,7 @@ export type Database = {
         }
         Update: {
           auth_id?: string
+          birth_date?: string | null
           email?: string
           first_name?: string
           last_name?: string
