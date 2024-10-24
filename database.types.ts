@@ -158,6 +158,7 @@ export type Database = {
           investement_goal: unknown | null
           name: string | null
           producer_id: string | null
+          progress: number | null
           project_banner_url: string | null
           project_id: string
           start_date: string | null
@@ -170,6 +171,7 @@ export type Database = {
           investement_goal?: unknown | null
           name?: string | null
           producer_id?: string | null
+          progress: number | null
           project_banner_url?: string | null
           project_id?: string
           start_date?: string | null
@@ -182,6 +184,7 @@ export type Database = {
           investement_goal?: unknown | null
           name?: string | null
           producer_id?: string | null
+          progress: number | null
           project_banner_url?: string | null
           project_id?: string
           start_date?: string | null
@@ -265,6 +268,7 @@ export type Database = {
       users: {
         Row: {
           auth_id: string
+          birth_date: Date
           email: string
           first_name: string
           last_name: string
@@ -273,6 +277,7 @@ export type Database = {
         }
         Insert: {
           auth_id: string
+          birth_date: Date
           email: string
           first_name: string
           last_name: string
@@ -281,6 +286,7 @@ export type Database = {
         }
         Update: {
           auth_id?: string
+          birth_date: Date
           email?: string
           first_name?: string
           last_name?: string

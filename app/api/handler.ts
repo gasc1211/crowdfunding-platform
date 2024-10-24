@@ -30,4 +30,22 @@ export async function getUserData() {
   return data
 }
 
+// In app/api/handler.ts
+
+export async function getUserProjects(userId: string) {
+  const supabase = createClient();
+
+  // Query Supabase for the projects of the current user
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('producer_id', userId); // Filter by the producer's user_id
+
+  if (error) {
+    console.error('Error fetching user projects:', error);
+    throw new Error('Failed to fetch user projects');
+  }
+
+  return data;
+}
 

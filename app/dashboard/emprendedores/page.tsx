@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ChevronRight } from "lucide-react"
-import {Project} from "@/lib/definitions"
 /* import { calculateAge } from "@/app/api/edad" */
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -19,7 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { getUserData } from "@/app/api/handler"
+import { getUserData, getUserProjects } from "@/app/api/handler"
 import { Database } from "@/database.types"
 
 
@@ -27,16 +26,7 @@ export default function Dashboard() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null)
     const [userData, setUserData] = useState<Database['public']['Tables']['users']['Row'] | null>(null);
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
-
-const projects: Project[] = [
-    { id: 1, name: "Creación de Huerto Comunitario", info: "Desarrollo de un espacio para cultivo de consumo local.", progress: 75 },
-    { id: 2, name: "Producción de Alimentos Orgánicos", info: "Gran impacto en la salud y el bienestar de la población local al mejorar la calidad de los alimentos y la producción agrícola", progress: 40 },
-    { id: 3, name: "Mejora de Calidad de Suelos", info: "Se lleva a cabo mediante la reducción de la contaminación, el uso eficiente de los recursos naturales y el manejo adecuado de los desechos", progress: 90 },
-    ]
-
-/* const users: UsuarioProductor[] = [
-  { idusuario: 1, descripcion: "Intereses: Agricultura, ganadería e ingeniería de producción", nombre: "Juan Ramirez", fechaNacimiento: new Date(1991,1,24), email: "andre.herrera@unah.hn"},
-] */
+    const [projects, setProjects] = useState<Project[]>([]); // State to store projects
 
   useEffect(() => {
     async function fetchData() {
@@ -45,6 +35,11 @@ const projects: Project[] = [
         const data = await getUserData();
         console.log("User Data:", data); // Log the fetched data
         setUserData(data);
+
+         // Fetch projects for the logged-in user using their user_id
+         const userProjects = await getUserProjects(data.user_id);
+         setProjects(userProjects);
+ 
     
       } catch (err) {
         console.error(err); // Log the error
@@ -120,10 +115,10 @@ const projects: Project[] = [
           <CardContent>
             <div className="space-y-14">
               {projects.map((project) => (
-                <div key={project.id} className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 md:space-x-4">
+                <div key={project.project_id} className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 md:space-x-4">
                   <div className="flex-1">
                     <h2 className="text-xl font-bold">{project.name}</h2>
-                    <p className="text-sm text-gray-600">{project.info}</p>
+                    <p className="text-sm text-gray-600">{project.description}</p>
                   </div>
                   <div className="w-full md:w-1/3">
                     <p className="text-sm font-medium leading-none mb-2">Progreso</p>
