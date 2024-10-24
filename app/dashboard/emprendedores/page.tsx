@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ChevronRight } from "lucide-react"
-import {Project, UsuarioProductor} from "@/lib/definitions"
-import { calculateAge } from "@/app/api/edad"
+import {Project} from "@/lib/definitions"
+/* import { calculateAge } from "@/app/api/edad" */
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,9 +19,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { getUserData } from "@/app/api/handler"
+import { Database } from "@/database.types"
+
 
 export default function Dashboard() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+    const [userData, setUserData] = useState<Database['public']['Tables']['users']['Row'] | null>(null);
+    const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
 
 const projects: Project[] = [
     { id: 1, name: "Creación de Huerto Comunitario", info: "Desarrollo de un espacio para cultivo de consumo local.", progress: 75 },
@@ -29,9 +34,32 @@ const projects: Project[] = [
     { id: 3, name: "Mejora de Calidad de Suelos", info: "Se lleva a cabo mediante la reducción de la contaminación, el uso eficiente de los recursos naturales y el manejo adecuado de los desechos", progress: 90 },
     ]
 
-const users: UsuarioProductor[] = [
+/* const users: UsuarioProductor[] = [
   { idusuario: 1, descripcion: "Intereses: Agricultura, ganadería e ingeniería de producción", nombre: "Juan Ramirez", fechaNacimiento: new Date(1991,1,24), email: "andre.herrera@unah.hn"},
-]
+] */
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        console.log("Fetching user data..."); // Debugging line
+        const data = await getUserData();
+        console.log("User Data:", data); // Log the fetched data
+        setUserData(data);
+    
+      } catch (err) {
+        console.error(err); // Log the error
+        if (err instanceof Error) {
+            setError(err); // Set the error safely
+        } else {
+            setError(new Error("An unknown error occurred.")); // Fallback
+        }
+    }
+    }
+
+    fetchData();
+  }, []);
+  if (error) return <div>Error: {error.message}</div>;
+  if (!userData) return <div>Loading...</div>;
  
 
   return (
@@ -48,7 +76,7 @@ const users: UsuarioProductor[] = [
         />
         {}
         <div  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-xl">
-          <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {users[0]?.nombre}</h1>
+          <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {userData?.first_name}</h1>
         </div>
       </div>
     </div>
@@ -59,8 +87,7 @@ const users: UsuarioProductor[] = [
             <CardTitle>Profile</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center">
-            {users.map((user)=>(
-              <div key={user.idusuario} className="flex flex-col items-center">
+              <div key={userData.auth_id} className="flex flex-col items-center">
                 <div className="relative w-32 h-32 mb-4 mx-auto">
                   <Image
                     src="/avatar.png"
@@ -69,10 +96,10 @@ const users: UsuarioProductor[] = [
                     className="rounded-full object-cover"
                   />
                 </div>
-              <h2 className="text-2xl font-bold mb-2 text-center">{user.nombre}</h2>
-              <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(user.fechaNacimiento)} Años</p>
+              <h2 className="text-2xl font-bold mb-2 text-center">{userData.first_name}</h2>
+              <p className="text-gray-500 mb-4 text-center">Edad: 33 Años</p>
               <br />
-              <p className="w-3/5 text-center">{user.descripcion}</p>
+              <p className="w-3/5 text-center">{userData.email}</p>
               <br />
               <div className="flex flex-col gap-4 w-full">
                 <Button className="w-full">
@@ -83,7 +110,6 @@ const users: UsuarioProductor[] = [
                 </Button>
                 </div>
               </div>
-            ))}
           </CardContent>
         </Card>
         <Card className="w-full lg:w-3/5">
