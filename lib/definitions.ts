@@ -17,10 +17,9 @@ export const userNavigationItems: NavigationItem[] = [
 ];
 
 export type UsuarioProductor = {
-  idusuario: number;
-  descripcion: string;
-  nombre: string;
-  fechaNacimiento: Date;
+  username: string;
+  first_name: string;
+  last_name: string;
   email: string;
 };
 

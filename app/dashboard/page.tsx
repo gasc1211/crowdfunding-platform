@@ -1,6 +1,5 @@
-"use client"
+'use client'
 
-import { useState } from "react"
 import Image from "next/image"
 import { ChevronRight } from "lucide-react"
 import {Project, UsuarioProductor} from "@/lib/definitions"
@@ -19,21 +18,51 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-    const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
-const projects: Project[] = [
+  const projects: Project[] = [
     { id: 1, name: "Creación de Huerto Comunitario", info: "Desarrollo de un espacio para cultivo de consumo local.", progress: 75 },
     { id: 2, name: "Producción de Alimentos Orgánicos", info: "Gran impacto en la salud y el bienestar de la población local al mejorar la calidad de los alimentos y la producción agrícola", progress: 40 },
     { id: 3, name: "Mejora de Calidad de Suelos", info: "Se lleva a cabo mediante la reducción de la contaminación, el uso eficiente de los recursos naturales y el manejo adecuado de los desechos", progress: 90 },
-    ]
+  ]
+  
+  // Estado para almacenar los datos del usuario
+  const [dataUser, setDataUser] = useState<UsuarioProductor>({
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+  });
+  
+  const [error, setError] = useState<string | null>(null);
 
-const users: UsuarioProductor[] = [
-  { idusuario: 1, descripcion: "Intereses: Agricultura, ganadería e ingeniería de producción", nombre: "Juan Ramirez", fechaNacimiento: new Date(1991,1,24), email: "andre.herrera@unah.hn"},
-]
- 
+  // useEffect para manejar la lógica asíncrona
+  useEffect(() => {
+    const obtenerUsuario = async () => {
+      try {
+        const response = await fetch("/api/usuario", {
+          method: "GET", // Especifica que es una solicitud GET
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
 
+        if (!response.ok) {
+          throw new Error("Error al obtener los datos del usuario");
+        }
+        const data = await response.json();
+        setDataUser(data as UsuarioProductor); // Almacena los datos en el estado
+      } catch (err: any) {
+        setError(err.message); // Maneja el error
+      }
+    };
+  
+    obtenerUsuario(); // Llama a la función dentro del useEffect
+  }, []);
+  
   return (
     <>
     <div className="mx-auto">
@@ -48,7 +77,7 @@ const users: UsuarioProductor[] = [
         />
         {}
         <div  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-xl">
-          <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {users[0]?.nombre}</h1>
+          <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {dataUser.first_name + " " + dataUser.last_name}</h1>
         </div>
       </div>
     </div>
@@ -59,8 +88,7 @@ const users: UsuarioProductor[] = [
             <CardTitle>Profile</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center">
-            {users.map((user)=>(
-              <div key={user.idusuario} className="flex flex-col items-center">
+              <div key={dataUser.username} className="flex flex-col items-center">
                 <div className="relative w-32 h-32 mb-4 mx-auto">
                   <Image
                     src="/avatar.png"
@@ -69,10 +97,10 @@ const users: UsuarioProductor[] = [
                     className="rounded-full object-cover"
                   />
                 </div>
-              <h2 className="text-2xl font-bold mb-2 text-center">{user.nombre}</h2>
-              <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(user.fechaNacimiento)} Años</p>
+              <h2 className="text-2xl font-bold mb-2 text-center">{dataUser.first_name + " " + dataUser.last_name}</h2>
+              <p className="text-gray-500 mb-4 text-center">Username: {dataUser.username}</p>
               <br />
-              <p className="w-3/5 text-center">{user.descripcion}</p>
+              <p className="text-center">{dataUser.email}</p>
               <br />
               <div className="flex flex-col gap-4 w-full">
                 <Button className="w-full">
@@ -83,7 +111,6 @@ const users: UsuarioProductor[] = [
                 </Button>
                 </div>
               </div>
-            ))}
           </CardContent>
         </Card>
         <Card className="w-full lg:w-3/5">
