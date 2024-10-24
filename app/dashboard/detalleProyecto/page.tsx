@@ -8,7 +8,7 @@ export default function DetalleProyecto() {
             <div className="h-screen">
                 <Banner />
                 <main className="flex-grow container mx-auto p-4 md:flex md:space-x-4">
-                    <Sidebar />
+                    <Sidebar name="Contactar al Productor" url="" />
                     <ProjectDetails />
                 </main>
             </div>
