@@ -1,9 +1,8 @@
 import Hero from "@/app/ui/components/Hero";
 import ProjectCard from "@/app/ui/components/ProjectCard";
 
-
 export default function InversorDashboard() {
-    const projects= [
+    const projects = [
         {
             title: "Creación de huerto comunitario",
             description:
@@ -29,7 +28,7 @@ export default function InversorDashboard() {
 
     return (
         <>
-            <div className="min-h-screen flex flex-col bg-gray-100">
+            <div className="min-h-screen flex flex-col">
                 <main className="flex-grow">
                     <Hero />
                     <div className="container mx-auto py-8 px-4">
