@@ -1,6 +1,7 @@
 'use client'
-import Link from "next/link";
 import { SignedIn, UserButton, useUser } from '@clerk/nextjs';
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -9,10 +10,11 @@ import { type NavigationItem, mainNavigationItems, userNavigationItems } from "@
 export default function Navbar() {
 
   const { user } = useUser();
+  const pathname = usePathname();
 
   return (
     <Disclosure as="nav" className="bg-lime-700">
-      <div className="mx-auto max px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -25,34 +27,31 @@ export default function Navbar() {
                   <Link
                     key={item.name}
                     href={item.href}
-
-                    aria-current={item.current ? 'page' : undefined}
-                    className={
-                      'rounded-md px-3 py-2 text-sm fon?t-medium' +
-                        item.current ? 'text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                    }
+                    aria-current={pathname === item.href ? 'page' : undefined}
+                    className={' rounded-md px-3 py-2 text-md text-white hover:text-gray-200'}
                   >
-                    <button className={'bg-black rounded-xl p-1.5 bg-opacity-40'}>{item.name}</button>
+                    {item.name}
                   </Link>
                 ))}
               </div>
             </div>
           </div>
           <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6">
+            <div className="flex items-center">
               {user ? (
-                  <div>
-                      <UserButton />
-                  </div>
-              ) : (
-                  <div className="hidden lg:flex lg:gap-x-12">
-                      <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href='/ui/sign-up'>Sign up</Link>
-                      <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white py-2 px-4 border border-yellow-500 hover:border-transparent rounded" href='/ui/sign-in'>Sign in</Link>
-                  </div>
+                <div>
+                  <UserButton />
+                </div>
+              ) : (!(pathname === '/sign-up' || pathname === '/sign-in') ?
+                <div className="hidden lg:flex lg:gap-x-2">
+                  <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white border border-blue-500 hover:border-transparent rounded px-2 py-1" href='/sign-up'>Regístrate</Link>
+                  <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white border border-yellow-500 hover:border-transparent rounded px-2 py-1" href='/sign-in'>Iniciar Sesión</Link>
+                </div> : <div></div>
+
               )}
             </div>
           </div>
-          <div className="-mr-2 flex md:hidden">
+          <div className="mr-2 flex md:hidden">
             {/* Mobile menu button */}
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
               <span className="absolute -inset-0.5" />
@@ -71,10 +70,10 @@ export default function Navbar() {
               key={item.name}
               as="a"
               href={item.href}
-              aria-current={item.current ? 'page' : undefined}
+              aria-current={pathname === item.href ? 'page' : undefined}
               className={
-                'block rounded-md px-3 py-2 text-base font-medium' +
-                  item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                'block rounded-md px-3 py-2 text-base font-normal' +
+                  pathname === item.href ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
               }
             >
               {item.name}

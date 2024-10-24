@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { esMX } from "@clerk/localizations";
+import { apfel_regular } from "./ui/fonts";
 import Navbar from "./ui/components/Navbar";
-import { geistMono, geistSans } from "./ui/fonts";
-import Footer from "./ui/components/Footer";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,17 +16,14 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <ClerkProvider>
-            <html lang="en">
-                <body
-                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-                >
-                    <Navbar />
-                    {children}
-                    <Footer/>
-                </body>
-            </html>
-        </ClerkProvider>
-    );
+  return (
+    <ClerkProvider localization={esMX}>
+      <html lang="en">
+        <body className={`${apfel_regular.className} antialiased`}>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
+  );
 }
