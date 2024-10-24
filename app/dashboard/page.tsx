@@ -136,7 +136,7 @@ export default function Dashboard() {
                         <CardHeader>
                             <CardTitle>Proyectos en Desarrollo</CardTitle>
                             <CardDescription>
-                                El Progreso de los Proyyectos Actuales
+                                El Progreso de los Proyectos Actuales
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
