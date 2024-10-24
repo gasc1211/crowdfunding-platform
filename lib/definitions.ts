@@ -5,6 +5,7 @@ export interface NavigationItem {
 
 export const mainNavigationItems: NavigationItem[] = [
   { name: "Inicio", href: "/" },
+  { name: "Dashboard", href: "/dashboard" },
   { name: "Empezar una Campaña", href: "/empezar" },
   { name: "Acerca de", href: "/acerca-de" },
   { name: "Contáctanos", href: "/contacto" },
