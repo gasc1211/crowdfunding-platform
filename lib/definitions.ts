@@ -16,13 +16,13 @@ export const userNavigationItems: NavigationItem[] = [
   { name: "Iniciar Sesión", href: "/sign-in" },
 ];
 
-export type UsuarioProductor = {
+/* export type UsuarioProductor = {
   idusuario: number;
   descripcion: string;
   nombre: string;
   fechaNacimiento: Date;
   email: string;
-};
+}; */
 
 export type ProjectCardData = {
   id: number;
