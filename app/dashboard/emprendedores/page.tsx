@@ -94,7 +94,7 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold mb-2 text-center">{userData.first_name}</h2>
               <p className="text-gray-500 mb-4 text-center">Edad: 33 Años</p>
               <br />
-              <p className="w-3/5 text-center">{userData.email}</p>
+              <p className="text-center">{userData.email}</p>
               <br />
               <div className="flex flex-col gap-4 w-full">
                 <Button className="w-full">
