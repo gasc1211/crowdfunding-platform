@@ -5,6 +5,7 @@ CREATE TABLE "users" (
   "first_name" varchar not null,
   "last_name" varchar not null,
   "email" varchar unique not null
+  "birth_date" date
 );
 
 CREATE TABLE "producer" (
@@ -24,6 +25,7 @@ CREATE TABLE "projects" (
   "start_date" date,
   "expected_finish_date" date,
   "finish_date" date,
+  "progress" number,
   "investement_goal" money,
   "total_invested" money
 );
