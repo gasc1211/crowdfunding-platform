@@ -12,3 +12,4 @@ export default async function Hello () {
       <p><strong>Email:</strong> {user.email}</p>
     </div>
   )
+}
