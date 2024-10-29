@@ -26,3 +26,9 @@ export const apfel_regular = localFont({
   display: "swap",
   weight: "400",
 });
+
+export const apfel_fett = localFont({
+  src: "../fonts/ApfelGrotezk-Fett.woff2",
+  display: "swap",
+  weight: "500",
+});

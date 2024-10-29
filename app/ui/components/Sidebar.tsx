@@ -9,7 +9,7 @@ interface SidebarProps {
 
 export default function Sidebar({ name, url }: SidebarProps) {
     return (
-        <aside className="w- bg-red-100 p-4 rounded-lg mb-4 md:mb-0">
+        <aside className="bg-red-100 p-4 rounded-lg mb-4 md:mb-0">
             <div className="text-center">
                 <h2 className="text-xl font-bold">Juan Ramirez</h2>
                 <Image
