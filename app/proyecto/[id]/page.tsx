@@ -2,7 +2,8 @@ import Banner from "@/app/ui/components/Banner";
 import Sidebar from "@/app/ui/components/Sidebar";
 import ProjectDetails from "@/app/ui/components/ProjectDetails";
 
-export default function DetalleProyecto() {
+export default function DetalleProyecto({ params }: { params: { id: string } }) {
+    console.log(params);
     return (
         <>
             <div className="h-screen">
