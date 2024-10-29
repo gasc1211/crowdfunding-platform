@@ -70,11 +70,11 @@ const personas = [
 
 export default function Cartas() {
   return (
-    <div className="bg-gray-400 py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row rounded-3xl">
+    <div className="text-foreground py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row rounded-3xl">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-center">Campañas Exitosas</h2>
-          <p className="mt-2 text-lg leading-8 text-white text-center">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-center">Campañas Exitosas</h2>
+          <p className="mt-2 text-lg leading-8  text-center">
             Vea algunos de los increíbles proyectos que se han financiado a través de AgroSmart.
           </p>
         </div>
@@ -102,8 +102,8 @@ export default function Cartas() {
       </div>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-center">Productores Destacados</h2>
-          <p className="mt-2 text-lg leading-8 text-white text-center">
+          <h2 className="text-3xl font-bold tracking-tight  sm:text-4xl text-center">Productores Destacados</h2>
+          <p className="mt-2 text-lg leading-8  text-center">
             Conozca a algunos de los increíbles pequeños agricultores y productores que forman parte de la comunidad AgroSmart.
           </p>
         </div>
