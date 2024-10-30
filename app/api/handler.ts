@@ -49,3 +49,18 @@ export async function getUserProjects(userId: string) {
   return data;
 }
 
+
+export async function getAllProjects() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+
+  if (error) {
+    console.error('Error fetching user projects:', error);
+    throw new Error('Failed to fetch user projects');
+  }
+
+  return data;
+}
