@@ -5,24 +5,25 @@ import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   AlertDialogDescription,
+//   AlertDialogFooter,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+//   AlertDialogTrigger,
+//} from "@/components/ui/alert-dialog"
 import { getUserData, getUserProjects } from "@/app/api/handler"
-import { Database } from "@/database.types"
+import { calculateAge } from "@/app/api/edad";
+import Details from "@/app/ui/components/Details";
 
 
 export default function Dashboard() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [userData, setUserData] = useState<Database['public']['Tables']['users']['Row'] | null>(null);
+  //const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [userData, setUserData] = useState<Users | null>(null);
   const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
   const [projects, setProjects] = useState<Project[]>([]); // State to store projects
 
@@ -90,7 +91,7 @@ export default function Dashboard() {
                   />
                 </div>
                 <h2 className="text-2xl font-bold mb-2 text-center">{userData.first_name}</h2>
-                <p className="text-gray-500 mb-4 text-center">Edad: 33 Años</p>
+                <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(new Date(userData.birth_date))}</p>
                 <br />
                 <p className="text-center">{userData.email}</p>
                 <br />
@@ -108,7 +109,7 @@ export default function Dashboard() {
           <Card className="w-full lg:w-3/5">
             <CardHeader>
               <CardTitle>Proyectos en Desarrollo</CardTitle>
-              <CardDescription>El Progreso de los Proyyectos Actuales</CardDescription>
+              <CardDescription>El Progreso de los Proyectos Actuales</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-14">
@@ -123,7 +124,7 @@ export default function Dashboard() {
                       <Progress value={project.progress} className="w-full" />
                     </div>
                     <div className="flex justify-start">
-                      <AlertDialog>
+                      {/* <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="outline" size="sm" onClick={() => setSelectedProject(project)}>
                             Más Detalles
@@ -145,7 +146,8 @@ export default function Dashboard() {
                             <AlertDialogAction>View Full Details</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
-                      </AlertDialog>
+                      </AlertDialog> */}
+                      <Details key={project.project_id} project={project} />
                     </div>
                   </div>
                 ))}
