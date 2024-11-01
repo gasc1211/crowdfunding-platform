@@ -5,24 +5,13 @@ import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogCancel,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-//   AlertDialogTrigger,
-//} from "@/components/ui/alert-dialog"
 import { getUserData, getUserProjects } from "@/app/api/handler"
 import { calculateAge } from "@/app/api/edad";
 import Details from "@/app/ui/components/Details";
+import Link from "next/link";
 
 
 export default function Dashboard() {
-  //const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [userData, setUserData] = useState<Users | null>(null);
   const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
   const [projects, setProjects] = useState<Project[]>([]); // State to store projects
@@ -54,7 +43,6 @@ export default function Dashboard() {
   }, []);
   if (error) return <div>Error: {error.message}</div>;
   if (!userData) return <div>Loading...</div>;
-
 
   return (
     <>
@@ -91,13 +79,13 @@ export default function Dashboard() {
                   />
                 </div>
                 <h2 className="text-2xl font-bold mb-2 text-center">{userData.first_name}</h2>
-                <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(new Date(userData.birth_date))}</p>
+                <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(new Date(userData.birth_date!))}</p>
                 <br />
                 <p className="text-center">{userData.email}</p>
                 <br />
                 <div className="flex flex-col gap-4 w-full">
                   <Button className="w-full">
-                    <div> Crear Nuevo Proyecto </div>
+                    <div><Link href={'/proyecto/form'}>Crear Nuevo Proyecto</Link></div>
                   </Button>
                   <Button className="w-full">
                     <div> Ver Proyectos Completados </div>
@@ -121,33 +109,14 @@ export default function Dashboard() {
                     </div>
                     <div className="w-full md:w-1/3">
                       <p className="text-sm font-medium leading-none mb-2">Progreso</p>
+
                       <Progress value={project.progress} className="w-full" />
+
                     </div>
                     <div className="flex justify-start">
-                      {/* <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm" onClick={() => setSelectedProject(project)}>
-                            Más Detalles
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>{selectedProject?.name}</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Project progress: {selectedProject?.progress}%
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <p className="py-4">
-                            This is where you would display more detailed information about the selected project,
-                            such as team members, deadlines, and specific tasks.
-                          </p>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Close</AlertDialogCancel>
-                            <AlertDialogAction>View Full Details</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog> */}
+
                       <Details key={project.project_id} project={project} />
+                      
                     </div>
                   </div>
                 ))}

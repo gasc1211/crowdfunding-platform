@@ -11,6 +11,7 @@ import {
   } from "@/components/ui/alert-dialog"
   import { Button } from "@/components/ui/button"
   import { useState } from "react"
+  import Link from "next/link"
 
 
 
@@ -42,8 +43,8 @@ export default function Details({ project }: { project: Project }){
                         </ul>
                     </p>
                     <AlertDialogFooter>
-                    <AlertDialogCancel>Close</AlertDialogCancel>|
-                    <AlertDialogAction>View Full Details</AlertDialogAction>
+                    <AlertDialogCancel>Cerrar</AlertDialogCancel>|
+                    <AlertDialogAction><Link href={"/proyecto"}>Ver Todos Los Detalles</Link></AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
