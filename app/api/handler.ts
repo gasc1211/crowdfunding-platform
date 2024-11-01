@@ -64,3 +64,29 @@ export async function getAllProjects() {
 
   return data;
 }
+
+
+export async function getUserId() {
+  // Get the user's Clerk session
+  const { userId }: { userId: string | null } = await auth()
+  if (!userId) {
+    throw new Error('Not authenticated')
+  }
+
+
+  // Query Supabase for the user's data
+  const { data, error } = await supabase
+    .from('users')
+    .select('user_id')
+    .eq('auth_id', userId)
+    .single()
+  if (error) {
+    console.error('Error fetching user data:', error)
+    throw new Error('Failed to fetch user data')
+  }
+  if (!data) {
+    throw new Error('User data not found');
+  }
+
+  return data
+}
