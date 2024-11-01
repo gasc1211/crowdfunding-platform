@@ -5,24 +5,11 @@ export interface NavigationItem {
 
 export const mainNavigationItems: NavigationItem[] = [
   { name: "Inicio", href: "/" },
+  { name: "Dashboard", href: "/dashboard/emprendedores" },
   { name: "Empezar una Campaña", href: "/empezar" },
   { name: "Acerca de", href: "/acerca-de" },
   { name: "Contáctanos", href: "/contacto" },
 ];
-
-export const userNavigationItems: NavigationItem[] = [
-  { name: "Perfil", href: "/profile" },
-  { name: "Opciones", href: "/profile" },
-  { name: "Iniciar Sesión", href: "/sign-in" },
-];
-
-export type UsuarioProductor = {
-  idusuario: number;
-  descripcion: string;
-  nombre: string;
-  fechaNacimiento: Date;
-  email: string;
-};
 
 export type ProjectCardData = {
   id: number;

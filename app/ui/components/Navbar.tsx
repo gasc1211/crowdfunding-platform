@@ -5,7 +5,8 @@ import Link from "next/link";
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { type NavigationItem, mainNavigationItems, userNavigationItems } from "@/lib/definitions";
+import { type NavigationItem, mainNavigationItems } from "@/lib/definitions";
+import { apfel_fett } from '../fonts';
 
 export default function Navbar() {
 
@@ -13,16 +14,21 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <Disclosure as="nav" className="bg-lime-700">
+    <Disclosure as="nav" className="bg-primary fixed left-0 top-0 w-dvw">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              {/* Insert Logo Here */}
-              {/* <Image src="" alt="Logo" width={50} height={50}></Image> */}
-            </div>
+          <div className="flex-shrink-0">
+            {/* Insert Logo Here */}
+            {/* <Image src="" alt="Logo" width={50} height={50}></Image> */}
+            <h1 className={`${apfel_fett.className} text-xl text-primary-foreground`}>
+              <Link href="/">
+                AgroStart🌱
+              </Link>
+            </h1>
+          </div>
+          <div className="flex ml-auto items-center">
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
+              <div className="flex items-baseline space-x-4">
                 {mainNavigationItems.map((item: NavigationItem) => (
                   <Link
                     key={item.name}
@@ -36,16 +42,16 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden ml-2 md:block">
             <div className="flex items-center">
               {user ? (
                 <div>
                   <UserButton />
                 </div>
-              ) : (!(pathname === '/sign-up' || pathname === '/sign-in') ?
+              ) : (!(pathname.includes('/sign-up') || pathname.includes('/sign-in')) ?
                 <div className="hidden lg:flex lg:gap-x-2">
-                  <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white border border-blue-500 hover:border-transparent rounded px-2 py-1" href='/sign-up'>Regístrate</Link>
-                  <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white border border-yellow-500 hover:border-transparent rounded px-2 py-1" href='/sign-in'>Iniciar Sesión</Link>
+                  <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white border border-blue-500 hover:border-transparent rounded px-2 py-1" href='/auth/sign-up'>Regístrate</Link>
+                  <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white border border-yellow-500 hover:border-transparent rounded px-2 py-1" href='/auth/sign-in'>Iniciar Sesión</Link>
                 </div> : <div></div>
 
               )}
@@ -103,12 +109,12 @@ export default function Navbar() {
             </button>
           </div>
           <div className="mt-3 space-y-1 px-2">
-            {userNavigationItems.map((item: NavigationItem) => (
+            {mainNavigationItems.map((item: NavigationItem) => (
               <DisclosureButton
                 key={item.name}
                 as="a"
                 href={item.href}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                className="block rounded-md px-3 py-2 text-base font-medium text-background hover:bg-gray-700 hover:text-white"
               >
                 {item.name}
               </DisclosureButton>
