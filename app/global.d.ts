@@ -5,4 +5,6 @@ declare global {
     type Database = DB
     type Users = DB['public']['Tables']['users']['Row']
     type Project = DB['public']['Tables']['projects']['Row']
+    type ProjectInsert = DB['public']['Tables']['projects']['Insert']
+    type ProjectUpdate = DB['public']['Tables']['projects']['Update']
 }

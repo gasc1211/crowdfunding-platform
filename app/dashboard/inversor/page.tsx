@@ -14,8 +14,6 @@ export default function InversorDashboard() {
                 // Fetch projects for the logged-in user using their user_id
                 const allProjects = await getAllProjects();
                 setProjects(allProjects);
-                console.log("Fetched projects: ", projects)
-        
         
               } catch (err) {
                 console.error(err); // Log the error
