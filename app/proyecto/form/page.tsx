@@ -11,7 +11,6 @@ import { createClient } from '@/utils/supabase/client'
 import { getUserId } from '@/app/api/handler'
 import { UUID } from 'crypto'
 
-
 export default function CreateProjectForm() {
   const [userId, setUserId] = useState<UUID>();
   const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
@@ -85,15 +84,17 @@ export default function CreateProjectForm() {
   }
 
   return (
+    <>
+    <br /><br /><br /><br />
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Create New Project</CardTitle>
-        <CardDescription>Fill in the details to create a new project</CardDescription>
+        <CardTitle>Crear Un Nuevo Proyecto</CardTitle>
+        <CardDescription>Llene Los Campos Que Acontinuación Se Presentan Para Crear Un Nuevo Proyecto</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Project Name</Label>
+            <Label htmlFor="name">Nombre del Proyecto</Label>
             <Input
               id="name"
               name="name"
@@ -103,7 +104,7 @@ export default function CreateProjectForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
               name="description"
@@ -113,7 +114,7 @@ export default function CreateProjectForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="project_banner_url">Project Banner URL</Label>
+            <Label htmlFor="project_banner_url">Banner URL</Label>
             <Input
               id="project_banner_url"
               name="project_banner_url"
@@ -124,7 +125,7 @@ export default function CreateProjectForm() {
           <div className="grid grid-cols-2 gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="start_date">Start Date</Label>
+              <Label htmlFor="start_date">Fecha de Inicio</Label>
               <Input
                 id="start_date"
                 name="start_date"
@@ -135,7 +136,7 @@ export default function CreateProjectForm() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="expected_finish_date">Expected Finish Date</Label>
+              <Label htmlFor="expected_finish_date">Ficha Final Proyectada</Label>
               <Input
                 id="expected_finish_date"
                 name="expected_finish_date"
@@ -148,7 +149,7 @@ export default function CreateProjectForm() {
           </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="progress">Progress (%)</Label>
+            <Label htmlFor="progress">Progreso (%)</Label>
             <Input
               id="progress"
               name="progress"
@@ -162,24 +163,24 @@ export default function CreateProjectForm() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="investment_goal">Investment Goal</Label>
+              <Label htmlFor="investment_goal">Meta de Inversión</Label>
               <Input
                 id="investment_goal"
                 name="investment_goal"
                 type="number"
-                step="0.01"
+                step="1.0"
                 value={project.investment_goal}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="total_invested">Total Invested</Label>
+              <Label htmlFor="total_invested">Inversión Inicial</Label>
               <Input
                 id="total_invested"
                 name="total_invested"
                 type="number"
-                step="0.01"
+                step="1.0"
                 value={project.total_invested}
                 onChange={handleChange}
                 required
@@ -187,7 +188,7 @@ export default function CreateProjectForm() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="location">Ubicación</Label>
             <Input
               id="location"
               name="location"
@@ -198,11 +199,12 @@ export default function CreateProjectForm() {
           </div>
           <CardFooter className="px-0">
             <Button type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Project'}
+              {loading ? 'Creating...' : 'Crear Proyecto'}
             </Button>
           </CardFooter>
         </form>
       </CardContent>
     </Card>
+    </>
   )
 }

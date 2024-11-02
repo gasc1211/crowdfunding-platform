@@ -3,6 +3,11 @@ export interface NavigationItem {
   href: string;
 }
 
+export interface NavigationUser {
+  name: string;
+  href: string;
+}
+
 export const mainNavigationItems: NavigationItem[] = [
   { name: "Inicio", href: "/" },
   { name: "Dashboard", href: "/dashboard/emprendedores" },
@@ -11,7 +16,13 @@ export const mainNavigationItems: NavigationItem[] = [
   { name: "Contáctanos", href: "/contacto" },
 ];
 
-export type ProjectCardData = {
+export const NavigationUsers: NavigationUser[] = [
+  { name: "Inicio", href: "/" },
+  { name: "Acerca de", href: "/acerca-de" },
+  { name: "Contáctanos", href: "/contacto" },
+];
+
+/* export type ProjectCardData = {
   id: number;
   title: string;
   description: string;
@@ -32,3 +43,4 @@ export type ProjectInversor = {
   image: string;
   progress: number;
 };
+ */

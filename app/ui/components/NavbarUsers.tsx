@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { type NavigationItem, mainNavigationItems } from "@/lib/definitions";
+import { type NavigationItem, NavigationUsers } from "@/lib/definitions";
 import { apfel_fett } from '../fonts';
 
 export default function Navbar() {
@@ -29,7 +29,7 @@ export default function Navbar() {
           <div className="flex ml-auto items-center">
             <div className="hidden md:block">
               <div className="flex items-baseline space-x-4">
-                {mainNavigationItems.map((item: NavigationItem) => (
+                {NavigationUsers.map((item: NavigationItem) => (
                   <Link
                     key={item.name}
                     href={item.href}
@@ -50,8 +50,7 @@ export default function Navbar() {
                 </div>
               ) : (!(pathname.includes('/sign-up') || pathname.includes('/sign-in')) ?
                 <div className="hidden lg:flex lg:gap-x-2">
-                  <Link className="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white border border-blue-500 hover:border-transparent rounded px-2 py-1" href='/auth/sign-up'>Regístrate</Link>
-                  <Link className="bg-white hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white border border-yellow-500 hover:border-transparent rounded px-2 py-1" href='/auth/sign-in'>Iniciar Sesión</Link>
+                  
                 </div> : <div></div>
 
               )}
@@ -93,7 +92,7 @@ export default function Navbar() {
             </button>
           </div>
           <div className="mt-3 space-y-1 px-2">
-            {mainNavigationItems.map((item: NavigationItem) => (
+            {NavigationUsers.map((item: NavigationItem) => (
               <DisclosureButton
                 key={item.name}
                 as="a"
