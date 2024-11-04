@@ -1,9 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { apfel_regular, ortica } from "./ui/fonts";
-
 import Cartas from "./ui/components/Cartas";
-import Footer from "./ui/components/Footer";
+/* import Footer from "./ui/components/Footer"; */
 import Navbar from "./ui/components/Navbar";
 // import Mision from "./ui/components/Mision";
 
@@ -11,6 +10,7 @@ export default function HomePage() {
     return (
         <>
             <Navbar />
+            <br />
             <div className="min-h-full mt-10">
                 <main className="flex min-h-screen flex-col p-6">
                     <div className="mx-4 flex grow flex-col gap-4 md:flex-row justify-between">
@@ -62,7 +62,7 @@ export default function HomePage() {
                         {/* <Mision /> */}
                     </div>
                 </main>
-                <Footer />
+                {/* <Footer /> */}
             </div>
         </>
     );
