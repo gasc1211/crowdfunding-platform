@@ -26,7 +26,9 @@ export default function Dashboard() {
 
         // Fetch projects for the logged-in user using their user_id
         const userProjects = await getUserProjects(data.user_id);
-        setProjects(userProjects);
+
+        const randomProjects = userProjects.sort(()=> 0.5 - Math.random()).slice(0,3)
+        setProjects(randomProjects);
 
 
       } catch (err) {
@@ -46,6 +48,7 @@ export default function Dashboard() {
 
   return (
     <>
+    <br /><br />
       <div className="mx-auto">
         <div className="relative h-[20vh] overflow-hidden m-5">
           <Image
@@ -56,7 +59,6 @@ export default function Dashboard() {
             sizes="100vw"
             priority
           />
-          { }
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-xl">
             <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {userData?.first_name}</h1>
           </div>
@@ -66,7 +68,7 @@ export default function Dashboard() {
         <div className="flex flex-col lg:flex-row justify-between gap-6">
           <Card className="w-full lg:w-1/3">
             <CardHeader className="text-center">
-              <CardTitle>Profile</CardTitle>
+              <CardTitle>Perfil</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center">
               <div key={userData.auth_id} className="flex flex-col items-center">
