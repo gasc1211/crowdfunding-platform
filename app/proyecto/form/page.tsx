@@ -52,6 +52,17 @@ export default function CreateProjectForm() {
 
     fetchId();
   }, []);
+
+  useEffect(() => {
+    const goal = project.investment_goal || 1; // Use 1 as a fallback to avoid division by zero
+    const invested = project.total_invested || 0; // Default to 0 if undefined
+    
+    setProject(prev => ({
+      ...prev,
+      progress: Math.min((invested / goal) * 100, 100),
+    }));
+  }, [project.total_invested, project.investment_goal]);
+
   if (error) return <div>Error: {error.message}</div>;
   if (!userId) return <div>Loading...</div>;
  
@@ -148,19 +159,6 @@ export default function CreateProjectForm() {
             </div>
           </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="progress">Progreso (%)</Label>
-            <Input
-              id="progress"
-              name="progress"
-              type="number"
-              min="0"
-              max="100"
-              value={project.progress?? ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="investment_goal">Meta de Inversión</Label>
@@ -186,6 +184,13 @@ export default function CreateProjectForm() {
                 required
               />
             </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="progress">Progreso (%)</Label>
+            <Input
+              value={project.progress?.toFixed(2)}
+              readOnly
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="location">Ubicación</Label>
