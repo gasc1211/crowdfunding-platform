@@ -91,3 +91,19 @@ export async function getUserId() {
   return data
 }
 
+//Categorias
+export async function getCategories() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('categories')  // Asumiendo que tienes una tabla 'categories'
+    .select('*')
+    .order('name');
+
+  if (error) {
+    console.error('Error fetching categories:', error);
+    throw new Error('Failed to fetch categories');
+  }
+
+  return data;
+}

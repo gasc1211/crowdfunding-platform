@@ -17,18 +17,6 @@ export default function Hero() {
                 <p className="text-xl mb-8">
                     Estos son los proyectos en los que puedes invertir
                 </p>
-                <div className="flex justify-center items-center space-x-4">
-                    <Input
-                        className="max-w-md"
-                        placeholder="Buscar proyectos..."
-                    />
-                    <Button variant="default">
-                        <Search className="w-5 h-5" />
-                    </Button>
-                    <Button variant="outline">
-                        <Menu className="w-5 h-5" />
-                    </Button>
-                </div>
             </div>
         </div>
     );
@@ -42,7 +30,7 @@ export function HeroInversor() {
                 backgroundImage: "url('/banner3.png')",
             }}
         >
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
                 <div className="text-center text-white">
                     <h1 className="text-4xl font-bold mb-2">
                         ¡Bienvenido, Juan!
