@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { apfel_regular, ortica } from "./ui/fonts";
@@ -5,6 +6,7 @@ import Cartas from "./ui/components/Cartas";
 /* import Footer from "./ui/components/Footer"; */
 import Navbar from "./ui/components/Navbar";
 // import Mision from "./ui/components/Mision";
+import Carrousel from "./ui/components/Carrousel";
 
 export default function HomePage() {
     return (
@@ -16,9 +18,12 @@ export default function HomePage() {
                     <div className="mx-4 flex grow flex-col gap-4 md:flex-row justify-between">
                         <div className="flex flex-col justify-center gap-6 rounded-3xlpx-6 py-10 md:w-3/5 md:px-20 mx-4">
                             <div />
-                            <p className={`${ortica.className} font-bold text-md md:text-2xl md:leading-normal`}>
+                            <p
+                                className={`${ortica.className} font-bold text-md md:text-2xl md:leading-normal`}
+                            >
                                 <strong>
-                                    HAGA REALIDAD SUS IDEAS CON NUESTRA PLATAFORMA DE FINANCIACIÓN COLECTIVA.
+                                    HAGA REALIDAD SUS IDEAS CON NUESTRA
+                                    PLATAFORMA DE FINANCIACIÓN COLECTIVA.
                                 </strong>
                             </p>
                             <p className={`${apfel_regular.className}`}>
@@ -46,6 +51,7 @@ export default function HomePage() {
                                 </Link>
                             </div>
                         </div>
+
                         <div className="flex items-center justify-center">
                             <Image
                                 src="/productor.webp"
@@ -56,6 +62,9 @@ export default function HomePage() {
                                 priority={true}
                             />
                         </div>
+                    </div>
+                    <div className="mt-10">
+                        <Carrousel />
                     </div>
                     <div>
                         <Cartas />
