@@ -1,40 +1,46 @@
 export interface NavigationItem {
   name: string;
   href: string;
-  current?: boolean;
+}
+
+export interface NavigationUser {
+  name: string;
+  href: string;
 }
 
 export const mainNavigationItems: NavigationItem[] = [
-  { name: "Explorar", href: "#", current: false },
-  { name: "Empezar una Campaña", href: "#", current: false },
-  { name: "Acerca de", href: "#", current: false },
-  { name: "Contáctanos", href: "#", current: false },
+  { name: "Inicio", href: "/" },
+  { name: "Dashboard", href: "/dashboard/emprendedores" },
+  { name: "Empezar una Campaña", href: "/empezar" },
+  { name: "Acerca de", href: "/acerca-de" },
+  { name: "Contáctanos", href: "/contacto" },
 ];
 
-export const userNavigationItems: NavigationItem[] = [
-  { name: "Perfil", href: "#" },
-  { name: "Opciones", href: "#" },
-  { name: "Iniciar Sesión", href: "#" },
+export const NavigationUsers: NavigationUser[] = [
+  { name: "Inicio", href: "/" },
+  { name: "Acerca de", href: "/acerca-de" },
+  { name: "Contáctanos", href: "/contacto" },
 ];
 
-export type UsuarioProductor = {
-  idusuario: number;
-  descripcion: string;
-  nombre: string;
-  fechaNacimiento: Date;
-  email: string;
-}
+/* export type ProjectCardData = {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  progress: number;
+};
 
 export type Project = {
   id: number;
   name: string;
   info: string;
   progress: number;
-}
+};
 
 export type ProjectInversor = {
   title: string;
   description: string;
   image: string;
   progress: number;
-}
+};
+ */

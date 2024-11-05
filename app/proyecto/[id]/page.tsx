@@ -2,14 +2,15 @@ import Banner from "@/app/ui/components/Banner";
 import Sidebar from "@/app/ui/components/Sidebar";
 import ProjectDetails from "@/app/ui/components/ProjectDetails";
 
-export default function DetalleProyecto() {
+export default function DetalleProyecto({ params }: { params: { id: string } }) {
+    console.log(params);
     return (
         <>
-            <div className="bg-gray-100 h-screen">
+            <div className="h-screen">
                 <Banner />
                 <main className="flex-grow container mx-auto p-4 md:flex md:space-x-4">
-                    <Sidebar />
-                    <ProjectDetails/>
+                    <Sidebar name="Contactar al Productor" url="" />
+                    <ProjectDetails />
                 </main>
             </div>
         </>

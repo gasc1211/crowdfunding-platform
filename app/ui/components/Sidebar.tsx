@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Sidebar() {
+interface SidebarProps {
+    name: string;
+    url: string;
+}
+
+export default function Sidebar({ name, url }: SidebarProps) {
     return (
-        <aside className="w- bg-red-100 p-4 rounded-lg mb-4 md:mb-0">
+        <aside className="bg-red-100 p-4 rounded-lg mb-4 md:mb-0">
             <div className="text-center">
                 <h2 className="text-xl font-bold">Juan Ramirez</h2>
                 <Image
@@ -18,9 +24,11 @@ export default function Sidebar() {
                     Intereses: Agricultura, ganadería e ingeniería de
                     producción.
                 </p>
-                <Button className="mt-4 bg-orange-500 hover:bg-orange-600">
-                    Contactar al Productor
-                </Button>
+                <Link href={url} passHref>
+                    <Button className="mt-4 bg-orange-500 hover:bg-orange-600">
+                        {name}
+                    </Button>
+                </Link>
             </div>
         </aside>
     );

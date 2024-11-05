@@ -70,11 +70,11 @@ const personas = [
 
 export default function Cartas() {
   return (
-    <div className="bg-black bg-opacity-20 py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row rounded-3xl">
+    <div className="text-foreground py-24 sm:py-32 mt-4 flex grow flex-col gap-4 md:flex-row rounded-3xl">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-center">Campañas Exitosas</h2>
-          <p className="mt-2 text-lg leading-8 text-white text-center">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-center">Campañas Exitosas</h2>
+          <p className="mt-2 text-lg leading-8  text-center">
             Vea algunos de los increíbles proyectos que se han financiado a través de AgroSmart.
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function Cartas() {
           {posts.map((post) => (
             <div key={post.id} className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <Link href="#">
-                <Image className="rounded-t-lg w-[250px] h-[200px] m-auto mt-5" src={post.author.imageUrl} width= {250}  height={200}  alt="" />
+                <Image className="rounded-t-lg w-[250px] h-[200px] m-auto mt-5" src={post.author.imageUrl} width={250} height={200} alt="" />
               </Link>
               <article key={post.id} className="flex max-w-xl flex-col items-start justify-between text-center">
                 <div className="group relative">
@@ -102,8 +102,8 @@ export default function Cartas() {
       </div>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-center">Productores Destacados</h2>
-          <p className="mt-2 text-lg leading-8 text-white text-center">
+          <h2 className="text-3xl font-bold tracking-tight  sm:text-4xl text-center">Productores Destacados</h2>
+          <p className="mt-2 text-lg leading-8  text-center">
             Conozca a algunos de los increíbles pequeños agricultores y productores que forman parte de la comunidad AgroSmart.
           </p>
         </div>
@@ -112,7 +112,7 @@ export default function Cartas() {
             <div key={post.id} className="max-w-sm bg-white border bg-opacity-85 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="mx-auto grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <Link href="#">
-                  <Image className="rounded-t-lg  w-[250px] h-[200px] ml-5 mt-5" src={post.author.imageUrl} width= {250}  height={200} alt="" />
+                  <Image className="rounded-t-lg  w-[250px] h-[200px] ml-5 mt-5" src={post.author.imageUrl} width={250} height={200} alt="" />
                 </Link>
                 <div className="flex items-center justify-center h-full">
                   <p className="font-semibold text-gray-900 text-center">
