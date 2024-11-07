@@ -9,6 +9,9 @@ type HeroInversorProps = {
 
 export default function Hero() {
     return (
+        <>
+        <br />
+        <br />
         <div
             className="bg-white py-12 px-4"
             style={{
@@ -17,13 +20,14 @@ export default function Hero() {
         >
             <div className="container mx-auto text-center">
                 <h1 className="text-4xl font-bold mb-4">
-                    ¡Bienvenido, Daniel!
+                    ¡Bienvenido!
                 </h1>
                 <p className="text-xl mb-8">
                     Estos son los proyectos en los que puedes invertir
                 </p>
             </div>
         </div>
+        </>
     );
 }
 
