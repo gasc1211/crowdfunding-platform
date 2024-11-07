@@ -13,8 +13,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-  import { Button } from "@/components/ui/button"
   import { useRouter } from "next/navigation";
+  import Image from "next/image";
 
 
 export default function ProfileImageUpload() {
@@ -38,7 +38,7 @@ export default function ProfileImageUpload() {
         }
         fetchData();
     }, []);
-    console.log("UserUpdate", userUpdate)
+    //console.log("UserUpdate", userUpdate)
     if (error) return <div>Error: {error.message}</div>;
     if (!userUpdate) return <div>Loading...</div>;
 
@@ -100,7 +100,7 @@ export default function ProfileImageUpload() {
                 console.log("Proyecto creado:", data);
             }
 
-            router.push("/dashboard/inversor"); // Redirect to projects list page
+            router.push("/dashboard/emprendedores"); // Redirect to projects list page
         } catch (error) {
             console.error("Error creating project:", error);
             alert("Error creating project. Please try again.");
@@ -111,30 +111,49 @@ export default function ProfileImageUpload() {
     };
 
     return (
+        <>
         <AlertDialog>
         <AlertDialogTrigger asChild>
-            <Button variant="outline">Show Dialog</Button>
+            <button>
+            <div className="relative w-32 h-32 mb-4 mx-auto">
+                <Image
+                    src={userUpdate.profileImg || "/avatar.png"}  // Default to "/avatar.png" if no profile image
+                    alt="Profile picture"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    fill
+                    className="rounded-full object-cover"
+                  />
+            </div>
+            </button>
         </AlertDialogTrigger>
         <AlertDialogContent>
-            <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <input id="img" name="img" type="file" onChange={handleFileChange} accept="image/*"/>
-                    <button type="submit" disabled={loading}>
-                        {loading ? "Uploading..." : "Upload Profile Image"}
-                    </button>
-                </form>
-                </div> 
+            <AlertDialogHeader className="flex justify-center items-center">
+            <AlertDialogTitle>Seleccionar Imagen de Perfil</AlertDialogTitle>
             <AlertDialogDescription> 
             </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
-            </AlertDialogFooter>
+            <div className="flex justify-center mb-4">
+            <Image
+                src={userUpdate.profileImg || "/avatar.png"}  // Default to "/avatar.png" if no profile image
+                alt="Profile picture"
+                width={400}
+                height={400}
+            />
+            </div>
+        
+            <form onSubmit={handleSubmit}>
+                <input id="img" name="img" type="file" onChange={handleFileChange} accept="image/*"/>
+                <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction type="submit" disabled={loading}>
+                        {loading ? "Uploading..." : "Subir Imagen de Perfil"}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </form>
+
         </AlertDialogContent>
         </AlertDialog>
+        </>
     );
 }
 
