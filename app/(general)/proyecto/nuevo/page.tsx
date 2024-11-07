@@ -294,13 +294,19 @@ export default function CreateProjectForm() {
                     />
                 }
                 <h1 className="font-bold text-2xl my-2" >{project.name}</h1>
+                {project.location &&
+                    <p><strong>Ubicación:</strong> {project.location}</p>
+                }
+                {project.investment_goal !== 0 &&
+                    <p className="mt-2"><strong>Meta de Recaudación:</strong> L {project.investment_goal}</p>
+                }
                 {project.start_date &&
                     <p><strong>Fecha de Inicio:</strong> {project.start_date}</p>
                 }
                 {project.expected_finish_date &&
                     <p><strong>Fecha de Finalización:</strong> {project.expected_finish_date}</p>
                 }
-                <p>{project.description}</p>
+                <p className="mt-2">{project.description}</p>
             </div>
         </div>
     );

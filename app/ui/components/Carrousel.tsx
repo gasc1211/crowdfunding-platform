@@ -8,33 +8,6 @@ import {
     CarouselItem,
 } from "@/components/ui/carousel";
 
-// interface SlideData {
-//     imageUrl: string;
-//     title: string;
-//     description: string;
-// }
-
-// const slides: SlideData[] = [
-//     {
-//         imageUrl: "/banner.jpg",
-//         title: "Proyecto 1",
-//         description:
-//             "Discover the wonders of nature with our breathtaking views.",
-//     },
-//     {
-//         imageUrl: "/banner2.png",
-//         title: "Proyecto 2",
-//         description:
-//             "Experience the vibrant nightlife of bustling metropolises.",
-//     },
-//     {
-//         imageUrl: "/banner3.png",
-//         title: "Proyecto 3",
-//         description:
-//             "Relax and unwind on pristine shores with crystal-clear waters.",
-//     },
-// ];
-
 export default function ResponsiveCarousel({ projects }: { projects: Project[] }) {
 
     const [currentSlide, setCurrentSlide] = useState(0);
