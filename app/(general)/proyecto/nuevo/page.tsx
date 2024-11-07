@@ -1,5 +1,6 @@
 "use client";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -152,55 +153,51 @@ export default function CreateProjectForm() {
     };
 
     return (
-        <>
-            <br />
-            <br />
-            <br />
-            <br />
-            <Card className="w-full max-w-2xl mx-auto">
-                <CardHeader>
-                    <CardTitle>Crear Un Nuevo Proyecto</CardTitle>
-                    <CardDescription>
-                        Llene Los Campos Que Acontinuación Se Presentan Para
-                        Crear Un Nuevo Proyecto
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Nombre del Proyecto</Label>
-                            <Input
-                                id="name"
-                                name="name"
-                                value={project.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Descripción</Label>
-                            <Textarea
-                                id="description"
-                                name="description"
-                                value={project.description ?? ""}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="start_date">
-                                Subir un ilustrativo
-                            </Label>
-                            <Input
-                                id="img"
-                                name="img"
-                                type="file"
-                                className="cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                                onChange={handleFileChange}
-                                accept="image/*"
-                            />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
+        <div className="flex mt-12 items-stretch justify-around">
+            <div className=" p-2">
+                <Card className="w-full max-w-2xl mx-auto">
+                    <CardHeader>
+                        <CardTitle>Crear Un Nuevo Proyecto</CardTitle>
+                        <CardDescription>
+                            Llene Los Campos Que Acontinuación Se Presentan Para
+                            Crear Un Nuevo Proyecto
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="name">Nombre del Proyecto</Label>
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    value={project.name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="description">Descripción</Label>
+                                <Textarea
+                                    id="description"
+                                    name="description"
+                                    value={project.description ?? ""}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="start_date">
+                                    Subir un ilustrativo
+                                </Label>
+                                <Input
+                                    id="img"
+                                    name="img"
+                                    type="file"
+                                    className="cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                                    onChange={handleFileChange}
+                                    accept="image/*"
+                                />
+                            </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="start_date">
@@ -217,7 +214,7 @@ export default function CreateProjectForm() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="expected_finish_date">
-                                        Ficha Final Proyectada
+                                        Fecha de Finalización
                                     </Label>
                                     <Input
                                         id="expected_finish_date"
@@ -231,62 +228,80 @@ export default function CreateProjectForm() {
                                     />
                                 </div>
                             </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="investment_goal">
+                                        Meta de Inversión
+                                    </Label>
+                                    <Input
+                                        id="investment_goal"
+                                        name="investment_goal"
+                                        type="number"
+                                        step="1.0"
+                                        value={project.investment_goal}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="total_invested">
+                                        Inversión Inicial
+                                    </Label>
+                                    <Input
+                                        id="total_invested"
+                                        name="total_invested"
+                                        type="number"
+                                        step="1.0"
+                                        value={project.total_invested}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
                             <div className="space-y-2">
-                                <Label htmlFor="investment_goal">
-                                    Meta de Inversión
-                                </Label>
+                                <Label htmlFor="progress">Progreso de Recaudación (%)</Label>
                                 <Input
-                                    id="investment_goal"
-                                    name="investment_goal"
-                                    type="number"
-                                    step="1.0"
-                                    value={project.investment_goal}
+                                    value={project.progress?.toFixed(2)}
+                                    readOnly
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="location">Ubicación</Label>
+                                <Input
+                                    id="location"
+                                    name="location"
+                                    value={project.location ?? ""}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="total_invested">
-                                    Inversión Inicial
-                                </Label>
-                                <Input
-                                    id="total_invested"
-                                    name="total_invested"
-                                    type="number"
-                                    step="1.0"
-                                    value={project.total_invested}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="progress">Progreso de Recaudación (%)</Label>
-                            <Input
-                                value={project.progress?.toFixed(2)}
-                                readOnly
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="location">Ubicación</Label>
-                            <Input
-                                id="location"
-                                name="location"
-                                value={project.location ?? ""}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <CardFooter className="px-0">
-                            <Button type="submit" disabled={loading}>
-                                {loading ? "Creating..." : "Crear Proyecto"}
-                            </Button>
-                        </CardFooter>
-                    </form>
-                </CardContent>
-            </Card>
-        </>
+                            <CardFooter className="px-0">
+                                <Button type="submit" disabled={loading}>
+                                    {loading ? "Creating..." : "Crear Proyecto"}
+                                </Button>
+                            </CardFooter>
+                        </form>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="w-1/2 p-2">
+                {bannerFile &&
+                    <Image
+                        className="w-full h-1/3 object-cover rounded-md"
+                        src={URL.createObjectURL(bannerFile)}
+                        alt="Project Profile Photo"
+                        width={500} height={100}
+                    />
+                }
+                <h1 className="font-bold text-2xl my-2" >{project.name}</h1>
+                {project.start_date &&
+                    <p><strong>Fecha de Inicio:</strong> {project.start_date}</p>
+                }
+                {project.expected_finish_date &&
+                    <p><strong>Fecha de Finalización:</strong> {project.expected_finish_date}</p>
+                }
+                <p>{project.description}</p>
+            </div>
+        </div>
     );
 }

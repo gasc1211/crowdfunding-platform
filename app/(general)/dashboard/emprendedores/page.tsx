@@ -28,7 +28,7 @@ export default function Dashboard() {
         // Fetch projects for the logged-in user using their user_id
         const userProjects = await getUserProjects(data.user_id);
 
-        const randomProjects = userProjects.sort(()=> 0.5 - Math.random()).slice(0,3)
+        const randomProjects = userProjects.sort(() => 0.5 - Math.random()).slice(0, 3)
         setProjects(randomProjects);
 
 
@@ -49,7 +49,7 @@ export default function Dashboard() {
 
   return (
     <>
-    <br /><br />
+      <br /><br />
       <div className="mx-auto">
         <div className="relative h-[20vh] overflow-hidden m-5">
           <Image
@@ -81,7 +81,7 @@ export default function Dashboard() {
                 <br />
                 <div className="flex flex-col gap-4 w-full">
                   <Button className="w-full">
-                    <div><Link href={'/proyecto/form'}>Crear Nuevo Proyecto</Link></div>
+                    <div><Link href={'/proyecto/nuevo'}>Crear Nuevo Proyecto</Link></div>
                   </Button>
                   <Button className="w-full">
                     <div> Ver Proyectos Completados </div>
@@ -112,7 +112,7 @@ export default function Dashboard() {
                     <div className="flex justify-start">
 
                       <Details key={project.project_id} project={project} />
-                      
+
                     </div>
                   </div>
                 ))}
