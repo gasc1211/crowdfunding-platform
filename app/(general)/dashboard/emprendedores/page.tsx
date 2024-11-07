@@ -61,7 +61,7 @@ export default function Dashboard() {
             priority
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-xl">
-            <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {userData?.first_name}</h1>
+            <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard</h1>
           </div>
         </div>
       </div>
@@ -74,9 +74,7 @@ export default function Dashboard() {
             <CardContent className="flex flex-col items-center">
               <div key={userData.auth_id} className="flex flex-col items-center">
                 <ProfileImageUpload />
-                <h2 className="text-2xl font-bold mb-2 text-center">{userData.first_name}</h2>
-                <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(new Date(userData.birth_date!))} Años</p>
-                <br />
+                <h2 className="text-2xl font-bold mb-2 text-center">{`${userData?.first_name} ${userData?.last_name}`}</h2>
                 <p className="text-center">{userData.email}</p>
                 <br />
                 <div className="flex flex-col gap-4 w-full">
