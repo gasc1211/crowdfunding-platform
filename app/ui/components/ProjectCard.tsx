@@ -11,7 +11,7 @@ export default function ProjectCard({ project }: { project: Project }) {
     return (
         <Card className="flex flex-col md:flex-row items-center p-4 mb-4">
             <Image
-                src=""
+                src={project.project_banner_url || "/avatar.png"}
                 alt={project.name}
                 className="w-full md:w-40 h-auto md:h-28 rounded-md mb-4 md:mb-0 md:mr-4"
                 width={100}

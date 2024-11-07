@@ -9,6 +9,7 @@ import { getUserData, getUserProjects } from "@/app/api/handler"
 import { calculateAge } from "@/app/api/edad";
 import Details from "@/app/ui/components/Details";
 import Link from "next/link";
+import ProfileImageUpload from "@/app/ui/components/ProfileImageUpload";
 
 
 export default function Dashboard() {
@@ -21,7 +22,7 @@ export default function Dashboard() {
       try {
         console.log("Fetching user data..."); // Debugging line
         const data = await getUserData();
-        console.log("User Data:", data); // Log the fetched data
+        //console.log("User Data:", data); // Log the fetched data
         setUserData(data);
 
         // Fetch projects for the logged-in user using their user_id
@@ -72,16 +73,9 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent className="flex flex-col items-center">
               <div key={userData.auth_id} className="flex flex-col items-center">
-                <div className="relative w-32 h-32 mb-4 mx-auto">
-                  <Image
-                    src="/avatar.png"
-                    alt="Profile picture"
-                    fill
-                    className="rounded-full object-cover"
-                  />
-                </div>
+                <ProfileImageUpload />
                 <h2 className="text-2xl font-bold mb-2 text-center">{userData.first_name}</h2>
-                <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(new Date(userData.birth_date!))}</p>
+                <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(new Date(userData.birth_date!))} Años</p>
                 <br />
                 <p className="text-center">{userData.email}</p>
                 <br />

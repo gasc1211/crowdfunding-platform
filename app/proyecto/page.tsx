@@ -9,7 +9,7 @@ export default function DetalleProyecto({ params }: { params: { id: string } }) 
             <div className="h-screen">
                 <Banner />
                 <main className="flex-grow container mx-auto p-4 md:flex md:space-x-4">
-                    <Sidebar name="Contactar al Productor" url="" />
+                    <Sidebar />
                     <ProjectDetails />
                 </main>
             </div>

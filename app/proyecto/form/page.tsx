@@ -264,7 +264,7 @@ export default function CreateProjectForm() {
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="progress">Progreso (%)</Label>
+                            <Label htmlFor="progress">Progreso de Recaudación (%)</Label>
                             <Input
                                 value={project.progress?.toFixed(2)}
                                 readOnly
