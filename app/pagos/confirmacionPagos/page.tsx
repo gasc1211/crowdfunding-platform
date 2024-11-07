@@ -16,7 +16,7 @@ export default function Confirmacion() {
   const cardNumber = searchParams.get('cardNumber') || 'XXXX'
 
   const handleReturn = () => {
-    router.push('/dashboard')
+    router.push('/dashboard/profileInversor')
   }
 
   return (
