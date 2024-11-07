@@ -16,22 +16,22 @@ interface SlideData {
 
 const slides: SlideData[] = [
     {
-        imageUrl: "/banner.jpg",
+        imageUrl: "/carousel.jpg",
         title: "Proyecto 1",
         description:
-            "Discover the wonders of nature with our breathtaking views.",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam.",
     },
     {
-        imageUrl: "/banner2.png",
+        imageUrl: "/carousel.jpg",
         title: "Proyecto 2",
         description:
-            "Experience the vibrant nightlife of bustling metropolises.",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam.",
     },
     {
-        imageUrl: "/banner3.png",
+        imageUrl: "/carousel.jpg",
         title: "Proyecto 3",
         description:
-            "Relax and unwind on pristine shores with crystal-clear waters.",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam.",
     },
 ];
 
