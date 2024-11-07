@@ -55,7 +55,7 @@ export default function Sidebar() {
                 <br />
                 <div className="flex flex-col gap-4 w-full">
                   <Button className="w-full">
-                    <div><Link href={'/proyecto/form'}>Crear Nuevo Proyecto</Link></div>
+                    <div><Link href={'/dashboard/inversor'}>Ver Proyectos</Link></div>
                   </Button>
                   <Button className="w-full">
                     <div> Ver Proyectos Completados </div>
