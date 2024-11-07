@@ -27,8 +27,6 @@ export default function HomePage() {
         fetchProjectsData();
     }, [featuredProjects]);
 
-    // console.log("featuredProjects");.error)(
-
     return (
         <>
             <Navbar />

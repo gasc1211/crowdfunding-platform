@@ -1,5 +1,4 @@
 import Link from "next/link";
-// import { apfel_fett } from "./ui/fonts";
 import Navbar from "./ui/components/Navbar";
 
 export default function NotFound() {
