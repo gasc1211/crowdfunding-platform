@@ -8,34 +8,35 @@ import {
     CarouselItem,
 } from "@/components/ui/carousel";
 
-interface SlideData {
-    imageUrl: string;
-    title: string;
-    description: string;
-}
+// interface SlideData {
+//     imageUrl: string;
+//     title: string;
+//     description: string;
+// }
 
-const slides: SlideData[] = [
-    {
-        imageUrl: "/banner.jpg",
-        title: "Proyecto 1",
-        description:
-            "Discover the wonders of nature with our breathtaking views.",
-    },
-    {
-        imageUrl: "/banner2.png",
-        title: "Proyecto 2",
-        description:
-            "Experience the vibrant nightlife of bustling metropolises.",
-    },
-    {
-        imageUrl: "/banner3.png",
-        title: "Proyecto 3",
-        description:
-            "Relax and unwind on pristine shores with crystal-clear waters.",
-    },
-];
+// const slides: SlideData[] = [
+//     {
+//         imageUrl: "/banner.jpg",
+//         title: "Proyecto 1",
+//         description:
+//             "Discover the wonders of nature with our breathtaking views.",
+//     },
+//     {
+//         imageUrl: "/banner2.png",
+//         title: "Proyecto 2",
+//         description:
+//             "Experience the vibrant nightlife of bustling metropolises.",
+//     },
+//     {
+//         imageUrl: "/banner3.png",
+//         title: "Proyecto 3",
+//         description:
+//             "Relax and unwind on pristine shores with crystal-clear waters.",
+//     },
+// ];
 
-export default function ResponsiveCarousel() {
+export default function ResponsiveCarousel({ projects }: { projects: Project[] }) {
+
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const goToSlide = useCallback((event: React.SyntheticEvent) => {
@@ -45,12 +46,12 @@ export default function ResponsiveCarousel() {
     }, []);
 
     const goToPrevSlide = useCallback(() => {
-        setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    }, []);
+        setCurrentSlide((prev) => (prev - 1 + projects.length) % projects.length);
+    }, [projects.length]);
 
     const goToNextSlide = useCallback(() => {
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, []);
+        setCurrentSlide((prev) => (prev + 1) % projects.length);
+    }, [projects.length]);
 
     useEffect(() => {
         const interval = setInterval(goToNextSlide, 5000);
@@ -66,22 +67,22 @@ export default function ResponsiveCarousel() {
                         transition: "transform 0.5s ease",
                     }}
                 >
-                    {slides.map((slide, index) => (
+                    {projects.map((project, index) => (
                         <CarouselItem key={index}>
                             <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
                                 <Image
-                                    src={slide.imageUrl}
-                                    alt={slide.title}
+                                    src={project!.project_banner_url as string}
+                                    alt={project.name}
                                     fill
                                     className="object-cover"
                                     priority={index === 0}
                                 />
                                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 sm:p-6 md:p-8">
                                     <h2 className="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2">
-                                        {slide.title}
+                                        {project.name}
                                     </h2>
                                     <p className="text-white text-sm sm:text-base md:text-lg">
-                                        {slide.description}
+                                        {project.description}
                                     </p>
                                 </div>
                             </div>
@@ -108,16 +109,15 @@ export default function ResponsiveCarousel() {
 
             {/* Position Indicators */}
             <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-2">
-                {slides.map((_, index) => (
+                {projects.map((_, index) => (
                     <button
                         key={index}
                         onClick={goToSlide}
                         data-index={index}
-                        className={`w-3 h-3 rounded-full transition-colors ${
-                            currentSlide === index
-                                ? "bg-white"
-                                : "bg-white/50 hover:bg-white/75"
-                        }`}
+                        className={`w-3 h-3 rounded-full transition-colors ${currentSlide === index
+                            ? "bg-white"
+                            : "bg-white/50 hover:bg-white/75"
+                            }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />
                 ))}

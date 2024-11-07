@@ -1,14 +1,34 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+
 import { apfel_regular, ortica } from "./ui/fonts";
 import Cartas from "./ui/components/Cartas";
 import Footer from "./ui/components/Footer";
 import Navbar from "./ui/components/Navbar";
-// import Mision from "./ui/components/Mision";
 import Carrousel from "./ui/components/Carrousel";
+import { createClient } from "@/utils/supabase/client";
 
 export default function HomePage() {
+
+    const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
+
+    useEffect(() => {
+        const fetchProjectsData = async () => {
+            // Fetch projects data in the format required for the carrousel
+            const supabase = createClient();
+            const result = await supabase.from("projects").select("*").limit(3);
+
+            // Set projects data if succesfully fetched
+            if (!result.error) setFeaturedProjects(result.data as Project[]);
+        };
+
+        fetchProjectsData();
+    }, [featuredProjects]);
+
+    // console.log("featuredProjects");.error)(
+
     return (
         <>
             <Navbar />
@@ -64,7 +84,7 @@ export default function HomePage() {
                         </div>
                     </div>
                     <div className="mt-10">
-                        <Carrousel />
+                        <Carrousel projects={featuredProjects} />
                     </div>
                     <div>
                         <Cartas />
