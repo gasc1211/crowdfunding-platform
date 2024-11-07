@@ -9,6 +9,7 @@ import { getUserData, getUserProjects } from "@/app/api/handler"
 import { calculateAge } from "@/app/api/edad";
 import Details from "@/app/ui/components/Details";
 import Link from "next/link";
+import ProfileImageUpload from "@/app/ui/components/ProfileImageUpload";
 
 
 export default function Dashboard() {
@@ -73,8 +74,8 @@ export default function Dashboard() {
             <CardContent className="flex flex-col items-center">
               <div key={userData.auth_id} className="flex flex-col items-center">
                 <div className="relative w-32 h-32 mb-4 mx-auto">
-                  <Image
-                    src="/avatar.png"
+                <Image
+                    src={userData.profileImg || "/avatar.png"}  // Default to "/avatar.png" if no profile image
                     alt="Profile picture"
                     fill
                     className="rounded-full object-cover"
@@ -133,6 +134,7 @@ export default function Dashboard() {
           </Card>
         </div>
       </div>
+      <ProfileImageUpload />
     </>
   )
 }
