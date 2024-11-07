@@ -1,3 +1,4 @@
+//app/api/handler.ts
 'use server'
 
 import { createClient } from '@/utils/supabase/client'
@@ -30,8 +31,6 @@ export async function getUserData() {
   return data
 }
 
-// In app/api/handler.ts
-
 export async function getUserProjects(userId: string) {
   const supabase = createClient();
 
@@ -39,7 +38,7 @@ export async function getUserProjects(userId: string) {
   const { data, error } = await supabase
     .from('projects')
     .select('*')
-    .eq('producer_id', userId); // Filter by the producer's user_id
+    .eq('producer_id', userId); 
 
   if (error) {
     console.error('Error fetching user projects:', error);
@@ -67,14 +66,12 @@ export async function getAllProjects() {
 
 
 export async function getUserId() {
-  // Get the user's Clerk session
   const { userId }: { userId: string | null } = await auth()
   if (!userId) {
     throw new Error('Not authenticated')
   }
 
 
-  // Query Supabase for the user's data
   const { data, error } = await supabase
     .from('users')
     .select('user_id')
@@ -96,7 +93,7 @@ export async function getCategories() {
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from('categories')  // Asumiendo que tienes una tabla 'categories'
+    .from('categories') 
     .select('*')
     .order('name');
 
@@ -106,4 +103,40 @@ export async function getCategories() {
   }
 
   return data;
+}
+
+export async function getProjectsByCategory(categoryId: string) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select(`
+        project_id,
+        producer_id,
+        project_banner_url,
+        name,
+        description,
+        start_date,
+        expected_finish_date,
+        finish_date,
+        progress,
+        investment_goal,
+        total_invested,
+        location,
+        project_categories!inner(category_id)
+    `)
+    .eq('project_categories.category_id', categoryId);
+
+  if (error) {
+    console.error('Error fetching projects by category:', error);
+    throw new Error('Failed to fetch projects by category');
+  }
+
+  // Map the data to ensure category_id is included
+  const mappedData = data.map((project) => ({
+    ...project,
+    category_id: categoryId, // Add the category_id to each project
+  }));
+
+  return mappedData;
 }
