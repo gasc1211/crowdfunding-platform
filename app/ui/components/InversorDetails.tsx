@@ -1,10 +1,26 @@
+'use client'
+
 import { Card } from "@/components/ui/card";
 import { CardHeader } from "@/components/ui/card";
 import { CardTitle } from "@/components/ui/card";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export default function InversorDetails() {
+
+export default function InversorDetails({ projects }: {projects: Project[]}) {
+
+    // Sum the total_invested values from all projects
+    const totalInvested = projects.reduce((acc, project) => acc + (project.total_invested || 0), 0);
+
+
+    // Count the number of projects where progress is not 100
+    const projectsInProgress = projects.filter(project => project.progress !== 100).length;
+
+    // Count the number of projects where progress is  100
+    const projectsCompleted = projects.filter(project => project.progress == 100).length;
+  
+
+
     return (
         <main className="md:col-span-3">
             <h2 className="text-2xl font-bold mb-4">Resumen de inversiones</h2>
@@ -17,7 +33,7 @@ export default function InversorDetails() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-orange-500 place-self-center">
-                            11
+                            {projects.length}
                         </div>
                     </CardContent>
                 </Card>
@@ -29,7 +45,7 @@ export default function InversorDetails() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-orange-500 place-self-center">
-                            $ 300.00
+                            $ {totalInvested.toFixed(2)}
                         </div>
                     </CardContent>
                 </Card>
@@ -59,7 +75,7 @@ export default function InversorDetails() {
                             su meta para ser completados.
                         </p>
                         <div className="text-4xl font-bold text-orange-500 mb-4 place-self-center">
-                            5
+                            {projectsInProgress}
                         </div>
                         <div className="place-self-center">
                             <Button className="bg-orange-500 hover:bg-orange-600" variant="outline">Más detalles</Button>
@@ -76,7 +92,7 @@ export default function InversorDetails() {
                             realizó inversión.
                         </p>
                         <div className="text-4xl font-bold text-orange-500 mb-4 place-self-center">
-                            6
+                            {projectsCompleted}
                         </div>
                         <div className="place-self-center">
                             <Button className="bg-orange-500 hover:bg-orange-600" variant="outline">Más detalles</Button>
