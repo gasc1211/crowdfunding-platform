@@ -121,7 +121,7 @@ export default function Dashboard() {
             <br />
             <CardFooter>
               <Button variant="outline" className="w-full">
-                <ChevronRight className="mr-2 h-4 w-4" /> Ver todos los Proyectos
+                <ChevronRight className="mr-2 h-4 w-4" /> <Link href="/dashboard/emprendedores/proyectosEmprendedor">Ver Todos Los Proyectos</Link>
               </Button>
             </CardFooter>
           </Card>
