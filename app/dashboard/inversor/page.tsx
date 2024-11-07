@@ -1,9 +1,10 @@
-'use client'
+'use client';
+
 import { useEffect, useState } from "react";
 import Hero from "@/app/ui/components/Hero";
 import ProjectCard from "@/app/ui/components/ProjectCard";
 import { Input } from "@/components/ui/input";
-import { getAllProjects, getCategories } from "@/app/api/handler";
+import { getAllProjects, getCategories, getProjectsByCategory } from "@/app/api/handler";  // make sure to import getProjectsByCategory
 
 interface Project {
   project_id: string;
@@ -37,6 +38,7 @@ export default function InversorDashboard() {
     const [loading, setLoading] = useState(true);
     const projectsPerPage = 6;
 
+    // Fetching initial data for projects and categories
     useEffect(() => {
         async function fetchData() {
             try {
@@ -47,7 +49,7 @@ export default function InversorDashboard() {
                 setProjects(allProjects);
                 setCategories(allCategories);
             } catch (err) {
-                console.error(err);
+                console.error('Fetch error:', err);
                 if (err instanceof Error) {
                     setError(err);
                 } else {
@@ -60,20 +62,54 @@ export default function InversorDashboard() {
 
         fetchData();
     }, []);
+    
 
-    // Filtrado de proyectos por búsqueda y categoría
+    // Filtering projects based on selected category
+    useEffect(() => {
+        async function fetchFilteredProjects() {
+            try {
+                setLoading(true);
+                if (selectedCategory) {
+                    const projectsByCategory = await getProjectsByCategory(selectedCategory);
+                    setProjects(projectsByCategory);
+                } else {
+                    const allProjects = await getAllProjects();
+                    setProjects(allProjects);
+                }
+            } catch (err) {
+                console.error('Fetch error:', err);
+                setError(err instanceof Error ? err : new Error("Unknown error occurred"));
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchFilteredProjects();
+    }, [selectedCategory]);  // Dependency array includes selectedCategory
+
+    // Reset pagination when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedCategory, searchTerm]);
+
+    // Filtering projects by search term
     const filteredProjects = projects.filter(project => {
         const matchesSearch = 
             project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.location.toLowerCase().includes(searchTerm.toLowerCase());
         
-        const matchesCategory = selectedCategory ? project.category_id === selectedCategory : true;
+        // Only filter by category if one is selected
+        if (!selectedCategory) return matchesSearch;
         
-        return matchesSearch && matchesCategory;
+        // Ensure both values are strings and trim any whitespace
+        const projectCategoryId = String(project.category_id).trim();
+        const selectedCategoryId = String(selectedCategory).trim();
+        
+        return matchesSearch && projectCategoryId === selectedCategoryId;
     });
 
-    // Paginación
+    // Pagination
     const indexOfLastProject = currentPage * projectsPerPage;
     const indexOfFirstProject = indexOfLastProject - projectsPerPage;
     const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
@@ -86,7 +122,6 @@ export default function InversorDashboard() {
             <main className="flex-grow">
                 <div className="relative">
                     <Hero />
-                    {/* Barra de búsqueda y filtros superpuestos en Hero */}
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-8 w-full max-w-4xl mx-auto px-4">
                         <div className="flex items-center justify-center gap-4">
                             <div className="relative w-96">
@@ -114,15 +149,19 @@ export default function InversorDashboard() {
                                 </button>
                             </div>
                             
-                            {/* Selector de categorías */}
                             <select
                                 className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
                                 value={selectedCategory}
-                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                onChange={(e) => {
+                                    setSelectedCategory(e.target.value);
+                                }}
                             >
                                 <option value="">Todas las categorías</option>
                                 {categories.map((category) => (
-                                    <option key={category.category_id} value={category.category_id}>
+                                    <option 
+                                        key={category.category_id} 
+                                        value={category.category_id}
+                                    >
                                         {category.name}
                                     </option>
                                 ))}
@@ -138,7 +177,6 @@ export default function InversorDashboard() {
                         </div>
                     ) : (
                         <>
-                            {/* Grid de proyectos */}
                             <div className="grid gap-6">
                                 {currentProjects.map((project) => (
                                     <ProjectCard
@@ -148,14 +186,12 @@ export default function InversorDashboard() {
                                 ))}
                             </div>
 
-                            {/* Mensaje cuando no hay resultados */}
                             {currentProjects.length === 0 && (
                                 <div className="text-center py-10">
                                     <p className="text-gray-500">No se encontraron proyectos que coincidan con tu búsqueda</p>
                                 </div>
                             )}
 
-                            {/* Paginación */}
                             {totalPages > 1 && (
                                 <div className="flex justify-center mt-6 gap-2">
                                     {Array.from({ length: totalPages }).map((_, index) => (
