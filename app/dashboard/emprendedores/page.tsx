@@ -1,32 +1,41 @@
 "use client";
+
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { getUserData, getUserProjects } from "@/app/api/handler"
+import { getUserData, getUserProjects, getProductorData } from "@/app/api/handler"
 import { calculateAge } from "@/app/api/edad";
 import Details from "@/app/ui/components/Details";
 import Link from "next/link";
 import ProfileImageUpload from "@/app/ui/components/ProfileImageUpload";
-
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const [userData, setUserData] = useState<Users | null>(null);
   const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
   const [projects, setProjects] = useState<Project[]>([]); // State to store projects
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
       try {
         console.log("Fetching user data..."); // Debugging line
         const data = await getUserData();
-        //console.log("User Data:", data); // Log the fetched data
+
+        const producer = await getProductorData(data.user_id);
+        console.log(producer)
+        if (producer.length == 0) {
+          return router.push('/productor/editar');
+        }
+
         setUserData(data);
 
         // Fetch projects for the logged-in user using their user_id
         const userProjects = await getUserProjects(data.user_id);
+
 
         const randomProjects = userProjects.sort(()=> 0.5 - Math.random()).slice(0,3)
         setProjects(randomProjects);
@@ -80,6 +89,9 @@ export default function Dashboard() {
                 <p className="text-center">{userData.email}</p>
                 <br />
                 <div className="flex flex-col gap-4 w-full">
+                  <Button className="w-full bg-[#10b981] hover:bg-emerald-600	">
+                    <div><Link href={'/productor/editar'}>Edita tu perfil de productor</Link></div>
+                  </Button>
                   <Button className="w-full">
                     <div><Link href={'/proyecto/form'}>Crear Nuevo Proyecto</Link></div>
                   </Button>

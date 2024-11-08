@@ -30,6 +30,27 @@ export async function getUserData() {
   return data
 }
 
+//Obtener perfil de productor
+export async function getProductorData( userId: string ) { 
+  // Query Supabase
+  const { data, error } = await supabase
+    .from('producer')
+    .select()
+    .eq('user_id', userId)
+  
+  if (error) {
+    console.error('Error fetching user data:', error)
+    throw new Error('Failed to fetch user data')
+  }
+
+  // Verificar si el usuario no existe en la tabla
+  if (!data || data.length === 0) {
+    console.warn('User does not exist in the producer table');
+  }
+
+  return data
+}
+
 export async function getInversorData() {
   // Get the user's Clerk session
   const { userId }: { userId: string | null } = await auth()
@@ -148,4 +169,76 @@ export async function getNumberProjects(userId: string) {
   }
 
   return data.length;
+}
+
+export async function getImageProfileUrl(bannerFile : File | null){
+  if (bannerFile) {
+    // Reemplazar espacios y caracteres especiales en el nombre del archivo
+    // Normalizar el nombre del archivo eliminando espacios y caracteres especiales
+    const sanitizedFileName = bannerFile.name
+        .normalize("NFD") // Descompone caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, "") // Elimina los acentos
+        .replace(/\s+/g, "_") // Reemplaza espacios con guiones bajos
+        .replace(/[^a-zA-Z0-9._-]/g, ""); // Elimina caracteres no permitidos
+
+    // Sube la imagen al bucket de Supabase
+    const { error: uploadError } = await supabase.storage
+        .from("Images_Projects")
+        .upload(`profiles/${sanitizedFileName}`, bannerFile);
+
+    if (uploadError) {
+        console.error("Error al subir la imagen:", uploadError.message);
+        return;
+    }
+
+    // Obtener la URL pública de la imagen
+    const { data: urlData } = supabase.storage
+        .from("Images_Projects")
+        .getPublicUrl(`profiles/${sanitizedFileName}`);
+
+    const projectBannerUrl = urlData?.publicUrl || "";
+    console.log(projectBannerUrl);
+
+    if (!projectBannerUrl) {
+        console.error("Error: No se pudo obtener la URL de la imagen");
+        return;
+    }
+    return projectBannerUrl;
+}
+}
+
+export async function getBannerProfileUrl(bannerFile : File | null){
+  if (bannerFile) {
+    // Reemplazar espacios y caracteres especiales en el nombre del archivo
+    // Normalizar el nombre del archivo eliminando espacios y caracteres especiales
+    const sanitizedFileName = bannerFile.name
+        .normalize("NFD") // Descompone caracteres acentuados
+        .replace(/[\u0300-\u036f]/g, "") // Elimina los acentos
+        .replace(/\s+/g, "_") // Reemplaza espacios con guiones bajos
+        .replace(/[^a-zA-Z0-9._-]/g, ""); // Elimina caracteres no permitidos
+
+    // Sube la imagen al bucket de Supabase
+    const { error: uploadError } = await supabase.storage
+        .from("Images_Projects")
+        .upload(`profiles/${sanitizedFileName}`, bannerFile);
+
+    if (uploadError) {
+        console.error("Error al subir la imagen:", uploadError.message);
+        return;
+    }
+
+    // Obtener la URL pública de la imagen
+    const { data: urlData } = supabase.storage
+        .from("Images_Projects")
+        .getPublicUrl(`profiles/${sanitizedFileName}`);
+
+    const projectBannerUrl = urlData?.publicUrl || "";
+    console.log(projectBannerUrl);
+
+    if (!projectBannerUrl) {
+        console.error("Error: No se pudo obtener la URL de la imagen");
+        return;
+    }
+    return projectBannerUrl;
+}
 }
