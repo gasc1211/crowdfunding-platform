@@ -1,5 +1,5 @@
-import { apfel_fett } from "../ui/fonts";
 import Link from "next/link";
+import { apfel_fett } from "../../ui/fonts";
 
 export default function AuthLayout({
   children,
