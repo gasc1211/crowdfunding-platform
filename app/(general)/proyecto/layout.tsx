@@ -4,7 +4,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <div>
             <NavbarUsers />
-            <div className="flex-grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+            <div className="flex-grow md:overflow-y-auto mt-20">{children}</div>
         </div>
 
     );

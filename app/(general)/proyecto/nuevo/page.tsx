@@ -17,6 +17,12 @@ import { createClient } from "@/utils/supabase/client";
 import { getUserId } from "@/app/api/handler";
 import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
+import { Progress } from "@/components/ui/progress";
+
+const hnl = new Intl.NumberFormat('es-HN', {
+    style: "currency",
+    currency: "HNL"
+});
 
 export default function CreateProjectForm() {
     const router = useRouter();
@@ -153,14 +159,13 @@ export default function CreateProjectForm() {
     };
 
     return (
-        <div className="flex mt-12 items-stretch justify-around">
-            <div className=" p-2">
-                <Card className="w-full max-w-2xl mx-auto">
+        <div className="flex md:items-stretch md:justify-around flex-col md:flex-row mx-4 lg:mx-8 mb-8">
+            <div className="md:w-1/2">
+                <Card className="w-full max-w-2xl mx-auto m-0">
                     <CardHeader>
                         <CardTitle>Crear Un Nuevo Proyecto</CardTitle>
                         <CardDescription>
-                            Llene Los Campos Que Acontinuación Se Presentan Para
-                            Crear Un Nuevo Proyecto
+                            Llene los campos que a continuación se presentan:
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -259,13 +264,6 @@ export default function CreateProjectForm() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="progress">Progreso de Recaudación (%)</Label>
-                                <Input
-                                    value={project.progress?.toFixed(2)}
-                                    readOnly
-                                />
-                            </div>
-                            <div className="space-y-2">
                                 <Label htmlFor="location">Ubicación</Label>
                                 <Input
                                     id="location"
@@ -275,16 +273,16 @@ export default function CreateProjectForm() {
                                     required
                                 />
                             </div>
-                            <CardFooter className="px-0">
+                            <CardFooter className="p-0">
                                 <Button type="submit" disabled={loading}>
-                                    {loading ? "Creating..." : "Crear Proyecto"}
+                                    {loading ? "Creando Nuevo Proyecto..." : "Crear Proyecto"}
                                 </Button>
                             </CardFooter>
                         </form>
                     </CardContent>
                 </Card>
             </div>
-            <div className="w-1/2 p-2">
+            <div className="md:w-1/2 md:ml-6 mt-4 md:mt-0">
                 {bannerFile &&
                     <Image
                         className="w-full h-1/3 object-cover rounded-md"
@@ -293,12 +291,18 @@ export default function CreateProjectForm() {
                         width={500} height={100}
                     />
                 }
-                <h1 className="font-bold text-2xl my-2" >{project.name}</h1>
+                <h1 className="font-bold text-2xl mt-6" >{project.name}</h1>
+                {project.investment_goal != 0 &&
+                    <div className="mb-6 mt-4">
+                        <Progress value={project.progress} />
+                        <div className="flex mt-2">
+                            <p><strong>Actualmente: </strong> {hnl.format(project.total_invested as number)}</p>
+                            <p className="ml-auto"><strong>Meta: </strong> {hnl.format(project.investment_goal as number)}</p>
+                        </div>
+                    </div>
+                }
                 {project.location &&
                     <p><strong>Ubicación:</strong> {project.location}</p>
-                }
-                {project.investment_goal !== 0 &&
-                    <p className="mt-2"><strong>Meta de Recaudación:</strong> L {project.investment_goal}</p>
                 }
                 {project.start_date &&
                     <p><strong>Fecha de Inicio:</strong> {project.start_date}</p>
