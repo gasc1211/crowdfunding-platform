@@ -118,12 +118,12 @@ export default function ProfileImageUpload() {
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <button>
-                        <div className="relative w-32 h-32 mb-4 mx-auto">
+                        <div className="mb-4 mx-auto">
                             <Image
                                 src={user?.imageUrl ? user.imageUrl : (userUpdate.profileImg || "/avatar.png")}  // Default to "/avatar.png" if no profile image
                                 alt="Profile picture"
-                                sizes="(max-width: 768px) 50vw, 25vw"
-                                fill
+                                width={120}
+                                height={120}
                                 className="rounded-full object-cover"
                             />
                         </div>
