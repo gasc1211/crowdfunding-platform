@@ -32,9 +32,9 @@ export default function ResponsiveCarousel({ projects }: { projects: Project[] }
     }, [goToNextSlide]);
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full rounded-md px-6 mt-4">
             <Carousel className="w-full" onSelect={goToSlide}>
-                <CarouselContent
+                <CarouselContent className="rounded-3xl"
                     style={{
                         transform: `translateX(-${currentSlide * 100}%)`,
                         transition: "transform 0.5s ease",
@@ -47,10 +47,10 @@ export default function ResponsiveCarousel({ projects }: { projects: Project[] }
                                     src={project!.project_banner_url as string}
                                     alt={project.name}
                                     fill
-                                    className="object-cover"
+                                    className="object-cover rounded-3xl"
                                     priority={index === 0}
                                 />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 sm:p-6 md:p-8">
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 sm:p-6 md:p-8 rounded-3xl">
                                     <h2 className="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2">
                                         {project.name}
                                     </h2>
@@ -67,14 +67,14 @@ export default function ResponsiveCarousel({ projects }: { projects: Project[] }
             {/* Navigation Arrows */}
             <button
                 onClick={goToPrevSlide}
-                className="absolute top-1/2 left-4 transform -translate-y-1/2 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-colors"
+                className="absolute top-1/2 left-12 transform -translate-y-1/2 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-colors"
                 aria-label="Previous slide"
             >
                 <ChevronLeft className="w-6 h-6" />
             </button>
             <button
                 onClick={goToNextSlide}
-                className="absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-colors"
+                className="absolute top-1/2 right-12 transform -translate-y-1/2 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-colors"
                 aria-label="Next slide"
             >
                 <ChevronRight className="w-6 h-6" />

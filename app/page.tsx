@@ -18,7 +18,7 @@ export default function HomePage() {
         const fetchProjectsData = async () => {
             // Fetch projects data in the format required for the carrousel
             const supabase = createClient();
-            const result = await supabase.from("projects").select("*").limit(3);
+            const result = await supabase.from("projects").select("*").limit(5);
 
             // Set projects data if succesfully fetched
             if (!result.error) setFeaturedProjects(result.data as Project[]);
@@ -30,11 +30,10 @@ export default function HomePage() {
     return (
         <>
             <Navbar />
-            <br />
             <div className="min-h-full mt-10">
-                <main className="flex min-h-screen flex-col p-6">
+                <main className="flex min-h-screen flex-col p-8">
                     <div className="mx-4 flex grow flex-col gap-4 md:flex-row justify-between">
-                        <div className="flex flex-col justify-center gap-6 rounded-3xlpx-6 py-10 md:w-3/5 md:px-20 mx-4">
+                        <div className="flex flex-col justify-center gap-8 rounded-3xlpx-6 py-10 md:w-3/5 md:px-20 mx-4">
                             <div />
                             <p
                                 className={`${ortica.className} font-bold text-md md:text-2xl md:leading-normal`}
