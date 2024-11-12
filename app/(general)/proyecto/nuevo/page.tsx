@@ -149,7 +149,7 @@ export default function CreateProjectForm() {
                 console.log("Proyecto creado:", data);
             }
 
-            router.push("/dashboard/inversor"); // Redirect to projects list page
+            router.push("/dashboard/emprendedores/proyectosEmprendedor"); // Redirect to projects list page
         } catch (error) {
             console.error("Error creating project:", error);
             alert("Error creating project. Please try again.");

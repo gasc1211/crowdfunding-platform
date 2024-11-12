@@ -1,9 +1,17 @@
 /* import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Menu } from "lucide-react"; */
+import Image from "next/image";
+
+type HeroInversorProps = {
+    userName: string;
+};
 
 export default function Hero() {
     return (
+        <>
+        <br />
+        <br />
         <div
             className="bg-white py-12 px-4 z-0"
             style={{
@@ -19,10 +27,11 @@ export default function Hero() {
                 </p>
             </div>
         </div>
+        </>
     );
 }
 
-export function HeroInversor() {
+export function HeroInversor({userName}: HeroInversorProps) {
     return (
         <section
             className="relative h-64 bg-cover bg-center"
@@ -33,7 +42,7 @@ export function HeroInversor() {
             <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
                 <div className="text-center text-white">
                     <h1 className="text-4xl font-bold mb-2">
-                        ¡Bienvenido!
+                        ¡Bienvenido, Juan!
                     </h1>
                     <p className="text-xl">
                         ¿Listo para ayudar a crear un mejor futuro?
