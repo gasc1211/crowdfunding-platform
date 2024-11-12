@@ -49,48 +49,37 @@ export default function Dashboard() {
 
   return (
     <>
-      <br /><br />
-      <div className="mx-auto">
-        <div className="relative h-[20vh] overflow-hidden m-5">
-          <Image
-            src="/dashboard-plant2.png"
-            alt="Dashboard plant"
-            fill
-            className="object-cover rounded-xl"
-            sizes="100vw"
-            priority
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-xl">
+      <div className="w-full md:h-[75vh]">
+        {/* <div className="mx-auto">
+          <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/dashboard-plant2.png')] bg-cover">
             <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard</h1>
           </div>
-        </div>
-      </div>
-      <div className="container mx-auto p-4">
-        <div className="flex flex-col lg:flex-row justify-between gap-6">
-          <Card className="w-full lg:w-1/3">
-            <CardHeader className="text-center">
+        </div> */}
+        <div className="flex flex-col lg:flex-row justify-between mt-4">
+          <Card className="w-full lg:w-1/4 mr-4 md:mb-0 mb-4">
+            {/* <CardHeader className="text-center">
               <CardTitle>Perfil</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center">
-              <div key={userData.auth_id} className="flex flex-col items-center">
+            </CardHeader> */}
+            <CardContent className="flex flex-col items-center h-full mt-12">
+              <div key={userData.auth_id} className="flex flex-col items-center justify-between">
                 <ProfileImageUpload />
                 <h2 className="text-2xl font-bold mb-2 text-center">{`${userData?.first_name} ${userData?.last_name}`}</h2>
                 <p className="text-center">{userData.email}</p>
                 <br />
-                <div className="flex flex-col gap-4 w-full">
+                <div className="flex flex-col w-full [&>*]:mt-3">
                   <Button className="w-full">
-                    <div><Link href={'/proyecto/nuevo'}>Crear Nuevo Proyecto</Link></div>
+                    <Link href={'/proyecto/nuevo'}>Crear Nuevo Proyecto 🌱</Link>
                   </Button>
                   <Button className="w-full">
-                    <div> Ver Proyectos Completados </div>
+                    <Link href={'/proyecto/historial'}>Ver Proyectos Completados 🧑‍🌾</Link>
                   </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="w-full lg:w-3/5">
+          <Card className="w-full lg:w-3/4 h-full">
             <CardHeader>
-              <CardTitle>Proyectos en Desarrollo</CardTitle>
+              <CardTitle className="text-2xl font-bold">Proyectos en Desarrollo</CardTitle>
               <CardDescription>El Progreso de los Proyectos Actuales</CardDescription>
             </CardHeader>
             <CardContent>
