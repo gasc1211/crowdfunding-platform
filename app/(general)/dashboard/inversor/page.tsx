@@ -1,7 +1,5 @@
 'use client';
-
 import { useEffect, useState } from "react";
-import Hero from "@/app/ui/components/Hero";
 import ProjectCard from "@/app/ui/components/ProjectCard";
 import { Input } from "@/components/ui/input";
 import { getAllProjects, getCategories, getProjectsByCategory } from "@/app/api/handler";  // make sure to import getProjectsByCategory
@@ -62,7 +60,7 @@ export default function InversorDashboard() {
 
         fetchData();
     }, []);
-    
+
 
     // Filtering projects based on selected category
     useEffect(() => {
@@ -98,14 +96,14 @@ export default function InversorDashboard() {
             project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.location.toLowerCase().includes(searchTerm.toLowerCase());
-        
+
         // Only filter by category if one is selected
         if (!selectedCategory) return matchesSearch;
-        
+
         // Ensure both values are strings and trim any whitespace
         const projectCategoryId = String(project.category_id).trim();
         const selectedCategoryId = String(selectedCategory).trim();
-        
+
         return matchesSearch && projectCategoryId === selectedCategoryId;
 
         const matchesCategory = selectedCategory ? project.category_id === selectedCategory : true;

@@ -1,12 +1,10 @@
 "use client";
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { getUserData, getUserProjects } from "@/app/api/handler"
-import { calculateAge } from "@/app/api/edad";
 import Details from "@/app/ui/components/Details";
 import Link from "next/link";
 import ProfileImageUpload from "@/app/ui/components/ProfileImageUpload";

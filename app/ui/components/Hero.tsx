@@ -1,7 +1,6 @@
 /* import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Menu } from "lucide-react"; */
-import Image from "next/image";
 
 type HeroInversorProps = {
     userName: string;
@@ -10,28 +9,28 @@ type HeroInversorProps = {
 export default function Hero() {
     return (
         <>
-        <br />
-        <br />
-        <div
-            className="bg-white py-12 px-4 z-0"
-            style={{
-                backgroundImage: "url('/banner2.png')",
-            }}
-        >
-            <div className="container mx-auto text-center">
-                <h1 className="text-4xl font-bold mb-4">
-                    ¡Bienvenido!
-                </h1>
-                <p className="text-xl mb-8">
-                    Estos son los proyectos en los que puedes invertir
-                </p>
+            <br />
+            <br />
+            <div
+                className="bg-white py-12 px-4 z-0"
+                style={{
+                    backgroundImage: "url('/banner2.png')",
+                }}
+            >
+                <div className="container mx-auto text-center">
+                    <h1 className="text-4xl font-bold mb-4">
+                        ¡Bienvenido!
+                    </h1>
+                    <p className="text-xl mb-8">
+                        Estos son los proyectos en los que puedes invertir
+                    </p>
+                </div>
             </div>
-        </div>
         </>
     );
 }
 
-export function HeroInversor({userName}: HeroInversorProps) {
+export function HeroInversor({ userName }: HeroInversorProps) {
     return (
         <section
             className="relative h-64 bg-cover bg-center"
