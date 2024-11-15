@@ -1,7 +1,7 @@
-import { getUserData } from "../api/handler";
+import { getUserData } from "@/app/api/handler";
 
 
-export default async function Hello () {
+export default async function Hello() {
 
   const user = await getUserData()
 
