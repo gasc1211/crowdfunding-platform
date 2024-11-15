@@ -1,5 +1,6 @@
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function ProjectDetails() {
     return (
@@ -50,7 +51,7 @@ export default function ProjectDetails() {
                 </div>
                 <p className="mb-4">Fecha de cierre de inversión: 30/01/2025</p>
                 <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                    Invertir Ahora
+                    <Link href="/pagos/confirmacionPagos">Invertir Ahora</Link>
                 </Button>
             </div>
         </section>
