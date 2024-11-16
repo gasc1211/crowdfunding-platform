@@ -1,13 +1,17 @@
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function ProjectDetails() {
     return (
-        <section className="md:w-3/4">
-            <h1 className="text-2xl font-bold mb-4">
-                Creación de huerto comunitario
-            </h1>
+        <Card className="w-full lg:w-full h-full">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Proyectos en Desarrollo</CardTitle>
+          <CardDescription>El Progreso de los Proyectos Actuales</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-14">
             <div className="bg-white p-4 rounded-lg shadow">
                 <div className="flex justify-between mb-2">
                     <span>Total necesario</span>
@@ -50,10 +54,14 @@ export default function ProjectDetails() {
                     </div>
                 </div>
                 <p className="mb-4">Fecha de cierre de inversión: 30/01/2025</p>
-                <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                    <Link href="/pagos/confirmacionPagos">Invertir Ahora</Link>
-                </Button>
             </div>
-        </section>
+          </div>
+        </CardContent>
+        <CardFooter>
+            <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                <Link href="/pagos/confirmacionPagos">Invertir Ahora</Link>
+            </Button>
+        </CardFooter>
+      </Card>
     );
 }

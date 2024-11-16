@@ -48,11 +48,11 @@ export default function Dashboard() {
   return (
     <>
       <div className="w-full md:h-[75vh]">
-        {/* <div className="mx-auto">
+        <div className="mx-auto">
           <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/dashboard-plant2.png')] bg-cover">
             <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard</h1>
           </div>
-        </div> */}
+        </div>
         <div className="flex flex-col lg:flex-row justify-between mt-4">
           <Card className="w-full lg:w-1/4 mr-4 md:mb-0 mb-4">
             {/* <CardHeader className="text-center">
