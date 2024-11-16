@@ -13,6 +13,7 @@ export default function InversorDashboard() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const projectsPerPage = 6;
+    type ProjectWithCategory = typeof projects[number] & { category_id: string };
 
     // Fetching initial data for projects and categories
     useEffect(() => {
@@ -70,7 +71,7 @@ export default function InversorDashboard() {
 
     // Filtering projects by search term
     const filteredProjects = projects.filter(project => {
-
+        const typedProject = project as ProjectWithCategory;
         const matchesSearch =
             project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.description!.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,7 +81,7 @@ export default function InversorDashboard() {
         if (!selectedCategory) return matchesSearch;
 
         // Ensure both values are strings and trim any whitespace
-        const projectCategoryId = String((project as any).category_id).trim();
+        const projectCategoryId = String(typedProject.category_id).trim();
         const selectedCategoryId = String(selectedCategory).trim();
 
         return matchesSearch && projectCategoryId === selectedCategoryId;
