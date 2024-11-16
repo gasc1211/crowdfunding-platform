@@ -4,37 +4,16 @@ import ProjectCard from "@/app/ui/components/ProjectCard";
 import { Input } from "@/components/ui/input";
 import { getAllProjects, getCategories, getProjectsByCategory } from "@/app/api/handler";  // make sure to import getProjectsByCategory
 
-interface Project {
-    project_id: string;
-    producer_id: string;
-    project_banner_url: string;
-    name: string;
-    description: string;
-    start_date: string;
-    expected_finish_date: string;
-    finish_date: string | null;
-    progress: number;
-    investment_goal: number;
-    total_invested: number;
-    location: string;
-    category_id: string;
-}
-
-interface Category {
-    category_id: string;
-    name: string;
-    description?: string;
-}
-
 export default function InversorDashboard() {
     const [projects, setProjects] = useState<Project[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<Categories[]>([]);
     const [error, setError] = useState<Error | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const projectsPerPage = 6;
+    type ProjectWithCategory = typeof projects[number] & { category_id: string };
 
     // Fetching initial data for projects and categories
     useEffect(() => {
@@ -92,23 +71,21 @@ export default function InversorDashboard() {
 
     // Filtering projects by search term
     const filteredProjects = projects.filter(project => {
+        const typedProject = project as ProjectWithCategory;
         const matchesSearch =
             project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            project.location.toLowerCase().includes(searchTerm.toLowerCase());
+            project.description!.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            project.location!.toLowerCase().includes(searchTerm.toLowerCase());
 
         // Only filter by category if one is selected
         if (!selectedCategory) return matchesSearch;
 
         // Ensure both values are strings and trim any whitespace
-        const projectCategoryId = String(project.category_id).trim();
+        const projectCategoryId = String(typedProject.category_id).trim();
         const selectedCategoryId = String(selectedCategory).trim();
 
         return matchesSearch && projectCategoryId === selectedCategoryId;
 
-        const matchesCategory = selectedCategory ? project.category_id === selectedCategory : true;
-
-        return matchesSearch && matchesCategory;
     });
 
     // Pagination
