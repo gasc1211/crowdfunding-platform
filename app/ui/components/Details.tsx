@@ -36,8 +36,25 @@ export default function Details({ project }: { project: Project }){
                         <ul>
                             <li>Nombre del Proyecto: {project.name}</li>
                             <li>Ubicación: {project.location}</li>
-                            <li>Inversión Projectada: {project.investment_goal}</li>
-                            <li>Inversión Actual: {project.total_invested}</li>
+                            {/* <li>Inversión Projectada: {project.investment_goal}</li> */}
+                            <li>Inversión Projectada: {" "}
+                                {new Intl.NumberFormat("es-HN", {
+                                    style: "currency",
+                                    currency: "HNL", // Replace with your desired currency
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                }).format(project.investment_goal)}
+                            </li>
+                            <li>
+                                Inversión Actual:{" "}
+                                {new Intl.NumberFormat("es-HN", {
+                                    style: "currency",
+                                    currency: "HNL", // Replace with your desired currency
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                }).format(project.total_invested)}
+                            </li>
+                            {/* <li>Inversión Actual: {project.total_invested}</li> */}
                             <li>Fecha de Inicio: {project.start_date}</li>
                             <li>Fecha de Finalización: {project.finish_date }</li>
                         </ul>
