@@ -1,4 +1,4 @@
-import Footer from "@/app/ui/components/Footer";
+/* import Footer from "@/app/ui/components/Footer"; */
 import Navbar from "@/app/ui/components/Navbar";
 
 import "@/app/globals.css";
@@ -14,7 +14,7 @@ export default function RootLayout({
         <Navbar />
       </div>
       {children}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

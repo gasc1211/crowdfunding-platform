@@ -41,7 +41,7 @@ export default function Sidebar() {
 
       
     return (
-        <Card className="mb-8">
+        <Card className="w-full lg:w-5/4 mr-4 md:mb-0 mb-4 h-full">
             <CardHeader className="text-center">
               <CardTitle>Perfil</CardTitle>
             </CardHeader>
