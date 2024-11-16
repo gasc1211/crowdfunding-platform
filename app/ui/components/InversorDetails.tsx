@@ -45,7 +45,12 @@ export default function InversorDetails({ projects }: {projects: Project[]}) {
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-orange-500 place-self-center">
-                            $ {totalInvested.toFixed(2)}
+                            {new Intl.NumberFormat("es-HN", {
+                                style: "currency",
+                                currency: "HNL", // Replace with your desired currency
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            }).format(totalInvested)}
                         </div>
                     </CardContent>
                 </Card>

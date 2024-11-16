@@ -60,7 +60,6 @@ export async function getInversorData() {
 
 
 export async function getUserProjects(userId: string) {
-  const supabase = createClient();
 
   // Query Supabase for the projects of the current user
   const { data, error } = await supabase
@@ -78,7 +77,6 @@ export async function getUserProjects(userId: string) {
 
 
 export async function getAllProjects() {
-  const supabase = createClient();
 
   const { data, error } = await supabase
     .from('projects')
@@ -118,7 +116,6 @@ export async function getUserId() {
 
 //Categorias
 export async function getCategories() {
-  const supabase = createClient();
 
   const { data, error } = await supabase
     .from('categories') 
@@ -135,7 +132,6 @@ export async function getCategories() {
 
 
 export async function getProjectsByCategory(categoryId: string) {
-  const supabase = createClient();
 
   const { data, error } = await supabase
     .from('projects')
@@ -166,13 +162,12 @@ export async function getProjectsByCategory(categoryId: string) {
     ...project,
     category_id: categoryId, // Add the category_id to each project
   }));
-
+  /* console.log("mapperData", mappedData) */
   return mappedData;
 }
 
 
 export async function getNumberProjects(userId: string) {
-  const supabase = createClient();
 
   // Query Supabase for the projects of the current user
   const { data, error } = await supabase
@@ -188,3 +183,18 @@ export async function getNumberProjects(userId: string) {
   return data.length;
 }
 
+
+//Project Categories
+export async function getAllProjectCategories() {
+ 
+  const { data, error } = await supabase
+    .from('project_categories') 
+    .select('*')
+
+  if (error) {
+    console.error('Error fetching categories:', error);
+    throw new Error('Failed to fetch categories');
+  }
+
+  return data;
+}
