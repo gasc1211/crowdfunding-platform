@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { apfel_regular, ortica } from "./ui/fonts";
 import Cartas from "./ui/components/Cartas";
-import Footer from "./ui/components/Footer";
+/* import Footer from "./ui/components/Footer"; */
 import Navbar from "./ui/components/Navbar";
 import Carrousel from "./ui/components/Carrousel";
 import { createClient } from "@/utils/supabase/client";
@@ -88,7 +88,7 @@ export default function HomePage() {
                         {/* <Mision /> */}
                     </div>
                 </main>
-                <Footer />
+  {/*               <Footer /> */}
             </div>
         </>
     );

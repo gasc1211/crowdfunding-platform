@@ -32,22 +32,10 @@ export default function Hero() {
 
 export function HeroInversor({ userName }: HeroInversorProps) {
     return (
-        <section
-            className="relative h-64 bg-cover bg-center"
-            style={{
-                backgroundImage: "url('/banner3.png')",
-            }}
-        >
-            <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-                <div className="text-center text-white">
-                    <h1 className="text-4xl font-bold mb-2">
-                        ¡Bienvenido, {userName}!
-                    </h1>
-                    <p className="text-xl">
-                        ¿Listo para ayudar a crear un mejor futuro?
-                    </p>
-                </div>
-            </div>
-        </section>
+        <div className="mx-auto">
+          <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner3.png')] bg-cover">
+            <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {userName}</h1>
+          </div>
+        </div>
     );
 }

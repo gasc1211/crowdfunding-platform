@@ -2,10 +2,10 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-800 text-white py-8">
+        <footer className="bg-gray-800 text-white py-2">
             <div className="container mx-auto text-center">
                 {/* <p className="mb-1">Síguenos en:</p> */}
-                <div className="flex justify-center space-x-4 mb-4">
+                <div className="flex justify-center space-x-4 mb-1">
                     <Link href="#" className="hover:text-green-500">
                         Facebook
                     </Link>
@@ -31,7 +31,7 @@ export default function Footer() {
                         Política de Privacidad
                     </Link>
                 </div>
-                <p className="mt-4">©️AgroStart 2024</p>
+                <p className="mt-1">©️AgroStart 2024</p>
             </div>
         </footer>
     );
