@@ -41,7 +41,6 @@ export default function ProfileaInversor() {
         if (!userData) return <div>Loading...</div>;
 
     return (
-        <>
             <div className="bg-gray-100">
                 <HeroInversor userName = {userData.first_name || 'Guest'}/>
                 <div className="flex flex-col lg:flex-row justify-between mt-4">
@@ -51,6 +50,5 @@ export default function ProfileaInversor() {
                     </div>
                 </div>
             </div>
-        </>
     );
 }

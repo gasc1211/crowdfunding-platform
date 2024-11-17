@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ProjectCard from "@/app/ui/components/ProjectCard";
 import { Input } from "@/components/ui/input";
 import { getAllProjects, getCategories, getProjectsByCategory } from "@/app/api/handler";  // make sure to import getProjectsByCategory
+import Hero from "@/app/ui/components/Hero";
 
 export default function InversorDashboard() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -100,10 +101,10 @@ export default function InversorDashboard() {
         <div className="min-h-screen flex flex-col">
             <main className="flex-grow">
                 <div>
-                    {/* <Hero /> */}
+                    <Hero />
                     {/* Barra de búsqueda y filtros superpuestos en Hero */}
-                    <div className="flex items-center md:justify-end justify-center gap-4 mt-4 mr-4">
-                        <div className="flex items-center w-96">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-4 mr-4">
+                        <div className="flex items-center w-full md:w-96">
                             <Input
                                 type="text"
                                 placeholder="Buscar proyectos..."
