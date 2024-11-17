@@ -23,7 +23,7 @@ export default function InversorDetails({ projects }: {projects: Project[]}) {
 
     return (
         <main className="md:col-span-3">
-            <h2 className="text-2xl font-bold mb-4">Resumen de inversiones</h2>
+            <h2 className="text-2xl font-bold mb-4 ml-4">Resumen de inversiones</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -68,8 +68,8 @@ export default function InversorDetails({ projects }: {projects: Project[]}) {
                 </Card>
             </div>
 
-            <h2 className="text-2xl font-bold mb-4">Progreso de Inversiones</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <h2 className="text-2xl font-bold mb-4 ml-4">Progreso de Inversiones</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card>
                     <CardHeader>
                         <CardTitle>Proyectos financiados en progreso</CardTitle>
