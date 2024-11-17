@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-800 text-white py-2">
+        <footer className="bg-primary opacity-80 text-white py-2">
             <div className="container mx-auto text-center">
                 {/* <p className="mb-1">Síguenos en:</p> */}
                 <div className="flex justify-center space-x-4 mb-1">
