@@ -31,6 +31,26 @@ export async function getUserData() {
   return data
 }
 
+//Obtener perfil de productor
+export async function getProductorData( userId: string ) { 
+  // Query Supabase
+  const { data, error } = await supabase
+    .from('producer')
+    .select()
+    .eq('user_id', userId)
+  
+  if (error) {
+    console.error('Error fetching user data:', error)
+    throw new Error('Failed to fetch user data')
+  }
+
+  // Verificar si el usuario no existe en la tabla
+  if (!data || data.length === 0) {
+    console.warn('User does not exist in the producer table');
+  }
+
+  return data
+}
 
 export async function getInversorData() {
   // Get the user's Clerk session
