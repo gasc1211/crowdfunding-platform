@@ -18,6 +18,7 @@ import { getUserId } from "@/app/api/handler";
 import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
+import { getCategories } from "@/app/api/handler";
 
 const hnl = new Intl.NumberFormat('es-HN', {
     style: "currency",
@@ -29,7 +30,8 @@ export default function CreateProjectForm() {
 
     const [userId, setUserId] = useState<UUID>();
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
-
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [categories, setCategories] = useState<Categories[]>([]);
     const [loading, setLoading] = useState(false);
     const [project, setProject] = useState<ProjectInsert>({
         description: "",
@@ -43,10 +45,31 @@ export default function CreateProjectForm() {
         start_date: "",
         total_invested: 0,
     });
+   /*  const [projectCategory, setProjectCategory] = useState<ProjectCategoriesInsert>(); */
 
     const [bannerFile, setBannerFile] = useState<File | null>(null);
 
     const supabase = createClient();
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const allCategories = await getCategories();
+                setCategories(allCategories);
+            } catch (err) {
+                console.error('Fetch error:', err);
+                if (err instanceof Error) {
+                    setError(err);
+                } else {
+                    setError(new Error("An unknown error occurred."));
+                }
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         async function fetchId() {
@@ -139,17 +162,44 @@ export default function CreateProjectForm() {
         const adjustedProgress = Math.round(project.progress ?? 0); // Usa 0 si progress es null o undefined
 
         try {
-            const { data, error } = await supabase
+            const { data: projectData, error: projectError } = await supabase
                 .from("projects")
-                .insert([{ ...project, progress: adjustedProgress }]);
-
-            if (error) {
-                console.error("Error al crear el proyecto:", error.message);
-            } else {
-                console.log("Proyecto creado:", data);
+                .insert([{ ...project, progress: adjustedProgress }])
+                .select();
+    
+            if (projectError) {
+                console.error("Error inserting project:", projectError.message);
+                setLoading(false);
+                return;
             }
-
-            router.push("/dashboard/emprendedores/proyectosEmprendedor"); // Redirect to projects list page
+    
+            if (projectData && projectData.length > 0) {
+                const createdProject = projectData[0];
+                console.log("createdProject: ", createdProject.project_id)
+    
+                // Associate the project with the selected category
+                if (selectedCategory) {
+                    const { error: categoryError } = await supabase
+                        .from("project_categories") // Adjust table name as needed
+                        .insert([
+                            {
+                                project_id: createdProject.project_id,
+                                category_id: selectedCategory,
+                            },
+                        ]);
+    
+                    if (categoryError) {
+                        console.error(
+                            "Error associating project with category:",
+                            categoryError.message
+                        );
+                    } else {
+                        console.log("Category successfully linked to project.");
+                    }
+                }
+            }
+    
+            router.push("/dashboard/emprendedores");
         } catch (error) {
             console.error("Error creating project:", error);
             alert("Error creating project. Please try again.");
@@ -272,6 +322,28 @@ export default function CreateProjectForm() {
                                     onChange={handleChange}
                                     required
                                 />
+                            </div>
+                            <div className="space-y-2">
+                                
+                                {/* <Input
+                                    id="location"
+                                    name="location"
+                                    value={project.location ?? ""}
+                                    onChange={handleChange}
+                                    required
+                                /> */}
+                                <select
+                            className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                        >
+                            <option value="">Seleccionar Categoria</option>
+                            {categories.map((category) => (
+                                <option key={category.category_id} value={category.category_id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
                             </div>
                             <CardFooter className="p-0">
                                 <Button type="submit" disabled={loading}>
