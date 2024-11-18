@@ -236,3 +236,37 @@ export async function getUserByProjectId(producerId: string) {
 
   return data
 }
+
+
+export async function getProject(projectId: string) {
+
+  // Query Supabase for the projects of the current user
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('projectId', projectId); 
+
+  if (error) {
+    console.error('Error fetching user projects:', error);
+    throw new Error('Failed to fetch user projects');
+  }
+
+  return data;
+}
+
+
+export async function getUrls(projectId: string) {
+  console.log('ProjectId handler', projectId)
+  // Query Supabase for the projects of the current user
+  const { data, error } = await supabase
+    .from('project_images')
+    .select('*')
+    .eq('project_id', projectId); 
+
+  if (error) {
+    console.error('Error fetching user projects:', error);
+    throw new Error('Failed to fetch user projects');
+  }
+  console.log('data from handler', data)
+  return data;
+}

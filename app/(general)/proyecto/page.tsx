@@ -44,7 +44,7 @@ export default function DetalleProyecto() {
                         </div>
                     </div>
                     <div className="mt-8">
-                        <ProjectGallery />
+                        <ProjectGallery projectId = {project.project_id}/>
                     </div>
                     <div className="flex justify-center mt-8">
                         <Button className="w-1/2 h-16">

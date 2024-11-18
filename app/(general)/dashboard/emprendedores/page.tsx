@@ -114,7 +114,13 @@ export default function Dashboard() {
             <br />
             <CardFooter>
               <Button variant="outline" className="w-full">
-                <ChevronRight className="mr-2 h-4 w-4" /> <Link href="/dashboard/emprendedores/proyectosEmprendedor">Ver Todos Los Proyectos</Link>
+                <ChevronRight className="mr-2 h-4 w-4" /> 
+                    <Link href={{
+                                    pathname: "/dashboard/inversor",
+                                    query: { userId: JSON.stringify(userData.user_id) }, // Serialize project object
+                                }}>
+                       Ver Todos Los Proyectos
+                    </Link>
               </Button>
             </CardFooter>
           </Card>
