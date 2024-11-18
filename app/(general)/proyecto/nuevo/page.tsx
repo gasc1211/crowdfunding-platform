@@ -19,8 +19,10 @@ import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { getCategories } from "@/app/api/handler";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+type AlertType = "success" | "error" | null;
 
 const hnl = new Intl.NumberFormat("es-HN", {
     style: "currency",
@@ -35,7 +37,7 @@ export default function CreateProjectForm() {
     const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [categories, setCategories] = useState<Categories[]>([]);
     const [loading, setLoading] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
+    const [alertType, setAlertType] = useState<AlertType>(null);
     const [project, setProject] = useState<ProjectInsert>({
         beneficios: "",
         description: "",
@@ -150,6 +152,11 @@ export default function CreateProjectForm() {
             if (uploadError) {
                 console.error("Error al subir la imagen:", uploadError.message);
                 setLoading(false);
+                setAlertType("error");
+
+                setTimeout(() => {
+                    setAlertType(null);
+                }, 3000);
                 return;
             }
 
@@ -164,6 +171,11 @@ export default function CreateProjectForm() {
             if (!projectBannerUrl) {
                 console.error("Error: No se pudo obtener la URL de la imagen");
                 setLoading(false);
+                setAlertType("error");
+
+                setTimeout(() => {
+                    setAlertType(null);
+                }, 3000);
                 return;
             }
             project.project_banner_url = projectBannerUrl;
@@ -182,6 +194,11 @@ export default function CreateProjectForm() {
             if (projectError) {
                 console.error("Error inserting project:", projectError.message);
                 setLoading(false);
+                setAlertType("error");
+
+                setTimeout(() => {
+                    setAlertType(null);
+                }, 3000);
                 return;
             }
 
@@ -205,6 +222,11 @@ export default function CreateProjectForm() {
                             "Error associating project with category:",
                             categoryError.message
                         );
+                        setAlertType("error");
+
+                        setTimeout(() => {
+                            setAlertType(null);
+                        }, 3000);
                     } else {
                         console.log("Category successfully linked to project.");
                     }
@@ -250,14 +272,19 @@ export default function CreateProjectForm() {
                     throw new Error("Error saving image URLs");
             }
 
-            setShowAlert(true);
+            setAlertType("success");
+
             setTimeout(() => {
-                setShowAlert(false);
+                setAlertType(null);
                 router.push("/dashboard/emprendedores");
             }, 3000);
         } catch (error) {
-            alert("Error creating project. Please try again.");
             console.error("Error creating project:", error);
+            setAlertType("error");
+
+            setTimeout(() => {
+                setAlertType(null);
+            }, 3000);
         } finally {
             setLoading(false);
         }
@@ -443,13 +470,29 @@ export default function CreateProjectForm() {
                         </form>
                     </CardContent>
                 </Card>
-                {showAlert && (
+                {alertType && (
                     <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
-                        <Alert className="w-80 border-green-500 bg-green-50 text-green-800">
-                            <CheckCircle2 className="h-4 w-4 text-green-500" />
-                            <AlertTitle>¡Exito!</AlertTitle>
+                        <Alert
+                            className={`w-80 ${
+                                alertType === "success"
+                                    ? "border-green-500 bg-green-50 text-green-800"
+                                    : "border-red-500 bg-red-50 text-red-800"
+                            }`}
+                        >
+                            {alertType === "success" ? (
+                                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                            ) : (
+                                <XCircle className="h-4 w-4 text-red-500" />
+                            )}
+                            <AlertTitle>
+                                {alertType === "success"
+                                    ? "¡Exito!"
+                                    : "¡Error!"}
+                            </AlertTitle>
                             <AlertDescription>
-                                El proyecto se ha creado correctamente.
+                                {alertType === "success"
+                                    ? "El proyecto fue creado correctamente."
+                                    : "Ocurrio un error al crear el proyecto. Por favor intentalo de nuevo."}
                             </AlertDescription>
                         </Alert>
                     </div>
