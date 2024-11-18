@@ -141,6 +141,7 @@ export async function getProjectsByCategory(categoryId: string) {
         project_banner_url,
         name,
         description,
+        beneficios,
         start_date,
         expected_finish_date,
         finish_date,
@@ -197,4 +198,21 @@ export async function getAllProjectCategories() {
   }
 
   return data;
+}
+
+
+export async function getUserByProjectId(producerId: string) {
+
+  // Query Supabase for the user's data
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('user_id', producerId)
+    .single()
+  if (error) {
+    console.error('Error fetching user data:', error)
+    throw new Error('Failed to fetch user data')
+  }
+
+  return data
 }
