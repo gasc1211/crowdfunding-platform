@@ -34,6 +34,7 @@ export default function CreateProjectForm() {
     const [categories, setCategories] = useState<Categories[]>([]);
     const [loading, setLoading] = useState(false);
     const [project, setProject] = useState<ProjectInsert>({
+        beneficios: "",
         description: "",
         expected_finish_date: "",
         investment_goal: 0,
@@ -236,6 +237,16 @@ export default function CreateProjectForm() {
                                     id="description"
                                     name="description"
                                     value={project.description ?? ""}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="description">Beneficios</Label>
+                                <Textarea
+                                    id="beneficios"
+                                    name="beneficios"
+                                    value={project.beneficios ?? ""}
                                     onChange={handleChange}
                                     required
                                 />
