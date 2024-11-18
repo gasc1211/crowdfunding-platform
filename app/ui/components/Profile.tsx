@@ -9,15 +9,14 @@ import { createClient } from "@/utils/supabase/client";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function Profile() {
-
     const router = useRouter();
     const [userId, setUserId] = useState<UUID>();
-    const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
+    const [, setError] = useState<Error | null>(null); // Updated type to Error | null
     const [loading, setLoading] = useState(false);
     const [profileImg, setProfileImg] = useState<File | null>(null);
     const [banner, setBanner] = useState<File | null>(null);
     const supabase = createClient();
-    
+
     const [producer, setProducer] = useState<ProducerInsert>({
         user_id: userId,
         profile_image_url: "",
@@ -77,25 +76,25 @@ export default function Profile() {
                 .replace(/[\u0300-\u036f]/g, "") // Elimina los acentos
                 .replace(/\s+/g, "_") // Reemplaza espacios con guiones bajos
                 .replace(/[^a-zA-Z0-9._-]/g, ""); // Elimina caracteres no permitidos
-        
+
             // Sube la imagen al bucket de Supabase
             const { error: uploadError } = await supabase.storage
                 .from("Images_Projects")
                 .upload(`profiles/${sanitizedFileName}`, profileImg);
-        
+
             if (uploadError) {
                 console.error("Error al subir la imagen:", uploadError.message);
                 setLoading(false);
                 return;
             }
-        
+
             // Obtener la URL pública de la imagen
             const { data: urlData } = supabase.storage
                 .from("Images_Projects")
                 .getPublicUrl(`profiles/${sanitizedFileName}`);
-        
+
             const projectImgUrl = urlData?.publicUrl || "";
-        
+
             if (!projectImgUrl) {
                 console.error("Error: No se pudo obtener la URL de la imagen");
                 setLoading(false);
@@ -112,26 +111,26 @@ export default function Profile() {
                 .replace(/[\u0300-\u036f]/g, "") // Elimina los acentos
                 .replace(/\s+/g, "_") // Reemplaza espacios con guiones bajos
                 .replace(/[^a-zA-Z0-9._-]/g, ""); // Elimina caracteres no permitidos
-        
+
             // Sube la imagen al bucket de Supabase
             const { error: uploadError } = await supabase.storage
                 .from("Images_Projects")
                 .upload(`profiles/${sanitizedName}`, banner);
-        
+
             if (uploadError) {
                 console.error("Error al subir la imagen:", uploadError.message);
                 setLoading(false);
                 return;
             }
-        
+
             // Obtener la URL pública de la imagen
             const { data: urlData } = supabase.storage
                 .from("Images_Projects")
                 .getPublicUrl(`banners/${sanitizedName}`);
-        
+
             const projectBannerUrl = urlData?.publicUrl || "";
             console.log(projectBannerUrl);
-        
+
             if (!projectBannerUrl) {
                 console.error("Error: No se pudo obtener la URL de la imagen");
                 setLoading(false);
@@ -146,7 +145,10 @@ export default function Profile() {
                 .insert(producer);
 
             if (error) {
-                console.error("Error al crear el perfil de productor:", error.message);
+                console.error(
+                    "Error al crear el perfil de productor:",
+                    error.message
+                );
             } else {
                 console.log("Perfil creado:", data);
                 router.push("/dashboard/emprendedores");
@@ -162,7 +164,9 @@ export default function Profile() {
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg mt-24 p-6 mb-8">
-            <h1 className="text-center text-xl">Crea tu perfil de productor</h1>
+                <h1 className="text-center text-xl">
+                    Crea tu perfil de productor
+                </h1>
                 <div className="space-y-2 mb-8">
                     {" "}
                     {/* Ajustamos el ancho del contenedor principal */}
@@ -180,7 +184,9 @@ export default function Profile() {
                 <div className="space-y-2 mb-8">
                     {" "}
                     {/* Ajustamos el ancho del contenedor principal */}
-                    <p className="text-gray-700 font-semibold">Imagen de perfil del productor:</p>
+                    <p className="text-gray-700 font-semibold">
+                        Imagen de perfil del productor:
+                    </p>
                     <input
                         type="file"
                         onChange={handleFileChange}
@@ -191,7 +197,9 @@ export default function Profile() {
                 <div className="space-y-2 mb-8">
                     {" "}
                     {/* Ajustamos el ancho del contenedor principal */}
-                    <p className="text-gray-700 font-semibold">Imagen de banner del productor:</p>
+                    <p className="text-gray-700 font-semibold">
+                        Imagen de banner del productor:
+                    </p>
                     <input
                         type="file"
                         onChange={handleFileChange2}
@@ -219,11 +227,15 @@ export default function Profile() {
                 </div>
 
                 <div className="flex justify-center">
-                    <Button type="submit" disabled={loading} className="text-white p-3 rounded-lg bg-orange-500 hover:bg-orange-600 w-2/5 h-15">
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        className="text-white p-3 rounded-lg bg-orange-500 hover:bg-orange-600 w-2/5 h-15"
+                    >
                         {loading ? "Creating..." : "Crear perfil de productor"}
                     </Button>
                 </div>
             </div>
-        </form>    
+        </form>
     );
 }
