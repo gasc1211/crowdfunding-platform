@@ -19,10 +19,12 @@ import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { getCategories } from "@/app/api/handler";
+import { CheckCircle2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const hnl = new Intl.NumberFormat('es-HN', {
+const hnl = new Intl.NumberFormat("es-HN", {
     style: "currency",
-    currency: "HNL"
+    currency: "HNL",
 });
 
 export default function CreateProjectForm() {
@@ -30,9 +32,10 @@ export default function CreateProjectForm() {
 
     const [userId, setUserId] = useState<UUID>();
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
-    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [categories, setCategories] = useState<Categories[]>([]);
     const [loading, setLoading] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
     const [project, setProject] = useState<ProjectInsert>({
         beneficios: "",
         description: "",
@@ -46,7 +49,7 @@ export default function CreateProjectForm() {
         start_date: "",
         total_invested: 0,
     });
-   /*  const [projectCategory, setProjectCategory] = useState<ProjectCategoriesInsert>(); */
+    /*  const [projectCategory, setProjectCategory] = useState<ProjectCategoriesInsert>(); */
 
     const [bannerFile, setBannerFile] = useState<File | null>(null);
     const [images, setImages] = useState<File[]>([]);
@@ -66,7 +69,7 @@ export default function CreateProjectForm() {
                 const allCategories = await getCategories();
                 setCategories(allCategories);
             } catch (err) {
-                console.error('Fetch error:', err);
+                console.error("Fetch error:", err);
                 if (err instanceof Error) {
                     setError(err);
                 } else {
@@ -175,17 +178,17 @@ export default function CreateProjectForm() {
                 .from("projects")
                 .insert([{ ...project, progress: adjustedProgress }])
                 .select();
-    
+
             if (projectError) {
                 console.error("Error inserting project:", projectError.message);
                 setLoading(false);
                 return;
             }
-    
+
             if (projectData && projectData.length > 0) {
                 const createdProject = projectData[0];
-                console.log("createdProject: ", createdProject.project_id)
-    
+                console.log("createdProject: ", createdProject.project_id);
+
                 // Associate the project with the selected category
                 if (selectedCategory) {
                     const { error: categoryError } = await supabase
@@ -196,7 +199,7 @@ export default function CreateProjectForm() {
                                 category_id: selectedCategory,
                             },
                         ]);
-    
+
                     if (categoryError) {
                         console.error(
                             "Error associating project with category:",
@@ -222,12 +225,14 @@ export default function CreateProjectForm() {
                     .from("Images_Projects")
                     .upload(`projectImages/${sanitizedImageName}`, image);
 
-                if (imageError) throw new Error(`Error uploading image ${image.name}`);
+                if (imageError)
+                    throw new Error(`Error uploading image ${image.name}`);
 
                 const { data: imageUrlData } = supabase.storage
                     .from("Images_Projects")
                     .getPublicUrl(`projectImages/${sanitizedImageName}`);
-                if (imageUrlData?.publicUrl) uploadedImageUrls.push(imageUrlData.publicUrl);
+                if (imageUrlData?.publicUrl)
+                    uploadedImageUrls.push(imageUrlData.publicUrl);
             }
 
             // Insert image URLs into project_images table
@@ -241,13 +246,18 @@ export default function CreateProjectForm() {
                     .from("project_images")
                     .insert(imageInserts);
 
-                if (imageInsertError) throw new Error("Error saving image URLs");
+                if (imageInsertError)
+                    throw new Error("Error saving image URLs");
             }
-    
-            router.push("/dashboard/emprendedores");
+
+            setShowAlert(true);
+            setTimeout(() => {
+                setShowAlert(false);
+                router.push("/dashboard/emprendedores");
+            }, 3000);
         } catch (error) {
-            console.error("Error creating project:", error);
             alert("Error creating project. Please try again.");
+            console.error("Error creating project:", error);
         } finally {
             setLoading(false);
         }
@@ -266,7 +276,9 @@ export default function CreateProjectForm() {
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Nombre del Proyecto</Label>
+                                <Label htmlFor="name">
+                                    Nombre del Proyecto
+                                </Label>
                                 <Input
                                     id="name"
                                     name="name"
@@ -309,7 +321,9 @@ export default function CreateProjectForm() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="images">Subir Imágenes del Proyecto (Máximo 6)</Label>
+                                <Label htmlFor="images">
+                                    Subir Imágenes del Proyecto (Máximo 6)
+                                </Label>
                                 <Input
                                     id="images"
                                     name="images"
@@ -392,7 +406,6 @@ export default function CreateProjectForm() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                
                                 {/* <Input
                                     id="location"
                                     name="location"
@@ -401,55 +414,89 @@ export default function CreateProjectForm() {
                                     required
                                 /> */}
                                 <select
-                            className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                        >
-                            <option value="">Seleccionar Categoria</option>
-                            {categories.map((category) => (
-                                <option key={category.category_id} value={category.category_id}>
-                                    {category.name}
-                                </option>
-                            ))}
-                        </select>
+                                    className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
+                                    value={selectedCategory}
+                                    onChange={(e) =>
+                                        setSelectedCategory(e.target.value)
+                                    }
+                                >
+                                    <option value="">
+                                        Seleccionar Categoria
+                                    </option>
+                                    {categories.map((category) => (
+                                        <option
+                                            key={category.category_id}
+                                            value={category.category_id}
+                                        >
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <CardFooter className="p-0">
                                 <Button type="submit" disabled={loading}>
-                                    {loading ? "Creando Nuevo Proyecto..." : "Crear Proyecto"}
+                                    {loading
+                                        ? "Creando Nuevo Proyecto..."
+                                        : "Crear Proyecto"}
                                 </Button>
                             </CardFooter>
                         </form>
                     </CardContent>
                 </Card>
+                {showAlert && (
+                    <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+                        <Alert className="w-80 border-green-500 bg-green-50 text-green-800">
+                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                            <AlertTitle>¡Exito!</AlertTitle>
+                            <AlertDescription>
+                                El proyecto se ha creado correctamente.
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                )}
             </div>
             <div className="md:w-1/2 md:ml-6 mt-4 md:mt-0">
-                {bannerFile &&
+                {bannerFile && (
                     <Image
                         className="w-full h-1/3 object-cover rounded-md"
                         src={URL.createObjectURL(bannerFile)}
                         alt="Project Profile Photo"
-                        width={500} height={100}
+                        width={500}
+                        height={100}
                     />
-                }
-                <h1 className="font-bold text-2xl mt-6" >{project.name}</h1>
-                {project.investment_goal != 0 &&
+                )}
+                <h1 className="font-bold text-2xl mt-6">{project.name}</h1>
+                {project.investment_goal != 0 && (
                     <div className="mb-6 mt-4">
                         <Progress value={project.progress} />
                         <div className="flex mt-2">
-                            <p><strong>Actualmente: </strong> {hnl.format(project.total_invested as number)}</p>
-                            <p className="ml-auto"><strong>Meta: </strong> {hnl.format(project.investment_goal as number)}</p>
+                            <p>
+                                <strong>Actualmente: </strong>{" "}
+                                {hnl.format(project.total_invested as number)}
+                            </p>
+                            <p className="ml-auto">
+                                <strong>Meta: </strong>{" "}
+                                {hnl.format(project.investment_goal as number)}
+                            </p>
                         </div>
                     </div>
-                }
-                {project.location &&
-                    <p><strong>Ubicación:</strong> {project.location}</p>
-                }
-                {project.start_date &&
-                    <p><strong>Fecha de Inicio:</strong> {project.start_date}</p>
-                }
-                {project.expected_finish_date &&
-                    <p><strong>Fecha de Finalización:</strong> {project.expected_finish_date}</p>
-                }
+                )}
+                {project.location && (
+                    <p>
+                        <strong>Ubicación:</strong> {project.location}
+                    </p>
+                )}
+                {project.start_date && (
+                    <p>
+                        <strong>Fecha de Inicio:</strong> {project.start_date}
+                    </p>
+                )}
+                {project.expected_finish_date && (
+                    <p>
+                        <strong>Fecha de Finalización:</strong>{" "}
+                        {project.expected_finish_date}
+                    </p>
+                )}
                 <p className="mt-2">{project.description}</p>
             </div>
         </div>
