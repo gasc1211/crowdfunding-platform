@@ -49,8 +49,16 @@ export default function CreateProjectForm() {
    /*  const [projectCategory, setProjectCategory] = useState<ProjectCategoriesInsert>(); */
 
     const [bannerFile, setBannerFile] = useState<File | null>(null);
+    const [images, setImages] = useState<File[]>([]);
 
     const supabase = createClient();
+
+    const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const selectedFiles = Array.from(e.target.files).slice(0, 6); // Limit to 6 files
+            setImages(selectedFiles);
+        }
+    };
 
     useEffect(() => {
         async function fetchData() {
@@ -199,6 +207,42 @@ export default function CreateProjectForm() {
                     }
                 }
             }
+
+            const createdProject = projectData[0];
+
+            // Upload images
+            const uploadedImageUrls: string[] = [];
+            for (const image of images) {
+                const sanitizedImageName = image.name
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "");
+                const { error: imageError } = await supabase.storage
+                    .from("Images_Projects")
+                    .upload(`projectImages/${sanitizedImageName}`, image);
+
+                if (imageError) throw new Error(`Error uploading image ${image.name}`);
+
+                const { data: imageUrlData } = supabase.storage
+                    .from("Images_Projects")
+                    .getPublicUrl(`projectImages/${sanitizedImageName}`);
+                if (imageUrlData?.publicUrl) uploadedImageUrls.push(imageUrlData.publicUrl);
+            }
+
+            // Insert image URLs into project_images table
+            if (uploadedImageUrls.length > 0) {
+                const imageInserts = uploadedImageUrls.map((url) => ({
+                    project_id: createdProject.project_id,
+                    image_url: url,
+                }));
+
+                const { error: imageInsertError } = await supabase
+                    .from("project_images")
+                    .insert(imageInserts);
+
+                if (imageInsertError) throw new Error("Error saving image URLs");
+            }
     
             router.push("/dashboard/emprendedores");
         } catch (error) {
@@ -264,6 +308,19 @@ export default function CreateProjectForm() {
                                     accept="image/*"
                                 />
                             </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="images">Subir Imágenes del Proyecto (Máximo 6)</Label>
+                                <Input
+                                    id="images"
+                                    name="images"
+                                    type="file"
+                                    multiple
+                                    className="cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                                    onChange={handleImagesChange}
+                                    accept="image/*"
+                                />
+                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="start_date">
