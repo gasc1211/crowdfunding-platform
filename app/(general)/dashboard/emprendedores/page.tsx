@@ -1,26 +1,35 @@
 "use client";
+
 import { useState, useEffect } from "react"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { getUserData, getUserProjects } from "@/app/api/handler"
+import { getUserData, getUserProjects, getProductorData } from "@/app/api/handler"
+import { calculateAge } from "@/app/api/edad";
 import Details from "@/app/ui/components/Details";
 import Link from "next/link";
 import ProfileImageUpload from "@/app/ui/components/ProfileImageUpload";
-
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const [userData, setUserData] = useState<Users | null>(null);
   const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
   const [projects, setProjects] = useState<Project[]>([]); // State to store projects
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
       try {
         console.log("Fetching user data..."); // Debugging line
         const data = await getUserData();
-        //console.log("User Data:", data); // Log the fetched data
+
+        const producer = await getProductorData(data.user_id);
+        console.log(producer)
+        if (producer.length == 0) {
+          return router.push('/productor/editar');
+        }
+
         setUserData(data);
 
         // Fetch projects for the logged-in user using their user_id
@@ -105,7 +114,13 @@ export default function Dashboard() {
             <br />
             <CardFooter>
               <Button variant="outline" className="w-full">
-                <ChevronRight className="mr-2 h-4 w-4" /> <Link href="/dashboard/emprendedores/proyectosEmprendedor">Ver Todos Los Proyectos</Link>
+                <ChevronRight className="mr-2 h-4 w-4" /> 
+                    <Link href={{
+                                    pathname: "/dashboard/inversor",
+                                    query: { userId: JSON.stringify(userData.user_id) }, // Serialize project object
+                                }}>
+                       Ver Todos Los Proyectos
+                    </Link>
               </Button>
             </CardFooter>
           </Card>
