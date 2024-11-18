@@ -1,4 +1,3 @@
-import Footer from "@/app/ui/components/Footer";
 import Navbar from "@/app/ui/components/Navbar";
 
 import "@/app/globals.css";
@@ -11,10 +10,9 @@ export default function RootLayout({
   return (
     <div>
       <div className="z-auto">
-        <Navbar />
+        {<Navbar />}
       </div>
       {children}
-      <Footer />
     </div>
   );
 }

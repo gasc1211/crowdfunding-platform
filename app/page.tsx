@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { apfel_regular, ortica } from "./ui/fonts";
 import Cartas from "./ui/components/Cartas";
-import Footer from "./ui/components/Footer";
+/* import Footer from "./ui/components/Footer"; */
 import Navbar from "./ui/components/Navbar";
 import Carrousel from "./ui/components/Carrousel";
 import { createClient } from "@/utils/supabase/client";
@@ -32,7 +32,7 @@ export default function HomePage() {
             <Navbar />
             <div className="min-h-full mt-10">
                 <main className="flex min-h-screen flex-col p-8">
-                    <div className="mx-4 flex grow flex-col gap-4 md:flex-row justify-between">
+                    <div className="mx-4 flex grow flex-col gap-4 md:flex-row justify-between mt-6">
                         <div className="flex flex-col justify-center gap-8 rounded-3xlpx-6 py-10 md:w-3/5 md:px-20 mx-4">
                             <div />
                             <p
@@ -88,7 +88,7 @@ export default function HomePage() {
                         {/* <Mision /> */}
                     </div>
                 </main>
-                <Footer />
+  {/*               <Footer /> */}
             </div>
         </>
     );
