@@ -5,11 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ProfileImageUpload from "./ProfileImageUpload";
 import { calculateAge } from "@/app/api/edad";
 import { useEffect, useState } from "react";
-import { getUserData } from "@/app/api/handler";
+import { getUserByProjectId } from "@/app/api/handler";
+
+type SidebarProjectProps = {
+  producerId: string | null;
+};
 
 
 
-export default function Sidebar() {
+export default function SidebarProject({ producerId }: SidebarProjectProps) {
     const [userData, setUserData] = useState<Users | null>(null);
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
 
@@ -17,7 +21,7 @@ export default function Sidebar() {
         async function fetchData() {
           try {
             console.log("Fetching user data..."); // Debugging line
-            const data = await getUserData();
+            const data = await getUserByProjectId(producerId!);
             //console.log("User Data:", data); // Log the fetched data
             setUserData(data);
     
@@ -35,7 +39,7 @@ export default function Sidebar() {
         }
     
         fetchData();
-      }, []);
+      },[]);
       if (error) return <div>Error: {error.message}</div>;
       if (!userData) return <div>Loading...</div>;
 

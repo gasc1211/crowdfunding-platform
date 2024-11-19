@@ -3,7 +3,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { esMX } from "@clerk/localizations";
 import { apfel_regular } from "./ui/fonts";
 import Footer from "./ui/components/Footer";
-import Navbar from "./ui/components/Navbar";
 
 import "./globals.css";
 
@@ -19,9 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider localization={esMX}>
-      <html lang="en">
+      <html lang="es">
         <body className={`${apfel_regular.className} antialiased`}>
-        <Navbar /> 
           {children}
           <Footer />
         </body>

@@ -14,7 +14,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <Disclosure as="nav" className="bg-primary fixed left-0 top-0 w-dvw">
+    <Disclosure as="nav" className="bg-primary fixed left-0 top-0 w-dvw z-10">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">
