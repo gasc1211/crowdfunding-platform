@@ -9,7 +9,7 @@ const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string;
 console.log(stripePublicKey);
 const stripe = loadStripe(stripePublicKey);
 
-export default async function checkoutForm() {
+export default function CheckoutForm() {
 
   const [options, setOptions] = useState({});
 
