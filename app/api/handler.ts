@@ -270,3 +270,35 @@ export async function getUrls(projectId: string) {
   console.log('data from handler', data)
   return data;
 }
+
+export async function getComments(projectId: string) {
+
+  // Query Supabase for the projects of the current user
+  const { data, error } = await supabase
+    .from('comments')
+    .select('*')
+    .eq('project_id', projectId); 
+
+  if (error) {
+    console.error('Error fetching user projects:', error);
+    throw new Error('Failed to fetch user projects');
+  }
+
+  return data;
+}
+
+export async function getUserByUserId(userId : string) {
+
+  const { data, error } = await supabase
+    .from('users')
+    .select()
+    .eq('user_id', userId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching user:', error);
+    return null;
+  }
+
+  return data;
+}
