@@ -12,7 +12,7 @@ export const mainNavigationItems: NavigationItem[] = [
   { name: "Inicio", href: "/" },
   { name: "Mi Perfil", href: "/dashboard/emprendedores" },
   { name: "Empezar una Campaña", href: "/proyecto/nuevo" },
-  { name: "Acerca de", href: "/acerca-de" },
+  { name: "Acerca de", href: "/about" },
   { name: "Contáctanos", href: "/contacto" },
 ];
 
