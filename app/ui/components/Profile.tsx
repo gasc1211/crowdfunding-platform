@@ -1,176 +1,252 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { UUID } from "crypto";
+import { useRouter } from "next/navigation";
+import { getUserId } from "@/app/api/handler";
+import { createClient } from "@/utils/supabase/client";
+import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CheckCircle2, XCircle } from 'lucide-react';
 
 export default function Profile() {
-    const [nombre, setNombre] = useState("Juan Ramírez");
-    const [edad, setEdad] = useState(45);
-    const [intereses, setIntereses] = useState("Agricultura, Ganadería");
-    const [descripcion, setDescripcion] = useState("");
-    const [ubicacion, setUbicacion] = useState("Tegucigalpa, Honduras");
-    const [telefono, setTelefono] = useState("9999-9999");
-    const [correo, setCorreo] = useState("juan.ramirez@example.com");
-    const [experiencia, setExperiencia] = useState(
-        "Más de 10 años en el cultivo de café."
-    );
-    const [certificaciones, setCertificaciones] = useState(
-        "Certificado en técnicas de agricultura sostenible."
-    );
-    const [proyectosPrevios, setProyectosPrevios] = useState(
-        "Proyecto de café orgánico."
-    );
+    const router = useRouter();
+    const [userId, setUserId] = useState<UUID>();
+    const [, setError] = useState<Error | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [profileImg, setProfileImg] = useState<File | null>(null);
+    const [banner, setBanner] = useState<File | null>(null);
+    const [alertType, setAlertType] = useState<'success' | 'error' | null>(null);
+    const supabase = createClient();
 
-    // Estado para manejar la imagen cargada
-    const [imagen, setImagen] = useState("/productor.png");
+    const [producer, setProducer] = useState<ProducerInsert>({
+        user_id: userId,
+        profile_image_url: "",
+        profile_banner_url: "",
+        biography: "",
+        location: "",
+    });
 
-    // Función para manejar el cambio de imagen
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]; // El '?' asegura que files no sea null
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setImagen(imageUrl);
+    useEffect(() => {
+        async function fetchId() {
+            try {
+                console.log("Fetching user data...");
+                const data = await getUserId();
+                setUserId(data.user_id);
+                setProducer((prev) => ({ ...prev, user_id: data.user_id }));
+            } catch (err) {
+                console.error(err);
+                if (err instanceof Error) {
+                    setError(err);
+                } else {
+                    setError(new Error("An unknown error occurred."));
+                }
+            }
+        }
+
+        fetchId();
+    }, []);
+
+    const handleChange = (
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value } = e.target;
+        setProducer((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setProfileImg(e.target.files[0]);
+        }
+    };
+
+    const handleFileChange2 = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setBanner(e.target.files[0]);
+        }
+    };
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            if (profileImg) {
+                const sanitizedFileName = profileImg.name
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "");
+
+                const { error: uploadError } = await supabase.storage
+                    .from("Images_Projects")
+                    .upload(`profiles/${sanitizedFileName}`, profileImg);
+
+                if (uploadError) {
+                    throw new Error("Error al subir la imagen de perfil");
+                }
+
+                const { data: urlData } = supabase.storage
+                    .from("Images_Projects")
+                    .getPublicUrl(`profiles/${sanitizedFileName}`);
+
+                if (!urlData?.publicUrl) {
+                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                }
+                producer.profile_image_url = urlData.publicUrl;
+            }
+
+            if (banner) {
+                const sanitizedName = banner.name
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "");
+
+                const { error: uploadError } = await supabase.storage
+                    .from("Images_Projects")
+                    .upload(`profiles/${sanitizedName}`, banner);
+
+                if (uploadError) {
+                    throw new Error("Error al subir la imagen de banner");
+                }
+
+                const { data: urlData } = supabase.storage
+                    .from("Images_Projects")
+                    .getPublicUrl(`banners/${sanitizedName}`);
+
+                const projectBannerUrl = urlData?.publicUrl || "";
+                console.log(projectBannerUrl);
+
+                if (!projectBannerUrl) {
+                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                }
+                producer.profile_banner_url = projectBannerUrl;
+            }
+
+            const { error } = await supabase
+                .from("producer")
+                .insert(producer);
+
+            if (error) {
+                throw error;
+            }
+
+            setAlertType('success');
+            setTimeout(() => {
+                setAlertType(null);
+                router.push("/dashboard/emprendedores");
+            }, 3000);
+            
+        } catch (error) {
+            console.error("Error creating producer:", error);
+            setAlertType('error');
+            setTimeout(() => {
+                setAlertType(null);
+            }, 3000);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg mt-8 p-6 mb-8">
-            {" "}
-            {/* Añadimos mb-8 para dejar espacio en la parte inferior */}
-            <h1 className="text-3xl font-bold text-center text-gray-700 mb-6">
-                Editar Perfil del Productor
-            </h1>
-            {/* Imagen editable */}
-            <div className="flex flex-col items-center justify-center">
-                <div className="relative">
-                    <Image
-                        src={imagen}
-                        alt="Imagen del Productor"
-                        width={150}
-                        height={150}
-                        className="rounded-full shadow-md cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:brightness-75"
-                        onClick={() => {
-                            const fileInput =
-                                document.getElementById("fileInput");
-                            if (fileInput) {
-                                fileInput.click();
-                            }
-                        }}
-                    />
-                </div>
-                <input
-                    id="fileInput"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={handleImageChange} // Cambia la imagen al seleccionar un archivo
-                />
-                <p className="text-xl text-gray-500 mt-3 mb-5">
-                    Haga click en la imagen para editar
-                </p>
-            </div>
-            <div className="flex items-center justify-between mb-4">
-                <div className="w-2/3">
-                    {" "}
-                    {/* Ajustamos el ancho del contenedor principal */}
-                    <p className="text-gray-700 font-semibold">Nombre:</p>
-                    <input
-                        type="text"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4" // Aumentamos padding para que el campo sea más ancho
-                    />
-                    <p className="text-gray-700 font-semibold">Edad:</p>
-                    <input
-                        type="number"
-                        value={edad}
-                        onChange={(e) => setEdad(Number(e.target.value))}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                    />
-                    <p className="text-gray-700 font-semibold">Intereses:</p>
-                    <input
-                        type="text"
-                        value={intereses}
-                        onChange={(e) => setIntereses(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                    />
-                    <p className="text-gray-700 font-semibold">Ubicación:</p>
-                    <input
-                        type="text"
-                        value={ubicacion}
-                        onChange={(e) => setUbicacion(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                    />
-                    <p className="text-gray-700 font-semibold">Teléfono:</p>
-                    <input
-                        type="text"
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                    />
-                    <p className="text-gray-700 font-semibold">
-                        Correo Electrónico:
-                    </p>
-                    <input
-                        type="email"
-                        value={correo}
-                        onChange={(e) => setCorreo(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                    />
-                    <p className="text-gray-700 font-semibold">Experiencia:</p>
-                    <input
-                        type="text"
-                        value={experiencia}
-                        onChange={(e) => setExperiencia(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                    />
-                    <p className="text-gray-700 font-semibold">
-                        Certificaciones:
-                    </p>
-                    <input
-                        type="text"
-                        value={certificaciones}
-                        onChange={(e) => setCertificaciones(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                    />
-                    <p className="text-gray-700 font-semibold">
-                        Proyectos Previos:
-                    </p>
-                    <textarea
-                        value={proyectosPrevios}
-                        onChange={(e) => setProyectosPrevios(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                        rows={3}
-                    />
-                </div>
-            </div>
-            <form>
-                <div className="mb-4">
-                    <label
-                        htmlFor="descripcion"
-                        className="block text-gray-600 font-semibold"
-                    >
-                        Descripción Personal:
-                    </label>
-                    <textarea
-                        id="descripcion"
-                        className="w-full p-4 border border-gray-300 rounded-lg"
-                        rows={4}
-                        value={descripcion}
-                        onChange={(e) => setDescripcion(e.target.value)}
-                        placeholder="Describe tu experiencia y proyectos..."
-                    />
-                </div>
+        <div className="relative">
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg mt-24 p-6 mb-8">
+                    <h1 className="text-center text-xl">
+                        Crea tu perfil de productor
+                    </h1>
+                    <div className="space-y-2 mb-8">
+                        <p className="text-gray-700 font-semibold">Ubicación:</p>
+                        <input
+                            id="location"
+                            name="location"
+                            value={producer.location ?? ""}
+                            onChange={handleChange}
+                            className="w-full p-4 border border-gray-300 rounded-lg mb-8"
+                            placeholder="De dónde eres..."
+                            required
+                        />
+                    </div>
+                    <div className="space-y-2 mb-8">
+                        <p className="text-gray-700 font-semibold">
+                            Imagen de perfil del productor:
+                        </p>
+                        <input
+                            type="file"
+                            onChange={handleFileChange}
+                            className="w-full p-4 border border-gray-300 rounded-lg mb-8"
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="space-y-2 mb-8">
+                        <p className="text-gray-700 font-semibold">
+                            Imagen de banner del productor:
+                        </p>
+                        <input
+                            type="file"
+                            onChange={handleFileChange2}
+                            className="w-full p-4 border border-gray-300 rounded-lg mb-8"
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="space-y-2 mb-8">
+                        <label
+                            htmlFor="descripcion"
+                            className="block text-gray-600 font-semibold"
+                        >
+                            Descripción Personal
+                        </label>
+                        <Textarea
+                            id="biography"
+                            name="biography"
+                            className="w-full p-4 border border-gray-300 rounded-lg mb-8"
+                            value={producer.biography ?? ""}
+                            rows={4}
+                            onChange={handleChange}
+                            placeholder="Describe tu experiencia y proyectos..."
+                            required
+                        />
+                    </div>
 
-                <div className="flex justify-center">
-                    <Button
-                        type="submit"
-                        className="text-white p-3 rounded-lg bg-orange-500 hover:bg-orange-600 w-2/5 h-15"
-                    >
-                        Guardar Cambios
-                    </Button>
+                    <div className="flex justify-center">
+                        <Button
+                            type="submit"
+                            disabled={loading}
+                            className="text-white p-3 rounded-lg bg-orange-500 hover:bg-orange-600 w-2/5 h-15"
+                        >
+                            {loading ? "Creando..." : "Crear perfil de productor"}
+                        </Button>
+                    </div>
                 </div>
             </form>
+
+            {alertType && (
+                <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+                    <Alert
+                        className={`w-80 ${
+                            alertType === 'success'
+                                ? 'border-green-500 bg-green-50 text-green-800'
+                                : 'border-red-500 bg-red-50 text-red-800'
+                        }`}
+                    >
+                        {alertType === 'success' ? (
+                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        ) : (
+                            <XCircle className="h-4 w-4 text-red-500" />
+                        )}
+                        <AlertTitle>
+                            {alertType === 'success' ? '¡Éxito!' : '¡Error!'}
+                        </AlertTitle>
+                        <AlertDescription>
+                            {alertType === 'success'
+                                ? 'El perfil fue creado correctamente.'
+                                : 'Ocurrió un error al crear el perfil. Por favor inténtalo de nuevo.'}
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            )}
         </div>
     );
 }

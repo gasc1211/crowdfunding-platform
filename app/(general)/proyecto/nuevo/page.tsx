@@ -18,10 +18,15 @@ import { getUserId } from "@/app/api/handler";
 import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
+import { getCategories } from "@/app/api/handler";
+import { CheckCircle2, XCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const hnl = new Intl.NumberFormat('es-HN', {
+type AlertType = "success" | "error" | null;
+
+const hnl = new Intl.NumberFormat("es-HN", {
     style: "currency",
-    currency: "HNL"
+    currency: "HNL",
 });
 
 export default function CreateProjectForm() {
@@ -29,9 +34,12 @@ export default function CreateProjectForm() {
 
     const [userId, setUserId] = useState<UUID>();
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
-
+    const [selectedCategory, setSelectedCategory] = useState<string>("");
+    const [categories, setCategories] = useState<Categories[]>([]);
     const [loading, setLoading] = useState(false);
+    const [alertType, setAlertType] = useState<AlertType>(null);
     const [project, setProject] = useState<ProjectInsert>({
+        beneficios: "",
         description: "",
         expected_finish_date: "",
         investment_goal: 0,
@@ -43,10 +51,39 @@ export default function CreateProjectForm() {
         start_date: "",
         total_invested: 0,
     });
+    /*  const [projectCategory, setProjectCategory] = useState<ProjectCategoriesInsert>(); */
 
     const [bannerFile, setBannerFile] = useState<File | null>(null);
+    const [images, setImages] = useState<File[]>([]);
 
     const supabase = createClient();
+
+    const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const selectedFiles = Array.from(e.target.files).slice(0, 6); // Limit to 6 files
+            setImages(selectedFiles);
+        }
+    };
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const allCategories = await getCategories();
+                setCategories(allCategories);
+            } catch (err) {
+                console.error("Fetch error:", err);
+                if (err instanceof Error) {
+                    setError(err);
+                } else {
+                    setError(new Error("An unknown error occurred."));
+                }
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         async function fetchId() {
@@ -115,6 +152,11 @@ export default function CreateProjectForm() {
             if (uploadError) {
                 console.error("Error al subir la imagen:", uploadError.message);
                 setLoading(false);
+                setAlertType("error");
+
+                setTimeout(() => {
+                    setAlertType(null);
+                }, 3000);
                 return;
             }
 
@@ -129,6 +171,11 @@ export default function CreateProjectForm() {
             if (!projectBannerUrl) {
                 console.error("Error: No se pudo obtener la URL de la imagen");
                 setLoading(false);
+                setAlertType("error");
+
+                setTimeout(() => {
+                    setAlertType(null);
+                }, 3000);
                 return;
             }
             project.project_banner_url = projectBannerUrl;
@@ -139,20 +186,105 @@ export default function CreateProjectForm() {
         const adjustedProgress = Math.round(project.progress ?? 0); // Usa 0 si progress es null o undefined
 
         try {
-            const { data, error } = await supabase
+            const { data: projectData, error: projectError } = await supabase
                 .from("projects")
-                .insert([{ ...project, progress: adjustedProgress }]);
+                .insert([{ ...project, progress: adjustedProgress }])
+                .select();
 
-            if (error) {
-                console.error("Error al crear el proyecto:", error.message);
-            } else {
-                console.log("Proyecto creado:", data);
+            if (projectError) {
+                console.error("Error inserting project:", projectError.message);
+                setLoading(false);
+                setAlertType("error");
+
+                setTimeout(() => {
+                    setAlertType(null);
+                }, 3000);
+                return;
             }
 
-            router.push("/dashboard/emprendedores/proyectosEmprendedor"); // Redirect to projects list page
+            if (projectData && projectData.length > 0) {
+                const createdProject = projectData[0];
+                console.log("createdProject: ", createdProject.project_id);
+
+                // Associate the project with the selected category
+                if (selectedCategory) {
+                    const { error: categoryError } = await supabase
+                        .from("project_categories") // Adjust table name as needed
+                        .insert([
+                            {
+                                project_id: createdProject.project_id,
+                                category_id: selectedCategory,
+                            },
+                        ]);
+
+                    if (categoryError) {
+                        console.error(
+                            "Error associating project with category:",
+                            categoryError.message
+                        );
+                        setAlertType("error");
+
+                        setTimeout(() => {
+                            setAlertType(null);
+                        }, 3000);
+                    } else {
+                        console.log("Category successfully linked to project.");
+                    }
+                }
+            }
+
+            const createdProject = projectData[0];
+
+            // Upload images
+            const uploadedImageUrls: string[] = [];
+            for (const image of images) {
+                const sanitizedImageName = image.name
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "");
+                const { error: imageError } = await supabase.storage
+                    .from("Images_Projects")
+                    .upload(`projectImages/${sanitizedImageName}`, image);
+
+                if (imageError)
+                    throw new Error(`Error uploading image ${image.name}`);
+
+                const { data: imageUrlData } = supabase.storage
+                    .from("Images_Projects")
+                    .getPublicUrl(`projectImages/${sanitizedImageName}`);
+                if (imageUrlData?.publicUrl)
+                    uploadedImageUrls.push(imageUrlData.publicUrl);
+            }
+
+            // Insert image URLs into project_images table
+            if (uploadedImageUrls.length > 0) {
+                const imageInserts = uploadedImageUrls.map((url) => ({
+                    project_id: createdProject.project_id,
+                    image_url: url,
+                }));
+
+                const { error: imageInsertError } = await supabase
+                    .from("project_images")
+                    .insert(imageInserts);
+
+                if (imageInsertError)
+                    throw new Error("Error saving image URLs");
+            }
+
+            setAlertType("success");
+
+            setTimeout(() => {
+                setAlertType(null);
+                router.push("/dashboard/emprendedores");
+            }, 3000);
         } catch (error) {
             console.error("Error creating project:", error);
-            alert("Error creating project. Please try again.");
+            setAlertType("error");
+
+            setTimeout(() => {
+                setAlertType(null);
+            }, 3000);
         } finally {
             setLoading(false);
         }
@@ -171,7 +303,9 @@ export default function CreateProjectForm() {
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Nombre del Proyecto</Label>
+                                <Label htmlFor="name">
+                                    Nombre del Proyecto
+                                </Label>
                                 <Input
                                     id="name"
                                     name="name"
@@ -191,6 +325,16 @@ export default function CreateProjectForm() {
                                 />
                             </div>
                             <div className="space-y-2">
+                                <Label htmlFor="description">Beneficios</Label>
+                                <Textarea
+                                    id="beneficios"
+                                    name="beneficios"
+                                    value={project.beneficios ?? ""}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2">
                                 <Label htmlFor="start_date">
                                     Subir un ilustrativo
                                 </Label>
@@ -203,6 +347,21 @@ export default function CreateProjectForm() {
                                     accept="image/*"
                                 />
                             </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="images">
+                                    Subir Imágenes del Proyecto (Máximo 6)
+                                </Label>
+                                <Input
+                                    id="images"
+                                    name="images"
+                                    type="file"
+                                    multiple
+                                    className="cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                                    onChange={handleImagesChange}
+                                    accept="image/*"
+                                />
+                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="start_date">
@@ -273,43 +432,114 @@ export default function CreateProjectForm() {
                                     required
                                 />
                             </div>
+                            <div className="space-y-2">
+                                {/* <Input
+                                    id="location"
+                                    name="location"
+                                    value={project.location ?? ""}
+                                    onChange={handleChange}
+                                    required
+                                /> */}
+                                <select
+                                    className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
+                                    value={selectedCategory}
+                                    onChange={(e) =>
+                                        setSelectedCategory(e.target.value)
+                                    }
+                                >
+                                    <option value="">
+                                        Seleccionar Categoria
+                                    </option>
+                                    {categories.map((category) => (
+                                        <option
+                                            key={category.category_id}
+                                            value={category.category_id}
+                                        >
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                             <CardFooter className="p-0">
                                 <Button type="submit" disabled={loading}>
-                                    {loading ? "Creando Nuevo Proyecto..." : "Crear Proyecto"}
+                                    {loading
+                                        ? "Creando Nuevo Proyecto..."
+                                        : "Crear Proyecto"}
                                 </Button>
                             </CardFooter>
                         </form>
                     </CardContent>
                 </Card>
+                {alertType && (
+                    <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+                        <Alert
+                            className={`w-80 ${
+                                alertType === "success"
+                                    ? "border-green-500 bg-green-50 text-green-800"
+                                    : "border-red-500 bg-red-50 text-red-800"
+                            }`}
+                        >
+                            {alertType === "success" ? (
+                                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                            ) : (
+                                <XCircle className="h-4 w-4 text-red-500" />
+                            )}
+                            <AlertTitle>
+                                {alertType === "success"
+                                    ? "¡Exito!"
+                                    : "¡Error!"}
+                            </AlertTitle>
+                            <AlertDescription>
+                                {alertType === "success"
+                                    ? "El proyecto fue creado correctamente."
+                                    : "Ocurrio un error al crear el proyecto. Por favor intentalo de nuevo."}
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                )}
             </div>
             <div className="md:w-1/2 md:ml-6 mt-4 md:mt-0">
-                {bannerFile &&
+                {bannerFile && (
                     <Image
                         className="w-full h-1/3 object-cover rounded-md"
                         src={URL.createObjectURL(bannerFile)}
                         alt="Project Profile Photo"
-                        width={500} height={100}
+                        width={500}
+                        height={100}
                     />
-                }
-                <h1 className="font-bold text-2xl mt-6" >{project.name}</h1>
-                {project.investment_goal != 0 &&
+                )}
+                <h1 className="font-bold text-2xl mt-6">{project.name}</h1>
+                {project.investment_goal != 0 && (
                     <div className="mb-6 mt-4">
                         <Progress value={project.progress} />
                         <div className="flex mt-2">
-                            <p><strong>Actualmente: </strong> {hnl.format(project.total_invested as number)}</p>
-                            <p className="ml-auto"><strong>Meta: </strong> {hnl.format(project.investment_goal as number)}</p>
+                            <p>
+                                <strong>Actualmente: </strong>{" "}
+                                {hnl.format(project.total_invested as number)}
+                            </p>
+                            <p className="ml-auto">
+                                <strong>Meta: </strong>{" "}
+                                {hnl.format(project.investment_goal as number)}
+                            </p>
                         </div>
                     </div>
-                }
-                {project.location &&
-                    <p><strong>Ubicación:</strong> {project.location}</p>
-                }
-                {project.start_date &&
-                    <p><strong>Fecha de Inicio:</strong> {project.start_date}</p>
-                }
-                {project.expected_finish_date &&
-                    <p><strong>Fecha de Finalización:</strong> {project.expected_finish_date}</p>
-                }
+                )}
+                {project.location && (
+                    <p>
+                        <strong>Ubicación:</strong> {project.location}
+                    </p>
+                )}
+                {project.start_date && (
+                    <p>
+                        <strong>Fecha de Inicio:</strong> {project.start_date}
+                    </p>
+                )}
+                {project.expected_finish_date && (
+                    <p>
+                        <strong>Fecha de Finalización:</strong>{" "}
+                        {project.expected_finish_date}
+                    </p>
+                )}
                 <p className="mt-2">{project.description}</p>
             </div>
         </div>

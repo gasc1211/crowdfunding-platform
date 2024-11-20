@@ -4,6 +4,8 @@ import ProjectCard from "@/app/ui/components/ProjectCard";
 import { Input } from "@/components/ui/input";
 import { getAllProjects, getCategories, getProjectsByCategory } from "@/app/api/handler";  // make sure to import getProjectsByCategory
 import Hero from "@/app/ui/components/Hero";
+import { useSearchParams } from "next/navigation";
+import { getUserProjects } from "@/app/api/handler";
 
 export default function InversorDashboard() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -15,17 +17,53 @@ export default function InversorDashboard() {
     const [loading, setLoading] = useState(true);
     const projectsPerPage = 6;
     type ProjectWithCategory = typeof projects[number] & { category_id: string };
+    const searchParams = useSearchParams();
+    const [user_id, setUser_id] = useState<Users['user_id']>();
+
+    useEffect(() => {
+        async function fetchId(){
+            const idUser = searchParams.get('userId');
+            console.log('userId:', idUser)
+            if (idUser) {
+                try {
+                    const parsedId = JSON.parse(idUser);
+                    setUser_id(parsedId);
+                    console.log('parsedid: ', parsedId)
+                } catch (err) {
+                    console.error('Failed to parse project:', err);
+                }
+            } else {
+                console.error('No project data found in query');
+            }
+
+        }
+        fetchId()
+    }, [searchParams]);
+    console.log('parsedid user_id: ', user_id)
 
     // Fetching initial data for projects and categories
     useEffect(() => {
         async function fetchData() {
             try {
-                const [allProjects, allCategories] = await Promise.all([
-                    getAllProjects(),
-                    getCategories()
-                ]);
-                setProjects(allProjects);
-                setCategories(allCategories);
+                console.log('dentro de data: ', user_id)
+                if (user_id) {
+                    console.log("hola")
+                    const [userProjects, allCategories] = await Promise.all([
+                        getUserProjects(user_id),
+                        getCategories()
+                    ]);
+                    setProjects(userProjects);
+                    setCategories(allCategories);
+                }
+                else{
+                    const [allProjects, allCategories] = await Promise.all([
+                        getAllProjects(),
+                        getCategories()
+                    ]);
+                    setProjects(allProjects);
+                    setCategories(allCategories);
+                }
+                
             } catch (err) {
                 console.error('Fetch error:', err);
                 if (err instanceof Error) {
@@ -38,8 +76,10 @@ export default function InversorDashboard() {
             }
         }
 
-        fetchData();
-    }, []);
+        if (user_id !== undefined) {
+            fetchData();
+        }
+    }, [user_id]);
 
 
     // Filtering projects based on selected category

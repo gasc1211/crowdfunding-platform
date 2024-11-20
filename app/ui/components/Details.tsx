@@ -60,8 +60,15 @@ export default function Details({ project }: { project: Project }){
                         </ul>
                     </p>
                     <AlertDialogFooter>
-                    <AlertDialogCancel>Cerrar</AlertDialogCancel>|
-                    <AlertDialogAction><Link href={"/proyecto"}>Ver Todos Los Detalles</Link></AlertDialogAction>
+                        <AlertDialogCancel>Cerrar</AlertDialogCancel>|
+                        <AlertDialogAction>
+                            <Link
+                                href={{
+                                    pathname: "/proyecto",
+                                    query: { project: JSON.stringify(project) }, // Serialize project object
+                                }}>Ver Todos Los Detalles
+                            </Link>
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

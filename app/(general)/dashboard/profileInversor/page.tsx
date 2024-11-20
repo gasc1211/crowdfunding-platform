@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { getUserData } from "@/app/api/handler";
 import { getUserProjects } from "@/app/api/handler";
 
-export default function ProfileaInversor() {
+export default function ProfileInversor() {
         const [userData, setUserData] = useState<Users | null>(null);
         const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
         const [projects, setProjects] = useState<Project[]>([]); // State to store projects
