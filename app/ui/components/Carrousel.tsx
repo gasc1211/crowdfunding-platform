@@ -8,8 +8,11 @@ import {
     CarouselItem,
 } from "@/components/ui/carousel";
 
-export default function ResponsiveCarousel({ projects }: { projects: Project[] }) {
-
+export default function ResponsiveCarousel({
+    projects,
+}: {
+    projects: Project[];
+}) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const goToSlide = useCallback((event: React.SyntheticEvent) => {
@@ -19,7 +22,9 @@ export default function ResponsiveCarousel({ projects }: { projects: Project[] }
     }, []);
 
     const goToPrevSlide = useCallback(() => {
-        setCurrentSlide((prev) => (prev - 1 + projects.length) % projects.length);
+        setCurrentSlide(
+            (prev) => (prev - 1 + projects.length) % projects.length
+        );
     }, [projects.length]);
 
     const goToNextSlide = useCallback(() => {
@@ -34,7 +39,8 @@ export default function ResponsiveCarousel({ projects }: { projects: Project[] }
     return (
         <div className="relative w-full rounded-md px-6 mt-4">
             <Carousel className="w-full" onSelect={goToSlide}>
-                <CarouselContent className="rounded-3xl"
+                <CarouselContent
+                    className="rounded-3xl"
                     style={{
                         transform: `translateX(-${currentSlide * 100}%)`,
                         transition: "transform 0.5s ease",
@@ -87,10 +93,11 @@ export default function ResponsiveCarousel({ projects }: { projects: Project[] }
                         key={index}
                         onClick={goToSlide}
                         data-index={index}
-                        className={`w-3 h-3 rounded-full transition-colors ${currentSlide === index
-                            ? "bg-white"
-                            : "bg-white/50 hover:bg-white/75"
-                            }`}
+                        className={`w-3 h-3 rounded-full transition-colors ${
+                            currentSlide === index
+                                ? "bg-white"
+                                : "bg-white/50 hover:bg-white/75"
+                        }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />
                 ))}

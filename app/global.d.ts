@@ -24,4 +24,6 @@ declare global {
     type ProjectCategories = DB['public']['Tables']['project_categories']['Insert']
     type ProjectCategories = DB['public']['Tables']['project_categories']['Update']
     type ProducerInsert = DB['public']['Tables']['producer']['Insert']
+    type ProjectComment = DB['public']['Tables']['comments']['Row']
+    type ProjectCommentInsert = DB['public']['Tables']['comments']['Insert']
 }

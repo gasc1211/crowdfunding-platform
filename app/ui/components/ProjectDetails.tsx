@@ -4,7 +4,88 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import ElementsCheckoutForm from "@/components/ElementsCheckoutForm";
 
+import Image from 'next/image'
+import { ChangeEvent, useEffect, useState } from "react";
+import { UUID } from "crypto";
+import { getUserByUserId, getComments, getUserId } from "@/app/api/handler";
+import { createClient } from "@/utils/supabase/client";
+
 export default function ProjectDetails({ project }: { project: Project }) {
+
+    const [userId, setUserId] = useState<UUID>();
+    const supabase = createClient();
+    const [comment, setComment] = useState<ProjectCommentInsert>({
+        author_id: userId,
+        content: "",
+        project_id: project.project_id,
+    });
+    const [comments, setComments] = useState<ProjectComment[] | null>(null);
+    const [authors, setAuthors] = useState<Users[] | null>(null);
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            const data = await getComments(project.project_id);
+            setComments(data); // Guarda los comentarios en el estado
+
+            data.forEach(async element => {
+                const user_id = element.author_id;
+                const author = await getUserByUserId(user_id);
+                if (author) {
+                    setAuthors((prevAuthors) => {
+                        if (prevAuthors === null) {
+                            return [author];
+                        }
+                        return [...prevAuthors, author];
+                    });
+                }
+            });
+        };
+    
+        fetchComments();
+      }, []);
+
+    
+    useEffect(() => {
+        async function fetchId() {
+            try {
+                const data = await getUserId();
+                setUserId(data.user_id);
+                setComment((prev) => ({ ...prev, author_id: data.user_id }));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        
+        fetchId();
+    }, []);
+
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+        const comentario = e.target.value;
+        setComment((prev) => ({ ...prev, content: comentario }));
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const { error } = await supabase
+              .from("comments")
+              .insert({author_id : comment.author_id, content : comment.content, project_id : comment.project_id});
+      
+            if (error) {
+              console.error("Error al guardar el comentario:", error.message);
+              alert("Error al guardar el comentario.");
+              return;
+            }
+      
+            alert("Comentario guardado exitosamente.");
+            setComment((prev) => ({ ...prev, content: "" }));
+        } catch (error) {
+            console.error("Error desconocido:", error);
+            alert("Hubo un error al guardar el comentario.");
+        }
+    };
+  if (!userId) return <div>Loading...</div>;
+  if (!project) return <div>Loading...</div>;
+
     return (
         <Card className="w-full lg:w-full h-full">
             <CardHeader>
@@ -65,6 +146,58 @@ export default function ProjectDetails({ project }: { project: Project }) {
                         </div>
                         <p className="mb-4">Fecha de cierre de inversión: {project.expected_finish_date}</p>
                     </div>
+                </div>
+            </CardContent>
+            <CardContent>
+                <div className="space-y-14">
+                    <div className="bg-white p-4 rounded-lg border border-inherit">
+                        <h5 className="font-bold mb-2">Comentarios</h5>
+                        <div>
+                            {authors && comments ? (
+                                comments.map((comment, index) => {
+                                    const author = authors[index]; // Asumiendo que el índice de comentarios coincide con el de los autores
+                                    return (
+                                        <div key={index} className="flex items-center mb-5">
+                                            <div className="flex-none w-14">
+                                            <Image
+                                                src={author ? (author.profileImg ? author.profileImg : "/usuario-verificado.png") : "/usuario-verificado.png"}
+                                                width={40}
+                                                height={40}
+                                                alt=""
+                                                className="rounded-full w-25 h-25 border"
+                                            />
+                                            </div>
+                                            <div className="ml-4">
+                                                <h3 className="text-lg">{author ? author.first_name + " " + author.last_name : "Nada"}</h3>
+                                                <p className="text-gray-500">{comment.content}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <p>No hay comentarios</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="flex mt-8">
+                    <input 
+                        type="text" 
+                        name="comentario" 
+                        id="comentario" 
+                        className="flex-1 peer h-full w-full rounded-[7px] border border-gray-200 bg-transparent px-3 py-2.5 pr-20 mr-2 text-sm text-blue-gray-700 outline outline-0 transition-all placeholder:text-gray-500 placeholder-shown:borde-gray-400 focus:border-2 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" 
+                        placeholder="Has tu comentario"
+                        value={comment.content ?? ""}
+                        onChange={handleInputChange}
+                    />  
+                    <button
+                        className="flex-full right-1 top-1 z-10 select-none rounded bg-green-500 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none peer-placeholder-shown:pointer-events-none peer-placeholder-shown:bg-blue-gray-500 peer-placeholder-shown:opacity-50 peer-placeholder-shown:shadow-none"
+                        type="button"
+                        data-ripple-light="true"
+                        onClick={handleSubmit}
+                    >
+                        Comentar
+                    </button>
                 </div>
             </CardContent>
             <CardFooter>

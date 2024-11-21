@@ -65,18 +65,18 @@ export default function Dashboard() {
     if (error) return <div>Error: {error.message}</div>;
     if (!userData) return <div>Loading...</div>;
 
-    return (
-        <>
-            <div className="mx-auto">
-                <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/dashboard-plant2.png')] bg-cover">
-                    <h1 className="text-white text-4xl font-bold text-center px-4">
-                        Bienvenido a tu Dashboard {userData.first_name}
-                    </h1>
-                </div>
-            </div>
-            <div className="flex flex-col lg:flex-row justify-between mt-4">
-                <Card className="w-full lg:w-1/4 mr-4 md:mb-0 mb-4">
-                    {/* <CardHeader className="text-center">
+
+  return (
+    <>
+        <div className="mx-auto">
+          <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/dashboard-plant2.png')] bg-cover">
+            <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {userData.first_name}</h1>
+          </div>
+        </div>
+        <br />
+        <div className="flex flex-col lg:flex-row justify-between mt-4">
+          <Card className="w-full lg:w-1/4 mr-4 md:mb-0 mb-4">
+            {/* <CardHeader className="text-center">
               <CardTitle>Perfil</CardTitle>
             </CardHeader> */}
                     <CardContent className="flex flex-col items-center h-full mt-12">
