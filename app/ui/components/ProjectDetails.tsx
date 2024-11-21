@@ -1,7 +1,7 @@
 import { Progress } from "@/components/ui/progress";
-// import { Button } from "@/components/ui/button";
-// import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import ElementsCheckoutForm from "@/components/ElementsCheckoutForm";
 
 import Image from 'next/image'
@@ -217,6 +217,19 @@ export default function ProjectDetails({ project }: { project: Project }) {
                     </button>
                 </div>
             </CardContent>
+            <CardFooter>
+            {/* Conditional Button */}
+            {userId === project.producer_id && (
+                    <Button className="ml-5 w-full bg-blue-500 hover:bg-blue-600">
+                        <Link href={{
+                                    pathname: "/proyecto/edit",
+                                    query: { projectId: JSON.stringify(project.project_id) }, // Serialize project object
+                                }}>
+                            Editar Perfil de Proyecto
+                        </Link>
+                    </Button>
+                )}
+        </CardFooter>
         </Card>
     );
 }
