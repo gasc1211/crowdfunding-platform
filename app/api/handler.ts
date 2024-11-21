@@ -310,21 +310,20 @@ export async function getUserByProjectId(producerId: string) {
   return data
 }
 
-
-export async function getProject(projectId: string) {
-  console.log("inside funct: ", projectId)
+export async function getProject(projectId: string): Promise<Project | null> {
   // Query Supabase for the projects of the current user
   const { data, error } = await supabase
     .from('projects')
     .select('*')
     .eq('project_id', projectId)
-    .single();
+    .single(); 
+
   if (error) {
     console.error('Error fetching user project:', error);
     throw new Error('Failed to fetch user projects');
   }
 
-  return data;
+  return data as Project;
 }
 
 
@@ -344,6 +343,21 @@ export async function getUrls(projectId: string) {
   return data;
 }
 
+export async function updateProjectTotalInvested(project: Project) {
+  // Update field
+  const { data, error } = await supabase
+    .from('projects')
+    .update({ total_invested: project.total_invested})
+    .eq('project_id', project.project_id)
+    .select(); 
+
+    if (error) {
+      console.error('Error updating project data:', error);
+      throw new Error('Failed to update the project'); 
+    }
+
+    console.log(data);
+  }
 
 export async function getComments(projectId: string) {
 
@@ -492,4 +506,3 @@ export async function insertImageUrls(imageUrls: string[], projectId: string) {
     throw new Error("Failed to save image URLs to the database.");
   }
 }
-
