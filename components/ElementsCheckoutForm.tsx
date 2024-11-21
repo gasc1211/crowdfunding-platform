@@ -10,11 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { register } from "module";
 import { createPaymentIntent } from "@/app/actions/stripe";
 import { StripeError } from "@stripe/stripe-js";
+import { updateProject } from "@/app/api/handler";
 
-function CheckoutForm() {
+function CheckoutForm({ project }: { project: Project }) {
 
   // Define values for form validation
   const checkoutFormSchema = z.object({
@@ -100,14 +100,24 @@ function CheckoutForm() {
       }
 
       // Create a PaymentIntent with the specified amount.
-      const { client_secret: clientSecret } = await createPaymentIntent({ amount: values.amount });
+      const { client_secret: clientSecret } = await createPaymentIntent({
+        amount: values.amount,
+        projectData: project,
+      });
+
+      // Update project on database
+      let newProject = project;
+      newProject.total_invested += values.amount;
+
+      console.log(newProject);
+      await updateProject(newProject);
 
       // Use your card Element with other Stripe.js APIs
       const { error: confirmError } = await stripe!.confirmPayment({
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `${window.location.origin}/inversor`,
+          return_url: `${window.location.origin}/proyecto/${project.project_id}`,
           payment_method_data: {
             billing_details: {
               name: values.cardholderName,
@@ -116,15 +126,16 @@ function CheckoutForm() {
         },
       });
 
+
       if (confirmError) {
         setPayment({ status: "error" });
         setErrorMessage(confirmError.message ?? "An unknown error occurred");
-      } else {
-        
+        return;
       }
+
+
     } catch (err) {
       const { message } = err as StripeError;
-
       setPayment({ status: "error" });
       setErrorMessage(message ?? "An unknown error occurred");
     }
@@ -192,7 +203,7 @@ function CheckoutForm() {
   );
 }
 
-export default function ElementsCheckoutForm(props: { project: Project }): JSX.Element {
+export default function ElementsCheckoutForm({ project }: { project: Project }): JSX.Element {
   return (
     <Elements
       stripe={getStripe()}
@@ -202,7 +213,7 @@ export default function ElementsCheckoutForm(props: { project: Project }): JSX.E
         mode: "payment",
         amount: 100,
       }}>
-      <CheckoutForm />
+      <CheckoutForm project={project} />
     </Elements>
   );
 }

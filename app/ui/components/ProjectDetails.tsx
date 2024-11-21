@@ -36,7 +36,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                                 }).format(project.total_invested)}
                             </span>
                         </div>
-                        <Progress value={project.progress} className="mb-4 h-4" />
+                        <Progress value={(project.total_invested / project.investment_goal) * 100} className="mb-4 h-4" />
                         <div className="grid md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <h3 className="font-bold mb-2">
@@ -69,9 +69,9 @@ export default function ProjectDetails({ project }: { project: Project }) {
             </CardContent>
             <CardFooter>
                 <div className="w-full">
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                    {/* <Button className="w-full bg-orange-500 hover:bg-orange-600">
                         <Link href={`/pagos/confirmar?${project.project_id}`}>Invertir Ahora [Hosted Page]</Link>
-                    </Button>
+                    </Button> */}
                     <div className="mt-4">
                         <h2 className="font-bold text-xl my-2">Invierte Ahora</h2>
                         <ElementsCheckoutForm project={project} />
