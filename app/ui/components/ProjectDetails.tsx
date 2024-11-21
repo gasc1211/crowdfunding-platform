@@ -1,6 +1,6 @@
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+// import { Button } from "@/components/ui/button";
+// import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import ElementsCheckoutForm from "@/components/ElementsCheckoutForm";
 
@@ -70,12 +70,11 @@ export default function ProjectDetails({ project }: { project: Project }) {
             <CardFooter>
                 <div className="w-full">
                     {/* <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                        <Link href={`/pagos/confirmar?${project.project_id}`}>Invertir Ahora [Hosted Page]</Link>
+                        <Link href={`/pagos?project=${project.project_id}&amount=$`}>Invertir Ahora [Hosted Page]</Link>
                     </Button> */}
                     <div className="mt-4">
                         <h2 className="font-bold text-xl my-2">Invierte Ahora</h2>
                         <ElementsCheckoutForm project={project} />
-
                     </div>
                 </div>
             </CardFooter>

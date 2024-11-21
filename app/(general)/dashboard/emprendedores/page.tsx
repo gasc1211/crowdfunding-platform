@@ -61,7 +61,7 @@ export default function Dashboard() {
         }
 
         fetchData();
-    }, []);
+    }, [router]);
     if (error) return <div>Error: {error.message}</div>;
     if (!userData) return <div>Loading...</div>;
 

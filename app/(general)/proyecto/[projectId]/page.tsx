@@ -12,24 +12,22 @@ export default function DetalleProyecto({ params }: { params: { projectId: strin
 
     const [project, setProject] = useState<Project | null>(null);
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState();
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        if (!project) {
-            setLoading(true);
-            const fetchProjectData = async (projectId: string) => {
-                try {
-                    const data = await getProject(projectId);
-                    setProject(data);
-                } catch (error: any) {
-                    console.error(error);
-                    setError(error);
-                }
+        setLoading(true);
+        const fetchProjectData = async (projectId: string) => {
+            try {
+                const data = await getProject(projectId);
+                setProject(data);
+            } catch (error) {
+                console.error(error);
+                setError(error as string);
             }
-            fetchProjectData(params.projectId);
-            setLoading(false);
         }
-    });
+        fetchProjectData(params.projectId);
+        setLoading(false);
+    }, [project, params.projectId]);
 
     if (error)
         return <p>Ha ocurrido un error: {error}</p>;

@@ -106,7 +106,7 @@ function CheckoutForm({ project }: { project: Project }) {
       });
 
       // Update project on database
-      let newProject = project;
+      const newProject = project;
       newProject.total_invested += values.amount;
 
       console.log(newProject);
