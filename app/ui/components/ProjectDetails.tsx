@@ -82,7 +82,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
             alert("Hubo un error al guardar el comentario.");
         }
     };
-  if (!user_id) return <div>Loading...</div>;
+  if (!userId) return <div>Loading...</div>;
   if (!project) return <div>Loading...</div>;
 
     return (
@@ -204,7 +204,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                 <Link href="/pagos/confirmar">Invertir Ahora</Link>
             </Button>
             {/* Conditional Button */}
-            {user_id === project.producer_id && (
+            {userId === project.producer_id && (
                     <Button className="ml-5 w-full bg-blue-500 hover:bg-blue-600">
                         <Link href={{
                                     pathname: "/proyecto/edit",
