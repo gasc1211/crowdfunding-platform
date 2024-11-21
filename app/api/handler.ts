@@ -238,20 +238,21 @@ export async function getUserByProjectId(producerId: string) {
 }
 
 
-export async function getProject(projectId: string) {
+export async function getProject(projectId: string): Promise<Project | null> {
 
   // Query Supabase for the projects of the current user
   const { data, error } = await supabase
     .from('projects')
     .select('*')
-    .eq('projectId', projectId); 
+    .eq('project_id', projectId)
+    .single(); 
 
   if (error) {
     console.error('Error fetching user projects:', error);
     throw new Error('Failed to fetch user projects');
   }
 
-  return data;
+  return data as Project;
 }
 
 
@@ -270,3 +271,19 @@ export async function getUrls(projectId: string) {
   console.log('data from handler', data)
   return data;
 }
+
+export async function updateProject(project: Project) {
+  // Update field
+  const { data, error } = await supabase
+    .from('projects')
+    .update({ total_invested: project.total_invested})
+    .eq('project_id', project.project_id)
+    .select(); 
+
+    if (error) {
+      console.error('Error updating project data:', error);
+      throw new Error('Failed to update the project'); 
+    }
+
+    console.log(data);
+  }

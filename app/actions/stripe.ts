@@ -38,7 +38,7 @@ export async function createCheckoutSession(values: {amount: number, embedded: b
 }
 
 export async function createPaymentIntent(
-  values: { amount: number },
+  values: { amount: number, projectData: Project },
 ): Promise<{ client_secret: string }> {
   const paymentIntent: Stripe.PaymentIntent =
     await stripe.paymentIntents.create({
@@ -48,6 +48,7 @@ export async function createPaymentIntent(
       ),
       automatic_payment_methods: { enabled: true },
       currency: config.CURRENCY,
+      metadata: {...values.projectData}
     });
 
   return { client_secret: paymentIntent.client_secret as string };
