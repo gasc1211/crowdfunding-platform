@@ -1,7 +1,7 @@
 import { Progress } from "@/components/ui/progress";
 // import { Button } from "@/components/ui/button";
 // import Link from "next/link";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import ElementsCheckoutForm from "@/components/ElementsCheckoutForm";
 
 import Image from 'next/image'
@@ -165,7 +165,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                     </div>
                 </div>
             </CardContent>
-            <CardFooter>
+            <CardContent>
                 <div className="space-y-14">
                     <div className="bg-white p-4 rounded-lg border border-inherit">
                         <h5 className="font-bold mb-2">Comentarios</h5>
@@ -216,7 +216,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                         Comentar
                     </button>
                 </div>
-            </CardFooter>
+            </CardContent>
         </Card>
     );
 }
