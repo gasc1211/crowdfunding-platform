@@ -165,7 +165,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                     </div>
                 </div>
             </CardContent>
-            <CardContent>
+            <CardFooter>
                 <div className="space-y-14">
                     <div className="bg-white p-4 rounded-lg border border-inherit">
                         <h5 className="font-bold mb-2">Comentarios</h5>
@@ -216,7 +216,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                         Comentar
                     </button>
                 </div>
-            </CardContent>
+            </CardFooter>
         </Card>
     );
 }
