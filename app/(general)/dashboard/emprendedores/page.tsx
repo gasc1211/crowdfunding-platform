@@ -52,6 +52,7 @@ export default function Dashboard() {
             <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {userData.first_name}</h1>
           </div>
         </div>
+        <br />
         <div className="flex flex-col lg:flex-row justify-between mt-4">
           <Card className="w-full lg:w-1/4 mr-4 md:mb-0 mb-4">
             {/* <CardHeader className="text-center">

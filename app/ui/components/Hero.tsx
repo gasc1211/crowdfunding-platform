@@ -10,7 +10,7 @@ export default function Hero() {
     return (
         <div className="mx-auto">
           <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner2.png')] bg-cover">
-            <h1 className="text-primary text-6xl font-bold text-center px-4">Proyectos Para Invertir</h1>
+            <h1 className="text-primary text-4xl md:text-6xl font-bold text-center px-4">Proyectos Para Invertir</h1>
           </div>
         </div>
     );

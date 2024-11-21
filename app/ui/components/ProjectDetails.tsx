@@ -2,8 +2,35 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react";
+import { getUserId } from "@/app/api/handler";
 
 export default function ProjectDetails({ project }: { project: Project }) {
+    const [user_id, setUser_id] = useState<Users['user_id']>();
+    const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
+    
+    useEffect(() => {
+        async function fetchId() {
+            try {
+                console.log("Fetching user data..."); // Debugging line
+                const data = await getUserId();
+                setUser_id(data.user_id);
+            } catch (err) {
+                console.error(err); // Log the error
+                if (err instanceof Error) {
+                    setError(err); // Set the error safely
+                } else {
+                    setError(new Error("An unknown error occurred.")); // Fallback
+                }
+            }
+        }
+
+        fetchId();
+    }, []);
+    if (error) return <div>Error: {error.message}</div>;
+  if (!user_id) return <div>Loading...</div>;
+  if (!project) return <div>Loading...</div>;
+
     return (
         <Card className="w-full lg:w-full h-full">
         <CardHeader>
@@ -70,6 +97,17 @@ export default function ProjectDetails({ project }: { project: Project }) {
             <Button className="w-full bg-orange-500 hover:bg-orange-600">
                 <Link href="/pagos/confirmar">Invertir Ahora</Link>
             </Button>
+            {/* Conditional Button */}
+            {user_id === project.producer_id && (
+                    <Button className="ml-5 w-full bg-blue-500 hover:bg-blue-600">
+                        <Link href={{
+                                    pathname: "/proyecto/edit",
+                                    query: { projectId: JSON.stringify(project.project_id) }, // Serialize project object
+                                }}>
+                            Editar Perfil de Proyecto
+                        </Link>
+                    </Button>
+                )}
         </CardFooter>
       </Card>
     );

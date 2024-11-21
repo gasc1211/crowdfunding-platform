@@ -296,12 +296,12 @@ export default function CreateProjectForm() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="start_date">
+                                <Label htmlFor="project_banner_url">
                                     Subir un ilustrativo
                                 </Label>
                                 <Input
-                                    id="img"
-                                    name="img"
+                                    id="project_banner_url"
+                                    name="project_banner_url"
                                     type="file"
                                     className="cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                     onChange={handleFileChange}
@@ -392,26 +392,18 @@ export default function CreateProjectForm() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                
-                                {/* <Input
-                                    id="location"
-                                    name="location"
-                                    value={project.location ?? ""}
-                                    onChange={handleChange}
-                                    required
-                                /> */}
                                 <select
-                            className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                        >
-                            <option value="">Seleccionar Categoria</option>
-                            {categories.map((category) => (
-                                <option key={category.category_id} value={category.category_id}>
-                                    {category.name}
-                                </option>
-                            ))}
-                        </select>
+                                    className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                >
+                                    <option value="">Seleccionar Categoria</option>
+                                    {categories.map((category) => (
+                                        <option key={category.category_id} value={category.category_id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <CardFooter className="p-0">
                                 <Button type="submit" disabled={loading}>
