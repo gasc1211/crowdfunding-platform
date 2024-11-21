@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfileImageUpload from "./ProfileImageUpload";
 import { calculateAge } from "@/app/api/edad";
 import { useEffect, useState } from "react";
-import { getUserData } from "@/app/api/handler";
+import { getUserData, isProducer } from "@/app/api/handler";
 
 export default function Sidebar() {
     const [userData, setUserData] = useState<Users | null>(null);
+    const [isUserProducer, setIsUserProducer] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
 
     useEffect(() => {
@@ -20,6 +21,8 @@ export default function Sidebar() {
                 setUserData(data);
 
                 // Fetch projects for the logged-in user using their user_id
+                const producerStatus = await isProducer(data.user_id); // Verificamos si es productor
+                setIsUserProducer(producerStatus);
             } catch (err) {
                 console.error(err); // Log the error
                 if (err instanceof Error) {
@@ -67,14 +70,19 @@ export default function Sidebar() {
                         <Button className="w-full">
                             <div> Ver Proyectos Completados </div>
                         </Button>
-                        <Button className="w-full">
-                            <div>
+                        {isUserProducer ? (
+                            <Button className="w-full">
+                                <Link href={"/dashboard/emprendedores"}>
+                                    Perfil Emprendedor
+                                </Link>
+                            </Button>
+                        ) : (
+                            <Button className="w-full">
                                 <Link href={"/productor/editar"}>
                                     ¿Deseas empezar una Campaña?
                                 </Link>
-                                <Link href={"/"}>Perfil Emprendedor</Link>
-                            </div>
-                        </Button>
+                            </Button>
+                        )}
                     </div>
                 </div>
             </CardContent>

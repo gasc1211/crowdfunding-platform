@@ -31,6 +31,26 @@ export async function getUserData() {
   return data
 }
 
+export async function isProducer(userId: string): Promise<boolean> {
+  // Buscamos si el `user_id` existe en la tabla `producer`
+  const { data, error } = await supabase
+    .from("producer")
+    .select("user_id")
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      // Retornamos false si no se encuentra el usuario
+      return false;
+    }
+    console.error("Error checking producer status:", error);
+    throw error;
+  }
+
+  return !!data; // Si hay datos, el usuario es productor
+}
+
 //Obtener perfil de productor
 export async function getProductorData( userId: string ) { 
   // Query Supabase

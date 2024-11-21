@@ -9,9 +9,11 @@ type HeroInversorProps = {
 export default function Hero() {
     return (
         <div className="mx-auto">
-          <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner2.png')] bg-cover">
-            <h1 className="text-primary text-6xl font-bold text-center px-4">Proyectos Para Invertir</h1>
-          </div>
+            <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner2.png')] bg-cover">
+                <h1 className=" text-6xl font-bold text-center px-4">
+                    Proyectos Para Invertir
+                </h1>
+            </div>
         </div>
     );
 }
@@ -19,9 +21,11 @@ export default function Hero() {
 export function HeroInversor({ userName }: HeroInversorProps) {
     return (
         <div className="mx-auto">
-          <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner3.png')] bg-cover">
-            <h1 className="text-white text-4xl font-bold text-center px-4">Bienvenido a tu Dashboard {userName}</h1>
-          </div>
+            <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner3.png')] bg-cover">
+                <h1 className="text-white text-4xl font-bold text-center px-4">
+                    Bienvenido a tu Dashboard {userName}
+                </h1>
+            </div>
         </div>
     );
 }
