@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "@/app/ui/components/ProjectCard";
 import { Input } from "@/components/ui/input";
-import { getAllProjects, getCategories, getProjectsByCategory } from "@/app/api/handler";  // make sure to import getProjectsByCategory
+import { getAllProjects, getCategories, getProjectsByCategory, getProjectsByUserCategory } from "@/app/api/handler";  // make sure to import getProjectsByCategory
 import Hero from "@/app/ui/components/Hero";
 import { useSearchParams } from "next/navigation";
 import { getUserProjects } from "@/app/api/handler";
@@ -76,9 +76,7 @@ export default function InversorDashboard() {
             }
         }
 
-        if (user_id !== undefined) {
             fetchData();
-        }
     }, [user_id]);
 
 
@@ -88,11 +86,25 @@ export default function InversorDashboard() {
             try {
                 setLoading(true);
                 if (selectedCategory) {
-                    const projectsByCategory = await getProjectsByCategory(selectedCategory);
-                    setProjects(projectsByCategory);
+                    if (user_id) {
+                        console.log("hola")
+                        const projectsByCategory = await getProjectsByUserCategory(selectedCategory, user_id);
+                        setProjects(projectsByCategory);
+                    }
+                    else{
+                        const projectsByCategory = await getProjectsByCategory(selectedCategory);
+                        setProjects(projectsByCategory);
+                    }
                 } else {
-                    const allProjects = await getAllProjects();
-                    setProjects(allProjects);
+                    if (user_id) {
+                        console.log("hola")
+                        const userProjects = await getUserProjects(user_id);
+                        setProjects(userProjects);
+                    }
+                    else{
+                        const allProjects = await getAllProjects();
+                        setProjects(allProjects);
+                    }
                 }
             } catch (err) {
                 console.error('Fetch error:', err);
@@ -103,7 +115,7 @@ export default function InversorDashboard() {
         }
 
         fetchFilteredProjects();
-    }, [selectedCategory]);  // Dependency array includes selectedCategory
+    }, [selectedCategory, user_id]);  // Dependency array includes selectedCategory
 
     // Reset pagination when filters change
     useEffect(() => {

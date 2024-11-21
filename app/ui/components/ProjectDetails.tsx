@@ -2,6 +2,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+
 import Image from 'next/image'
 import { ChangeEvent, useEffect, useState } from "react";
 import { UUID } from "crypto";
@@ -41,6 +42,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
     
         fetchComments();
       }, []);
+
     
     useEffect(() => {
         async function fetchId() {
@@ -80,6 +82,8 @@ export default function ProjectDetails({ project }: { project: Project }) {
             alert("Hubo un error al guardar el comentario.");
         }
     };
+  if (!userId) return <div>Loading...</div>;
+  if (!project) return <div>Loading...</div>;
 
     return (
         <Card className="w-full lg:w-full h-full">
@@ -199,6 +203,17 @@ export default function ProjectDetails({ project }: { project: Project }) {
             <Button className="w-full bg-orange-500 hover:bg-orange-600">
                 <Link href="/pagos/confirmar">Invertir Ahora</Link>
             </Button>
+            {/* Conditional Button */}
+            {userId === project.producer_id && (
+                    <Button className="ml-5 w-full bg-blue-500 hover:bg-blue-600">
+                        <Link href={{
+                                    pathname: "/proyecto/edit",
+                                    query: { projectId: JSON.stringify(project.project_id) }, // Serialize project object
+                                }}>
+                            Editar Perfil de Proyecto
+                        </Link>
+                    </Button>
+                )}
         </CardFooter>
       </Card>
     );
