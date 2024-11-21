@@ -4,7 +4,8 @@ import type { NextRequest } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
   "/",
-  "/acerca-de",
+  "/about",
+  "/dashboard/inversor",
   "/contacto",
   "/auth/(.*)",
 ]);
