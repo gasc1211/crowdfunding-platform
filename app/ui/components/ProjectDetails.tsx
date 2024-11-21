@@ -41,7 +41,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
         };
     
         fetchComments();
-      }, []);
+      }, [project.project_id]);
 
     
     useEffect(() => {
