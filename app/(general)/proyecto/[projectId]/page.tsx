@@ -37,7 +37,7 @@ export default function DetalleProyecto({ params }: { params: { projectId: strin
             {!isLoading && project &&
                 <div className="min-h-screen flex flex-col">
                     <div className="container mx-auto p-4">
-                        <Banner />
+                        <Banner imageUrl={project.project_banner_url as string} />
                         <div className="flex-grow">
                             <div className="flex flex-col lg:flex-row gap-6 mt-4">
                                 <div className="lg:w-1/3 xl:w-1/4">
