@@ -9,6 +9,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { UUID } from "crypto";
 import { getUserByUserId, getComments, getUserId } from "@/app/api/handler";
 import { createClient } from "@/utils/supabase/client";
+import { useUser } from "@clerk/nextjs";
 
 export default function ProjectDetails({ project }: { project: Project }) {
 
@@ -40,24 +41,29 @@ export default function ProjectDetails({ project }: { project: Project }) {
                 }
             });
         };
-    
-        fetchComments();
-      }, []);
 
-    
+        fetchComments();
+
+    }, [project.project_id]);
+
+    const { isSignedIn } = useUser();
+
     useEffect(() => {
         async function fetchId() {
             try {
-                const data = await getUserId();
-                setUserId(data.user_id);
-                setComment((prev) => ({ ...prev, author_id: data.user_id }));
+                if (isSignedIn) {
+                    const data = await getUserId();
+                    setUserId(data.user_id);
+                    setComment((prev) => ({ ...prev, author_id: data.user_id }));
+                }
+
             } catch (err) {
                 console.error(err);
             }
         }
-        
+
         fetchId();
-    }, []);
+    }, [isSignedIn]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const comentario = e.target.value;
@@ -67,15 +73,15 @@ export default function ProjectDetails({ project }: { project: Project }) {
     const handleSubmit = async () => {
         try {
             const { error } = await supabase
-              .from("comments")
-              .insert({author_id : comment.author_id, content : comment.content, project_id : comment.project_id});
-      
+                .from("comments")
+                .insert({ author_id: comment.author_id, content: comment.content, project_id: comment.project_id });
+
             if (error) {
-              console.error("Error al guardar el comentario:", error.message);
-              alert("Error al guardar el comentario.");
-              return;
+                console.error("Error al guardar el comentario:", error.message);
+                alert("Error al guardar el comentario.");
+                return;
             }
-      
+
             alert("Comentario guardado exitosamente.");
             setComment((prev) => ({ ...prev, content: "" }));
         } catch (error) {
@@ -83,8 +89,8 @@ export default function ProjectDetails({ project }: { project: Project }) {
             alert("Hubo un error al guardar el comentario.");
         }
     };
-  if (!userId) return <div>Loading...</div>;
-  if (!project) return <div>Loading...</div>;
+    if (!userId) return <div>Loading...</div>;
+    if (!project) return <div>Loading...</div>;
 
     return (
         <Card className="w-full lg:w-full h-full">
@@ -149,6 +155,17 @@ export default function ProjectDetails({ project }: { project: Project }) {
                 </div>
             </CardContent>
             <CardContent>
+                <div className="w-full">
+                    {/* <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                        <Link href={`/pagos?project=${project.project_id}&amount=$`}>Invertir Ahora [Hosted Page]</Link>
+                    </Button> */}
+                    <div className="mt-4">
+                        <h2 className="font-bold text-xl my-2">Invierte Ahora</h2>
+                        <ElementsCheckoutForm project={project} />
+                    </div>
+                </div>
+            </CardContent>
+            <CardContent>
                 <div className="space-y-14">
                     <div className="bg-white p-4 rounded-lg border border-inherit">
                         <h5 className="font-bold mb-2">Comentarios</h5>
@@ -159,13 +176,13 @@ export default function ProjectDetails({ project }: { project: Project }) {
                                     return (
                                         <div key={index} className="flex items-center mb-5">
                                             <div className="flex-none w-14">
-                                            <Image
-                                                src={author ? (author.profileImg ? author.profileImg : "/usuario-verificado.png") : "/usuario-verificado.png"}
-                                                width={40}
-                                                height={40}
-                                                alt=""
-                                                className="rounded-full w-25 h-25 border"
-                                            />
+                                                <Image
+                                                    src={author ? (author.profileImg ? author.profileImg : "/usuario-verificado.png") : "/usuario-verificado.png"}
+                                                    width={40}
+                                                    height={40}
+                                                    alt=""
+                                                    className="rounded-full w-25 h-25 border"
+                                                />
                                             </div>
                                             <div className="ml-4">
                                                 <h3 className="text-lg">{author ? author.first_name + " " + author.last_name : "Nada"}</h3>
@@ -181,15 +198,15 @@ export default function ProjectDetails({ project }: { project: Project }) {
                     </div>
                 </div>
                 <div className="flex mt-8">
-                    <input 
-                        type="text" 
-                        name="comentario" 
-                        id="comentario" 
-                        className="flex-1 peer h-full w-full rounded-[7px] border border-gray-200 bg-transparent px-3 py-2.5 pr-20 mr-2 text-sm text-blue-gray-700 outline outline-0 transition-all placeholder:text-gray-500 placeholder-shown:borde-gray-400 focus:border-2 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" 
+                    <input
+                        type="text"
+                        name="comentario"
+                        id="comentario"
+                        className="flex-1 peer h-full w-full rounded-[7px] border border-gray-200 bg-transparent px-3 py-2.5 pr-20 mr-2 text-sm text-blue-gray-700 outline outline-0 transition-all placeholder:text-gray-500 placeholder-shown:borde-gray-400 focus:border-2 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                         placeholder="Has tu comentario"
                         value={comment.content ?? ""}
                         onChange={handleInputChange}
-                    />  
+                    />
                     <button
                         className="flex-full right-1 top-1 z-10 select-none rounded bg-green-500 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none peer-placeholder-shown:pointer-events-none peer-placeholder-shown:bg-blue-gray-500 peer-placeholder-shown:opacity-50 peer-placeholder-shown:shadow-none"
                         type="button"
@@ -200,17 +217,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
                     </button>
                 </div>
             </CardContent>
-            <CardFooter>
-                <div className="w-full">
-                    {/* <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                        <Link href={`/pagos?project=${project.project_id}&amount=$`}>Invertir Ahora [Hosted Page]</Link>
-                    </Button> */}
-                    <div className="mt-4">
-                        <h2 className="font-bold text-xl my-2">Invierte Ahora</h2>
-                        <ElementsCheckoutForm project={project} />
-                    </div>
-                </div>
-            </CardFooter>
         </Card>
     );
 }
