@@ -343,7 +343,7 @@ export async function getUrls(projectId: string) {
   return data;
 }
 
-export async function updateProject(project: Project) {
+export async function updateProjectTotalInvested(project: Project) {
   // Update field
   const { data, error } = await supabase
     .from('projects')

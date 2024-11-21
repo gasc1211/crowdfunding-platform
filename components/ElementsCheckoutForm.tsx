@@ -12,7 +12,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { createPaymentIntent } from "@/app/actions/stripe";
 import { StripeError } from "@stripe/stripe-js";
-import { updateProject } from "@/app/api/handler";
+import { updateProjectTotalInvested } from "@/app/api/handler";
 
 function CheckoutForm({ project }: { project: Project }) {
 
@@ -110,7 +110,7 @@ function CheckoutForm({ project }: { project: Project }) {
       newProject.total_invested += values.amount;
 
       console.log(newProject);
-      await updateProject(newProject);
+      await updateProjectTotalInvested(newProject);
 
       // Use your card Element with other Stripe.js APIs
       const { error: confirmError } = await stripe!.confirmPayment({
