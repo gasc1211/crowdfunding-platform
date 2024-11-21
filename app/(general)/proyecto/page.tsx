@@ -33,18 +33,18 @@ export default function DetalleProyecto() {
     return (
         <div className="min-h-screen flex flex-col">
             <div className="container mx-auto p-4">
-                <Banner />
+                <Banner imageUrl="" />
                 <div className="flex-grow">
                     <div className="flex flex-col lg:flex-row gap-6 mt-4">
                         <div className="lg:w-1/3 xl:w-1/4">
-                            <SidebarProject producerId={project.producer_id}/>
+                            <SidebarProject producerId={project.producer_id} />
                         </div>
-                        <div className="lg:w-2/3 xl:w-3/4">
-                            <ProjectDetails key={project.project_id} project={project}/>
+                        <div className="lg:w-2/3 xl:w-3/4 h-full">
+                            <ProjectDetails key={project.project_id} project={project} />
                         </div>
                     </div>
                     <div className="mt-8">
-                        <ProjectGallery projectId = {project.project_id}/>
+                        <ProjectGallery projectId={project.project_id} />
                     </div>
                     <div className="flex justify-center mt-8">
                         <Button className="w-1/2 h-16">
