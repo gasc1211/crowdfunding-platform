@@ -26,7 +26,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
             setComments(data); // Guarda los comentarios en el estado
 
             data.forEach(async element => {
-                let user_id = element.author_id;
+                const user_id = element.author_id;
                 const author = await getUserByUserId(user_id);
                 if (author) {
                     setAuthors((prevAuthors) => {
