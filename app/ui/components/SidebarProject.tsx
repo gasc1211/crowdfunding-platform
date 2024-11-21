@@ -39,7 +39,7 @@ export default function SidebarProject({ producerId }: SidebarProjectProps) {
         }
     
         fetchData();
-      },[]);
+      },[producerId]);
       if (error) return <div>Error: {error.message}</div>;
       if (!userData) return <div>Loading...</div>;
 
