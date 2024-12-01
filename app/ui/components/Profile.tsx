@@ -21,7 +21,7 @@ export default function Profile() {
     const supabase = createClient();
 
     const [producer, setProducer] = useState<ProducerInsert>({
-        user_id: userId,
+        user_id: userId!,
         profile_image_url: "",
         profile_banner_url: "",
         biography: "",

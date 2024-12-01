@@ -60,7 +60,7 @@ export default function Details({ project }: { project: Project }) {
                     </ul>
                 </p>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cerrar</AlertDialogCancel>|
+                    <AlertDialogCancel>Cerrar</AlertDialogCancel>
                     <AlertDialogAction>
                         <Link href={`/proyecto/${project.project_id}`}>
                             Ver Todos Los Detalles
