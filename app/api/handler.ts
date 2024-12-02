@@ -51,6 +51,27 @@ export async function isProducer(userId: string): Promise<boolean> {
   return !!data; // Si hay datos, el usuario es productor
 }
 
+export async function isAdmin(userId: string): Promise<boolean> {
+  // Buscamos si el `user_id` existe en la tabla `admin`
+  const { data, error } = await supabase
+    .from("admin")
+    .select("user_id")
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      // Retornamos false si no se encuentra el usuario
+      return false;
+    }
+    console.error("Error checking admin status:", error);
+    throw error;
+  }
+
+  return !!data; // Si hay datos, el usuario es admin
+}
+
+
 //Obtener perfil de productor
 export async function getProductorData( userId: string ) { 
   // Query Supabase
