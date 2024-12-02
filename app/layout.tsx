@@ -7,23 +7,25 @@ import Footer from "./ui/components/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AgroStart",
-  description: "Plataforma de Crowdfunding para el Agro.",
+    title: "AgroStart",
+    description: "Plataforma de Crowdfunding para el Agro.",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <ClerkProvider localization={esMX}>
-      <html lang="es">
-        <body className={`${apfel_regular.className} antialiased`}>
-          {children}
-          <Footer />
-        </body>
-      </html>
-    </ClerkProvider>
-  );
+    return (
+        <ClerkProvider localization={esMX}>
+            <html lang="es">
+                <body className={`${apfel_regular.className} antialiased`}>
+                    <div className="flex flex-col min-h-screen">
+                        <main className="flex-1">{children}</main>
+                        <Footer />
+                    </div>
+                </body>
+            </html>
+        </ClerkProvider>
+    );
 }

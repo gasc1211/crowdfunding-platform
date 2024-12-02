@@ -10,7 +10,7 @@ export interface NavigationUser {
 
 export const mainNavigationItems: NavigationItem[] = [
   { name: "Inicio", href: "/" },
-  { name: "Dashboard", href: "/dashboard/emprendedores" },
+  { name: "Mi Perfil", href: "/dashboard/profileInversor" },
   { name: "Empezar una Campaña", href: "/proyecto/nuevo" },
   { name: "Acerca de", href: "/about" },
   { name: "Contáctanos", href: "/contacto" },
