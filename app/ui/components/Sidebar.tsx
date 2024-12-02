@@ -83,9 +83,12 @@ export default function Sidebar() {
                                 </Link>
                             </Button>
                         )}
+                        <Button className="w-full">
+                            <Link href={"/pagos/historial"}>Historial de Inversiones</Link>
+                        </Button>
                     </div>
                 </div>
             </CardContent>
-        </Card>
+        </Card >
     );
 }
