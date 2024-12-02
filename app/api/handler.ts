@@ -1,9 +1,6 @@
-//app/api/handler.ts
 'use server'
-
 import { createClient } from '@/utils/supabase/client'
 import { auth } from '@clerk/nextjs/server'
-
 
 // Initialize Supabase client
 const supabase = createClient();
@@ -350,6 +347,7 @@ export async function newProjectInvestment(project: Project, amount: number, pay
 
   // Create a new investment object
   const newInvestment: InvestmentsInsert = {
+    date: new Date().toLocaleDateString(),
     payment_id: paymentId,
     investor_id: (await user).user_id,
     project_id: project.project_id,
@@ -528,6 +526,44 @@ export async function insertImageUrls(imageUrls: string[], projectId: string) {
   }
 }
 
-export async function getInvestedProjects() {
-  
+
+type ProjectWithInvestments = Omit<Project,
+  "beneficios" | "description" | "project_banner_url" | "progress" | "investment_goal" | "total_invested">
+  & { investments: Omit<Investments, "project_id" | "payment_id">[] }
+  & { producer: { users: Pick<Users, "first_name" | "last_name"> } };
+
+export async function getInvestedProjects(): Promise<ProjectWithInvestments[]> {
+  // Get investor id
+  const investorId = getUserId();
+
+  // Fetch projects
+  const investorProjectsWithPaymentInfo = await supabase.from("projects")
+    .select(`
+      project_id,
+      producer_id,
+      name,
+      start_date,
+      finish_date,
+      expected_finish_date,
+      location,
+      investments!inner(
+        investor_id,
+        investment_amount,
+        date
+      ),
+      producer!inner(
+        users!inner(
+          first_name,
+          last_name
+        )
+      )
+    `)
+    .eq("investments.investor_id", (await investorId).user_id);
+
+  if (!investorProjectsWithPaymentInfo.error)
+    return investorProjectsWithPaymentInfo.data as unknown as ProjectWithInvestments[];
+
+  console.log(investorProjectsWithPaymentInfo.error);
+  throw new Error("Failed to fetch investor projects");
+
 }
