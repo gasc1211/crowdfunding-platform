@@ -82,22 +82,25 @@ export type Database = {
       }
       investments: {
         Row: {
-          investment_amount: unknown | null
-          investor_id: string | null
-          payment_id: string | null
-          project_id: string | null
+          date: string | null
+          investment_amount: number | null
+          investor_id: string
+          payment_id: string
+          project_id: string
         }
         Insert: {
-          investment_amount?: unknown | null
-          investor_id?: string | null
-          payment_id?: string | null
-          project_id?: string | null
+          date?: string | null
+          investment_amount?: number | null
+          investor_id: string
+          payment_id: string
+          project_id: string
         }
         Update: {
-          investment_amount?: unknown | null
-          investor_id?: string | null
-          payment_id?: string | null
-          project_id?: string | null
+          date?: string | null
+          investment_amount?: number | null
+          investor_id?: string
+          payment_id?: string
+          project_id?: string
         }
         Relationships: [
           {
