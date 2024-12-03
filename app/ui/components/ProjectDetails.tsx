@@ -101,6 +101,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
             setComment((prev) => ({ ...prev, content: "" }));
             setAlertType('success');
         } catch (error) {
+            console.log(error);
             setAlertType('error');
         }
     };
