@@ -10,9 +10,12 @@ import { UUID } from "crypto";
 import { getUserByUserId, getComments, getUserId } from "@/app/api/handler";
 import { createClient } from "@/utils/supabase/client";
 import { useUser } from "@clerk/nextjs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function ProjectDetails({ project }: { project: Project }) {
 
+    const [alertType, setAlertType] = useState<'success' | 'error' | null>(null);
     const [userId, setUserId] = useState<UUID>();
     const supabase = createClient();
     const [comment, setComment] = useState<ProjectCommentInsert>({
@@ -72,21 +75,33 @@ export default function ProjectDetails({ project }: { project: Project }) {
 
     const handleSubmit = async () => {
         try {
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from("comments")
-                .insert({ author_id: comment.author_id, content: comment.content, project_id: comment.project_id });
+                .insert({ author_id: comment.author_id, content: comment.content, project_id: comment.project_id })
+                .select()
+                .single();
 
             if (error) {
                 console.error("Error al guardar el comentario:", error.message);
-                alert("Error al guardar el comentario.");
+                setAlertType('error');
                 return;
             }
+            
+            // Recupera el autor del nuevo comentario.
+            const author = await getUserByUserId(data.author_id);
 
-            alert("Comentario guardado exitosamente.");
+            // Actualiza el estado de los comentarios.
+            setComments((prevComments) => [...(prevComments || []), data]);
+
+            // Actualiza el estado de los autores.
+            if (author) {
+                setAuthors((prevAuthors) => [...(prevAuthors || []), author]);
+            }
+            
             setComment((prev) => ({ ...prev, content: "" }));
+            setAlertType('success');
         } catch (error) {
-            console.error("Error desconocido:", error);
-            alert("Hubo un error al guardar el comentario.");
+            setAlertType('error');
         }
     };
     if (!userId) return <div>Loading...</div>;
@@ -216,6 +231,31 @@ export default function ProjectDetails({ project }: { project: Project }) {
                         Comentar
                     </button>
                 </div>
+                    {alertType && (
+                    <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+                        <Alert
+                            className={`w-80 ${
+                                alertType === 'success'
+                                    ? 'border-green-500 bg-green-50 text-green-800'
+                                    : 'border-red-500 bg-red-50 text-red-800'
+                            }`}
+                        >
+                            {alertType === 'success' ? (
+                                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                            ) : (
+                                <XCircle className="h-4 w-4 text-red-500" />
+                            )}
+                            <AlertTitle>
+                                {alertType === 'success' ? '¡Éxito!' : '¡Error!'}
+                            </AlertTitle>
+                            <AlertDescription>
+                                {alertType === 'success'
+                                    ? 'Comentario agregado exitosamente'
+                                    : 'No se pudo agregar el comentario'}
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                )}
             </CardContent>
             <CardFooter>
             {/* Conditional Button */}
