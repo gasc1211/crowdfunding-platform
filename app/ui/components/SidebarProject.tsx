@@ -44,7 +44,7 @@ export default function SidebarProject({ producerId }: SidebarProjectProps) {
   if (!userData) return <div>Loading...</div>;
 
   return (
-    <Card className="w-full lg:w-5/4 mr-4 md:mb-0 mb-4 h-full">
+    <Card className="w-full lg:w-5/4 mr-4 md:mb-0 mb-4 h-auto">
       <CardHeader className="text-center">
         <CardTitle>Perfil</CardTitle>
       </CardHeader>

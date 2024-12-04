@@ -53,29 +53,30 @@ const BellNotification: React.FC<BellNotificationProps> = ({ notifications }) =>
           >
             <h2 className="text-lg font-bold mb-4">Notificaciones</h2>
             <ul className="space-y-2">
-              {unreadNotifications.map((notif) => (
-                <li
-                  key={notif.notification_id}
-                  className={`p-2 rounded-md ${
-                    notif.read ? "bg-gray-100" : "bg-blue-100"
-                  }`}
-                >
+            {unreadNotifications.length > 0 ? (
+              unreadNotifications.map((notif) => (
+                <li key={notif.notification_id} className="p-2 rounded-md bg-blue-100">
                   {notif.message}
                 </li>
-              ))}
+              ))
+            ) : (
+              <li className="p-2 text-center text-gray-500">
+                No hay mensajes en este momento
+              </li>
+            )}
             </ul>
             <div className="mt-4 flex justify-end space-x-2">
               <button
                 className="px-4 py-2 text-sm bg-gray-200 rounded-md hover:bg-gray-300"
                 onClick={toggleDialog}
               >
-                Close
+                Cerrar
               </button>
               <button
                 className="px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 onClick={markAllAsRead}
               >
-                Mark All as Read
+                Marcar como Leídos
               </button>
             </div>
           </div>
