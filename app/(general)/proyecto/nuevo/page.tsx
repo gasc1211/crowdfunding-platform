@@ -131,55 +131,57 @@ export default function CreateProjectForm() {
         }
     };
 
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
+    
         if (bannerFile) {
-            // Reemplazar espacios y caracteres especiales en el nombre del archivo
-            // Normalizar el nombre del archivo eliminando espacios y caracteres especiales
-            const sanitizedFileName = bannerFile.name
+            // Generar un nombre único para el archivo del banner
+            const uniqueBannerName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${bannerFile.name
                 .normalize("NFD") // Descompone caracteres acentuados
                 .replace(/[\u0300-\u036f]/g, "") // Elimina los acentos
                 .replace(/\s+/g, "_") // Reemplaza espacios con guiones bajos
-                .replace(/[^a-zA-Z0-9._-]/g, ""); // Elimina caracteres no permitidos
-
+                .replace(/[^a-zA-Z0-9._-]/g, "")}`; // Elimina caracteres no permitidos
+    
             // Sube la imagen al bucket de Supabase
             const { error: uploadError } = await supabase.storage
                 .from("Images_Projects")
-                .upload(`banners/${sanitizedFileName}`, bannerFile);
-
+                .upload(`banners/${uniqueBannerName}`, bannerFile);
+    
             if (uploadError) {
                 console.error("Error al subir la imagen:", uploadError.message);
                 setLoading(false);
                 setAlertType("error");
-
+    
                 setTimeout(() => {
                     setAlertType(null);
                 }, 3000);
                 return;
             }
-
+    
             // Obtener la URL pública de la imagen
             const { data: urlData } = supabase.storage
                 .from("Images_Projects")
-                .getPublicUrl(`banners/${sanitizedFileName}`);
-
+                .getPublicUrl(`banners/${uniqueBannerName}`);
+    
             const projectBannerUrl = urlData?.publicUrl || "";
             console.log(projectBannerUrl);
-
+    
             if (!projectBannerUrl) {
                 console.error("Error: No se pudo obtener la URL de la imagen");
                 setLoading(false);
                 setAlertType("error");
-
+    
                 setTimeout(() => {
                     setAlertType(null);
                 }, 3000);
                 return;
             }
+    
             project.project_banner_url = projectBannerUrl;
         }
+    
 
         // Inserta los datos del proyecto en la tabla, incluyendo la URL de la imagen
         // Antes de la inserción, ajusta el valor de progress
@@ -233,45 +235,53 @@ export default function CreateProjectForm() {
                 }
             }
 
+
             const createdProject = projectData[0];
 
-            // Upload images
-            const uploadedImageUrls: string[] = [];
-            for (const image of images) {
-                const sanitizedImageName = image.name
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .replace(/\s+/g, "_")
-                    .replace(/[^a-zA-Z0-9._-]/g, "");
-                const { error: imageError } = await supabase.storage
-                    .from("Images_Projects")
-                    .upload(`projectImages/${sanitizedImageName}`, image);
 
-                if (imageError)
-                    throw new Error(`Error uploading image ${image.name}`);
+// Upload images
+// Upload images
+// Inside handleSubmit function
+const uploadedImageUrls: string[] = [];
+for (const image of images) {
+  // Generate a unique filename
+  const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${image.name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/[^a-zA-Z0-9._-]/g, "")}.${image.name.split('.').pop()}`;
 
-                const { data: imageUrlData } = supabase.storage
-                    .from("Images_Projects")
-                    .getPublicUrl(`projectImages/${sanitizedImageName}`);
-                if (imageUrlData?.publicUrl)
-                    uploadedImageUrls.push(imageUrlData.publicUrl);
-            }
+  const { error: imageError } = await supabase.storage
+    .from("Images_Projects")
+    .upload(`projectImages/${uniqueFileName}`, image);
 
-            // Insert image URLs into project_images table
-            if (uploadedImageUrls.length > 0) {
-                const imageInserts = uploadedImageUrls.map((url) => ({
-                    project_id: createdProject.project_id,
-                    image_url: url,
-                }));
+  if (!imageError) {
+    const { data: imageUrlData } = supabase.storage
+      .from("Images_Projects")
+      .getPublicUrl(`projectImages/${uniqueFileName}`);
 
-                const { error: imageInsertError } = await supabase
-                    .from("project_images")
-                    .insert(imageInserts);
+    if (imageUrlData?.publicUrl) {
+      uploadedImageUrls.push(imageUrlData.publicUrl);
+    }
+  }
+}
 
-                if (imageInsertError)
-                    throw new Error("Error saving image URLs");
-            }
+// Insert image URLs into project_images table
+if (uploadedImageUrls.length > 0) {
+  const imageInserts = uploadedImageUrls.map((url) => ({
+    project_id: createdProject.project_id,
+    image_url: url,
+  }));
 
+  const { error: imageInsertError } = await supabase
+    .from("project_images")
+    .insert(imageInserts);
+
+  if (imageInsertError) {
+    console.error("Error saving image URLs", imageInsertError);
+    throw new Error("Error saving image URLs");
+  }
+}
             setAlertType("success");
 
             setTimeout(() => {

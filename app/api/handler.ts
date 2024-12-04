@@ -527,3 +527,17 @@ export async function insertImageUrls(imageUrls: string[], projectId: string) {
     throw new Error("Failed to save image URLs to the database.");
   }
 }
+
+
+export async function getNotifications(userId: string) {
+  const { data, error } = await supabase
+    .from("applications") // Your notifications table
+    .select("*")
+    .eq("user_id", userId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data || [];
+}
