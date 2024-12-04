@@ -20,8 +20,8 @@ export default function Peticion() {
     const [producerRequests, setProducerRequests] = useState<ProducerRequest[]>(
         []
     );
-    const [notification, setNotification] = useState<{ message: string }>({ message: "" }); // Initialize state with message
-    const [errors, setErrors] = useState<Partial<Record<keyof NotificationsInsert, string>>>({})
+    const [notifications, setNotifications] = useState<Record<string, string>>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [userData, setUserData] = useState<Users['user_id'] | null>(null);
     const supabase = createClient();
 
@@ -58,13 +58,13 @@ export default function Peticion() {
         fetchProducerRequests();
     }, [supabase]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target
-        setNotification({ ...notification!, [name]: value })
-        if (errors[name as keyof NotificationsInsert]) {
-          setErrors({ ...errors, [name]: '' })
+     // Handle textarea change
+     const handleChange = (id: string, value: string) => {
+        setNotifications((prev) => ({ ...prev, [id]: value }));
+        if (errors[id]) {
+            setErrors((prev) => ({ ...prev, [id]: '' }));
         }
-      }
+    };
 
     // Función para aprobar una solicitud
     const handleApprove = async (id: string) => {
@@ -95,7 +95,7 @@ export default function Peticion() {
                 .insert({ 
                     user_id: request.user_id, 
                     admin_id: userData, 
-                    message: notification?.message
+                    message: notifications[id] || "",
                  });
 
             // Actualizar la interfaz
@@ -176,13 +176,12 @@ export default function Peticion() {
                                         Comentario
                                     </label>
                                     <textarea
-                                        id="message"
-                                        name="message"
-                                        value={notification?.message}
-                                        onChange={handleChange}
+                                        id={`message-${request.id}`}
+                                        name={`message-${request.id}`}
+                                        value={notifications[request.id] || ""}
+                                        onChange={(e) => handleChange(request.id, e.target.value)}
                                         className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         rows={4}
-                                        required
                                     />
                                     {errors.message && (
                                         <p className="mt-1 text-sm text-red-600">{errors.message}</p>
