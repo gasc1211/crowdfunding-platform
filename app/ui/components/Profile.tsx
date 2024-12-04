@@ -165,10 +165,10 @@ export default function Profile() {
         <div className="relative">
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg mt-24 p-6 mb-8">
-                    <h1 className="text-center text-xl">
-                        Crea tu perfil de productor
+                    <h1 className="text-center text-3xl">
+                        Envia tu peticion para ser productor
                     </h1>
-                    <div className="space-y-2 mb-8">
+                    <div className="space-y-2 mb-8 mt-8">
                         <p className="text-gray-700 font-semibold">
                             Ubicación:
                         </p>
@@ -256,8 +256,8 @@ export default function Profile() {
                         </AlertTitle>
                         <AlertDescription>
                             {alertType === "success"
-                                ? "El perfil fue creado correctamente."
-                                : "Ocurrió un error al crear el perfil. Por favor inténtalo de nuevo."}
+                                ? "El formulario fue enviado."
+                                : "Ocurrió un error al enviar el formulario. Por favor inténtalo de nuevo."}
                         </AlertDescription>
                     </Alert>
                 </div>
