@@ -74,62 +74,62 @@ export default function Profile() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
+    
         try {
             if (profileImg) {
-                const sanitizedFileName = profileImg.name
+                const uniqueProfileName = `${Date.now()}-${Math.random()
+                    .toString(36)
+                    .substring(7)}-${profileImg.name
                     .normalize("NFD")
                     .replace(/[\u0300-\u036f]/g, "")
                     .replace(/\s+/g, "_")
-                    .replace(/[^a-zA-Z0-9._-]/g, "");
-
+                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+    
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
-                    .upload(`profiles/${sanitizedFileName}`, profileImg);
-
+                    .upload(`profiles/${uniqueProfileName}`, profileImg);
+    
                 if (uploadError) {
                     throw new Error("Error al subir la imagen de perfil");
                 }
-
+    
                 const { data: urlData } = supabase.storage
                     .from("Images_Projects")
-                    .getPublicUrl(`profiles/${sanitizedFileName}`);
-
+                    .getPublicUrl(`profiles/${uniqueProfileName}`);
+    
                 if (!urlData?.publicUrl) {
-                    throw new Error(
-                        "Error: No se pudo obtener la URL de la imagen"
-                    );
+                    throw new Error("Error: No se pudo obtener la URL de la imagen");
                 }
                 producer.profile_image_url = urlData.publicUrl;
             }
-
+    
             if (banner) {
-                const sanitizedName = banner.name
+                const uniqueBannerName = `${Date.now()}-${Math.random()
+                    .toString(36)
+                    .substring(7)}-${banner.name
                     .normalize("NFD")
                     .replace(/[\u0300-\u036f]/g, "")
                     .replace(/\s+/g, "_")
-                    .replace(/[^a-zA-Z0-9._-]/g, "");
-
+                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+    
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
-                    .upload(`banners/${sanitizedName}`, banner);
-
+                    .upload(`banners/${uniqueBannerName}`, banner);
+    
                 if (uploadError) {
                     throw new Error("Error al subir la imagen de banner");
                 }
-
+    
                 const { data: urlData } = supabase.storage
                     .from("Images_Projects")
-                    .getPublicUrl(`banners/${sanitizedName}`);
-
+                    .getPublicUrl(`banners/${uniqueBannerName}`);
+    
                 if (!urlData?.publicUrl) {
-                    throw new Error(
-                        "Error: No se pudo obtener la URL de la imagen"
-                    );
+                    throw new Error("Error: No se pudo obtener la URL de la imagen");
                 }
                 producer.profile_banner_url = urlData.publicUrl;
             }
-
+    
             // Insertar los datos en la tabla producer_requests
             const { error } = await supabase.from("producer_requests").insert({
                 user_id: producer.user_id,
@@ -140,11 +140,11 @@ export default function Profile() {
                 location: producer.location,
                 status: "pending",
             });
-
+    
             if (error) {
                 throw error;
             }
-
+    
             setAlertType("success");
             setTimeout(() => {
                 setAlertType(null);
@@ -160,6 +160,7 @@ export default function Profile() {
             setLoading(false);
         }
     };
+    
 
     return (
         <div className="relative">
