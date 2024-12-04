@@ -119,6 +119,48 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          admin_id: string
+          created_at: string | null
+          message: string | null
+          notification_id: string
+          read: boolean | null
+          user_id: string
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string | null
+          message?: string | null
+          notification_id?: string
+          read?: boolean | null
+          user_id: string
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string | null
+          message?: string | null
+          notification_id?: string
+          read?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admin"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       producer: {
         Row: {
           biography: string | null
@@ -146,6 +188,50 @@ export type Database = {
             foreignKeyName: "producer_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      producer_requests: {
+        Row: {
+          biography: string | null
+          created: string | null
+          id: string
+          location: string | null
+          profile_banner_url: string | null
+          profile_image_url: string | null
+          status: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          biography?: string | null
+          created?: string | null
+          id?: string
+          location?: string | null
+          profile_banner_url?: string | null
+          profile_image_url?: string | null
+          status?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          biography?: string | null
+          created?: string | null
+          id?: string
+          location?: string | null
+          profile_banner_url?: string | null
+          profile_image_url?: string | null
+          status?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "producer_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["user_id"]
           },
@@ -336,6 +422,7 @@ export type Database = {
           first_name: string
           last_name: string
           profileImg: string | null
+          rtn: string | null
           user_id: string
           username: string
         }
@@ -346,6 +433,7 @@ export type Database = {
           first_name: string
           last_name: string
           profileImg?: string | null
+          rtn?: string | null
           user_id?: string
           username: string
         }
@@ -356,6 +444,7 @@ export type Database = {
           first_name?: string
           last_name?: string
           profileImg?: string | null
+          rtn?: string | null
           user_id?: string
           username?: string
         }
