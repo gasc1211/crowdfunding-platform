@@ -28,4 +28,7 @@ declare global {
     type ProducerUpdate = DB['public']['Tables']['producer']['Update']
     type ProjectComment = DB['public']['Tables']['comments']['Row']
     type ProjectCommentInsert = DB['public']['Tables']['comments']['Insert']
+    type Application = DB['public']['Tables']['applications']['Row']
+    type ApplicationInsert = DB['public']['Tables']['applications']['Insert']
+    type ApplicationUpdate = DB['public']['Tables']['applications']['Update']
 }
