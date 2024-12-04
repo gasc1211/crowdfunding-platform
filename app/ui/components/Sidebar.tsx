@@ -8,17 +8,17 @@ import { useEffect, useState } from "react";
 import { getUserData, isProducer, getNotifications } from "@/app/api/handler";
 import BellNotification from "@/app/ui/components/BellNotification";
 
-type UserNotification = {
+/* type UserNotification = {
   id: string;
   message: string;
   read: boolean;
-};
+}; */
 
 export default function Sidebar() {
     const [userData, setUserData] = useState<Users | null>(null);
     const [isUserProducer, setIsUserProducer] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
-    const [notifications, setNotifications] = useState<UserNotification[]>([]);
+    const [notifications, setNotifications] = useState<Notifications[]>([]);
 
     useEffect(() => {
         async function fetchData() {

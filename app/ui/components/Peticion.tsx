@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { getUserId } from "@/app/api/handler";
 
 interface ProducerRequest {
     id: string;
@@ -19,8 +20,12 @@ export default function Peticion() {
     const [producerRequests, setProducerRequests] = useState<ProducerRequest[]>(
         []
     );
+    const [notification, setNotification] = useState<{ message: string }>({ message: "" }); // Initialize state with message
+    const [errors, setErrors] = useState<Partial<Record<keyof NotificationsInsert, string>>>({})
+    const [userData, setUserData] = useState<Users['user_id'] | null>(null);
     const supabase = createClient();
 
+    
     // Función para obtener solicitudes de productores desde Supabase
     useEffect(() => {
         async function fetchProducerRequests() {
@@ -44,11 +49,22 @@ export default function Peticion() {
                     profile_image_url: request.profile_image_url,
                 }));
                 setProducerRequests(requests);
+
+                const userInfo = await getUserId();
+                setUserData(userInfo.user_id);
             }
         }
 
         fetchProducerRequests();
     }, [supabase]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target
+        setNotification({ ...notification!, [name]: value })
+        if (errors[name as keyof NotificationsInsert]) {
+          setErrors({ ...errors, [name]: '' })
+        }
+      }
 
     // Función para aprobar una solicitud
     const handleApprove = async (id: string) => {
@@ -73,6 +89,14 @@ export default function Peticion() {
                 .from("producer_requests")
                 .update({ status: "approved" })
                 .eq("id", id);
+
+            await supabase
+                .from("notifications")
+                .insert({ 
+                    user_id: request.user_id, 
+                    admin_id: userData, 
+                    message: notification?.message
+                 });
 
             // Actualizar la interfaz
             setProducerRequests(
@@ -99,6 +123,8 @@ export default function Peticion() {
             console.error("Error rejecting producer:", error);
         }
     };
+
+    
 
     return (
         <div className="container mx-auto px-4 py-8 pt-24">
@@ -145,6 +171,24 @@ export default function Peticion() {
                                 <p className="text-sm text-muted-foreground mb-4">
                                     {request.description}
                                 </p>
+                                <div className="flex flex-col">
+                                    <label htmlFor="message" className="mb-1 font-medium text-gray-700">
+                                        Comentario
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={notification?.message}
+                                        onChange={handleChange}
+                                        className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        rows={4}
+                                        required
+                                    />
+                                    {errors.message && (
+                                        <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+                                    )}
+                                </div>
+                                <br />
                                 <div className="flex gap-2 justify-end">
                                     <Button
                                         variant="outline"

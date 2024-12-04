@@ -1,36 +1,42 @@
-import React, { useState } from "react";
+'use client'
 
-export type Notification = {
-  id: string;
-  message: string;
-  read: boolean;
-};
+import React, { useState, useEffect } from "react";
+import { updateRead } from "@/app/api/handler";
 
 interface BellNotificationProps {
-  notifications: Notification[];
+  notifications: Notifications[];
 }
 
 const BellNotification: React.FC<BellNotificationProps> = ({ notifications }) => {
   const [isOpen, setIsOpen] = useState(false); // State to control dialog visibility
+  const [unreadNotifications, setUnreadNotifications] = useState<Notifications[]>(notifications); // Track unread notifications
+
+  useEffect(() => {
+    setUnreadNotifications(notifications.filter((notif) => !notif.read)); // Update unread notifications on notifications change
+  }, [notifications]);
 
   // Toggle the dialog
   const toggleDialog = () => setIsOpen(!isOpen);
 
-  // Mark all notifications as read (optional functionality)
+  // Mark all notifications as read
   const markAllAsRead = () => {
-    // Logic to mark notifications as read goes here
-    console.log("All notifications marked as read");
+    unreadNotifications.forEach((notif) => {
+      updateRead(notif.notification_id);
+    });
+    setUnreadNotifications([]); // Clear unread notifications after marking as read
+    setIsOpen(false); // Close the dialog
+    console.log("All unread notifications marked as read");
   };
 
   return (
     <div className="relative">
-      {/* Notification Bell Icon */}
+      {/* Notifications Bell Icon */}
       <button
         className="relative p-2 text-2xl text-gray-500 hover:text-gray-700"
         onClick={toggleDialog}
       >
         🔔
-        {notifications.some((notif) => !notif.read) && (
+        {unreadNotifications.length > 0 && (
           <span className="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full" />
         )}
       </button>
@@ -45,11 +51,11 @@ const BellNotification: React.FC<BellNotificationProps> = ({ notifications }) =>
             className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full"
             onClick={(e) => e.stopPropagation()} // Prevent background click from closing dialog
           >
-            <h2 className="text-lg font-bold mb-4">Notifications</h2>
+            <h2 className="text-lg font-bold mb-4">Notificaciones</h2>
             <ul className="space-y-2">
-              {notifications.map((notif) => (
+              {unreadNotifications.map((notif) => (
                 <li
-                  key={notif.id}
+                  key={notif.notification_id}
                   className={`p-2 rounded-md ${
                     notif.read ? "bg-gray-100" : "bg-blue-100"
                   }`}
