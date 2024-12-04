@@ -14,25 +14,29 @@ interface ProducerRequest {
     location: string;
     description: string;
     profile_image_url: string;
+    profile_banner_url: string;
 }
 
 export default function Peticion() {
     const [producerRequests, setProducerRequests] = useState<ProducerRequest[]>(
         []
     );
-    const [notification, setNotification] = useState<{ message: string }>({ message: "" }); // Initialize state with message
-    const [errors, setErrors] = useState<Partial<Record<keyof NotificationsInsert, string>>>({})
-    const [userData, setUserData] = useState<Users['user_id'] | null>(null);
+    const [notification, setNotification] = useState<{ message: string }>({
+        message: "",
+    }); // Initialize state with message
+    const [errors, setErrors] = useState<
+        Partial<Record<keyof NotificationsInsert, string>>
+    >({});
+    const [userData, setUserData] = useState<Users["user_id"] | null>(null);
     const supabase = createClient();
 
-    
     // Función para obtener solicitudes de productores desde Supabase
     useEffect(() => {
         async function fetchProducerRequests() {
             const { data, error } = await supabase
                 .from("producer_requests")
                 .select(
-                    "id, user_id, biography, location, profile_image_url, status, username"
+                    "id, user_id, biography, location, profile_image_url, profile_banner_url,status, username"
                 )
                 .eq("status", "pending");
 
@@ -47,6 +51,7 @@ export default function Peticion() {
                     location: request.location,
                     description: request.biography,
                     profile_image_url: request.profile_image_url,
+                    profile_banner_url: request.profile_banner_url,
                 }));
                 setProducerRequests(requests);
 
@@ -58,13 +63,15 @@ export default function Peticion() {
         fetchProducerRequests();
     }, [supabase]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target
-        setNotification({ ...notification!, [name]: value })
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value } = e.target;
+        setNotification({ ...notification!, [name]: value });
         if (errors[name as keyof NotificationsInsert]) {
-          setErrors({ ...errors, [name]: '' })
+            setErrors({ ...errors, [name]: "" });
         }
-      }
+    };
 
     // Función para aprobar una solicitud
     const handleApprove = async (id: string) => {
@@ -78,6 +85,7 @@ export default function Peticion() {
                 .insert({
                     user_id: request.user_id,
                     profile_image_url: request.profile_image_url,
+                    profile_banner_url: request.profile_banner_url,
                     biography: request.description,
                     location: request.location,
                 });
@@ -90,13 +98,11 @@ export default function Peticion() {
                 .update({ status: "approved" })
                 .eq("id", id);
 
-            await supabase
-                .from("notifications")
-                .insert({ 
-                    user_id: request.user_id, 
-                    admin_id: userData, 
-                    message: notification?.message
-                 });
+            await supabase.from("notifications").insert({
+                user_id: request.user_id,
+                admin_id: userData,
+                message: notification?.message,
+            });
 
             // Actualizar la interfaz
             setProducerRequests(
@@ -123,8 +129,6 @@ export default function Peticion() {
             console.error("Error rejecting producer:", error);
         }
     };
-
-    
 
     return (
         <div className="container mx-auto px-4 py-8 pt-24">
@@ -172,7 +176,10 @@ export default function Peticion() {
                                     {request.description}
                                 </p>
                                 <div className="flex flex-col">
-                                    <label htmlFor="message" className="mb-1 font-medium text-gray-700">
+                                    <label
+                                        htmlFor="message"
+                                        className="mb-1 font-medium text-gray-700"
+                                    >
                                         Comentario
                                     </label>
                                     <textarea
@@ -185,7 +192,9 @@ export default function Peticion() {
                                         required
                                     />
                                     {errors.message && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.message}
+                                        </p>
                                     )}
                                 </div>
                                 <br />
