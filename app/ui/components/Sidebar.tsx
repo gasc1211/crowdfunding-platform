@@ -8,11 +8,7 @@ import { useEffect, useState } from "react";
 import { getUserData, isProducer, getNotifications } from "@/app/api/handler";
 import BellNotification from "@/app/ui/components/BellNotification";
 
-/* type UserNotification = {
-  id: string;
-  message: string;
-  read: boolean;
-}; */
+
 
 export default function Sidebar() {
     const [userData, setUserData] = useState<Users | null>(null);
@@ -52,6 +48,7 @@ export default function Sidebar() {
     return (
         <Card className="w-full lg:w-1/4 mr-4 md:mb-0 mb-4">
             <CardHeader className="flex-row items-center justify-between">
+<<<<<<< HEAD
                 <div className="w-8">
                     {" "}
                     {/* Placeholder to balance the layout */}
@@ -61,6 +58,13 @@ export default function Sidebar() {
                 <div className="w-8">
                     {" "}
                     {/* Ensure the bell has consistent width */}
+=======
+                <div className="w-8"> {/* Placeholder to balance the layout */}
+                    {/* You can remove this div if you don't need a perfect balance */}
+                </div>
+                <CardTitle className="flex-grow text-center">Perfil</CardTitle>
+                <div className="w-8"> {/* Ensure the bell has consistent width */}
+>>>>>>> dev
                     <BellNotification notifications={notifications} />
                 </div>
             </CardHeader>
