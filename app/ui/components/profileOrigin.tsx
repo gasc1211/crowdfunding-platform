@@ -17,17 +17,15 @@ export default function Profile() {
     const [loading, setLoading] = useState(false);
     const [profileImg, setProfileImg] = useState<File | null>(null);
     const [banner, setBanner] = useState<File | null>(null);
-    const [proof, setProof] = useState<File | null>(null);
     const [alertType, setAlertType] = useState<'success' | 'error' | null>(null);
     const supabase = createClient();
 
-    const [ application, setApplication] = useState<ApplicationInsert>({
+    const [producer, setProducer] = useState<ProducerInsert>({
         user_id: userId!,
         profile_image_url: "",
         profile_banner_url: "",
         biography: "",
         location: "",
-        proof_url: "",
     });
 
     useEffect(() => {
@@ -36,7 +34,7 @@ export default function Profile() {
                 console.log("Fetching user data...");
                 const data = await getUserId();
                 setUserId(data.user_id);
-                setApplication((prev) => ({ ...prev, user_id: data.user_id }));
+                setProducer((prev) => ({ ...prev, user_id: data.user_id }));
             } catch (err) {
                 console.error(err);
                 if (err instanceof Error) {
@@ -54,18 +52,12 @@ export default function Profile() {
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
         const { name, value } = e.target;
-        setApplication((prev) => ({ ...prev, [name]: value }));
+        setProducer((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             setProfileImg(e.target.files[0]);
-        }
-    };
-
-    const handleFileChange1 = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setProof(e.target.files[0]);
         }
     };
 
@@ -102,7 +94,7 @@ export default function Profile() {
                 if (!urlData?.publicUrl) {
                     throw new Error("Error: No se pudo obtener la URL de la imagen");
                 }
-                application.profile_image_url = urlData.publicUrl;
+                producer.profile_image_url = urlData.publicUrl;
             }
 
             if (banner) {
@@ -130,40 +122,12 @@ export default function Profile() {
                 if (!projectBannerUrl) {
                     throw new Error("Error: No se pudo obtener la URL de la imagen");
                 }
-                application.profile_banner_url = projectBannerUrl;
-            }
-
-            if (proof) {
-                const sanitizedName = proof.name
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .replace(/\s+/g, "_")
-                    .replace(/[^a-zA-Z0-9._-]/g, "");
-
-                const { error: uploadError } = await supabase.storage
-                    .from("Images_Projects")
-                    .upload(`idProof/${sanitizedName}`, proof);
-
-                if (uploadError) {
-                    throw new Error("Error al subir la imagen de proof");
-                }
-
-                const { data: urlData } = supabase.storage
-                    .from("Images_Projects")
-                    .getPublicUrl(`idProof/${sanitizedName}`);
-
-                const projectBannerUrl = urlData?.publicUrl || "";
-                console.log(projectBannerUrl);
-
-                if (!projectBannerUrl) {
-                    throw new Error("Error: No se pudo obtener la URL de la imagen");
-                }
-                application.profile_banner_url = projectBannerUrl;
+                producer.profile_banner_url = projectBannerUrl;
             }
 
             const { error } = await supabase
-                .from("applications")
-                .insert(application);
+                .from("producer")
+                .insert(producer);
 
             if (error) {
                 throw error;
@@ -176,7 +140,7 @@ export default function Profile() {
             }, 3000);
             
         } catch (error) {
-            console.error("Error creating application:", error);
+            console.error("Error creating producer:", error);
             setAlertType('error');
             setTimeout(() => {
                 setAlertType(null);
@@ -198,7 +162,7 @@ export default function Profile() {
                         <input
                             id="location"
                             name="location"
-                            value={application.location ?? ""}
+                            value={producer.location ?? ""}
                             onChange={handleChange}
                             className="w-full p-4 border border-gray-300 rounded-lg mb-8"
                             placeholder="De dónde eres..."
@@ -211,7 +175,7 @@ export default function Profile() {
                         </p>
                         <input
                             type="file"
-                            onChange={handleFileChange1}
+                            onChange={handleFileChange}
                             className="w-full p-4 border border-gray-300 rounded-lg mb-8"
                             accept="image/*"
                         />
@@ -249,7 +213,7 @@ export default function Profile() {
                             id="biography"
                             name="biography"
                             className="w-full p-4 border border-gray-300 rounded-lg mb-8"
-                            value={application.biography ?? ""}
+                            value={producer.biography ?? ""}
                             rows={4}
                             onChange={handleChange}
                             placeholder="Describe tu experiencia y proyectos..."
