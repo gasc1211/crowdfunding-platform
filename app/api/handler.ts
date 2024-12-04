@@ -31,6 +31,30 @@ export async function getUserData() {
   return data
 }
 
+export async function getUserDataNav() {
+  // Get the user's Clerk session
+  const { userId }: { userId: string | null } = await auth()
+  console.log("id de usuario " + userId);
+  if (!userId) {
+        console.warn("Usuario no autenticado");
+        return null;
+  }
+
+
+  // Query Supabase for the user's data
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('auth_id', userId)
+    .single()
+  if (error) {
+    console.error('Error fetching user data:', error)
+    throw new Error('Failed to fetch user data')
+  }
+
+  return data
+}
+
 export async function isProducer(userId: string): Promise<boolean> {
   // Buscamos si el `user_id` existe en la tabla `producer`
   const { data, error } = await supabase
