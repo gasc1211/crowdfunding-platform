@@ -6,6 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { getUserId } from "@/app/api/handler";
+import { CheckCircle2, XCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+type AlertType = "approved" | "rejected" | null;
 
 interface ProducerRequest {
     id: string;
@@ -18,6 +22,7 @@ interface ProducerRequest {
 }
 
 export default function Peticion() {
+    const [alertType, setAlertType] = useState<AlertType>(null);
     const [producerRequests, setProducerRequests] = useState<ProducerRequest[]>(
         []
     );
@@ -108,6 +113,13 @@ export default function Peticion() {
             setProducerRequests(
                 producerRequests.filter((req) => req.id !== id)
             );
+
+            setAlertType("approved");
+
+            setTimeout(() => {
+                setAlertType(null);
+            }, 3000);
+
             console.log(`Approved producer ${id}`);
         } catch (error) {
             console.error("Error approving producer:", error);
@@ -124,6 +136,13 @@ export default function Peticion() {
             setProducerRequests(
                 producerRequests.filter((req) => req.id !== id)
             );
+
+            setAlertType("rejected");
+
+            setTimeout(() => {
+                setAlertType(null);
+            }, 3000);
+
             console.log(`Rejected producer ${id}`);
         } catch (error) {
             console.error("Error rejecting producer:", error);
@@ -221,6 +240,31 @@ export default function Peticion() {
                             </CardContent>
                         </Card>
                     ))}
+                </div>
+            )}
+            {alertType && (
+                <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+                    <Alert
+                        className={`w-80 ${
+                            alertType === "approved"
+                                ? "border-green-500 bg-green-50 text-green-800"
+                                : "border-red-500 bg-red-50 text-red-800"
+                        }`}
+                    >
+                        {alertType === "approved" ? (
+                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        ) : (
+                            <XCircle className="h-4 w-4 text-red-500" />
+                        )}
+                        <AlertTitle>
+                            {alertType === "approved" ? "¡Exito!" : "¡Exito!"}
+                        </AlertTitle>
+                        <AlertDescription>
+                            {alertType === "approved"
+                                ? "Se acepto la peticion."
+                                : "Se rechazo la peticion."}
+                        </AlertDescription>
+                    </Alert>
                 </div>
             )}
         </div>
