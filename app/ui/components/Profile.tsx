@@ -4,20 +4,23 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
-import { getUserId } from "@/app/api/handler";
+import { getUserData } from "@/app/api/handler";
 import { createClient } from "@/utils/supabase/client";
 import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function Profile() {
     const router = useRouter();
     const [userId, setUserId] = useState<UUID>();
+    const [username, setUsername] = useState<string>("");
     const [, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState(false);
     const [profileImg, setProfileImg] = useState<File | null>(null);
     const [banner, setBanner] = useState<File | null>(null);
-    const [alertType, setAlertType] = useState<'success' | 'error' | null>(null);
+    const [alertType, setAlertType] = useState<"success" | "error" | null>(
+        null
+    );
     const supabase = createClient();
 
     const [producer, setProducer] = useState<ProducerInsert>({
@@ -32,8 +35,9 @@ export default function Profile() {
         async function fetchId() {
             try {
                 console.log("Fetching user data...");
-                const data = await getUserId();
+                const data = await getUserData();
                 setUserId(data.user_id);
+                setUsername(data.username);
                 setProducer((prev) => ({ ...prev, user_id: data.user_id }));
             } catch (err) {
                 console.error(err);
@@ -92,7 +96,9 @@ export default function Profile() {
                     .getPublicUrl(`profiles/${sanitizedFileName}`);
 
                 if (!urlData?.publicUrl) {
-                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen"
+                    );
                 }
                 producer.profile_image_url = urlData.publicUrl;
             }
@@ -106,7 +112,7 @@ export default function Profile() {
 
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
-                    .upload(`profiles/${sanitizedName}`, banner);
+                    .upload(`banners/${sanitizedName}`, banner);
 
                 if (uploadError) {
                     throw new Error("Error al subir la imagen de banner");
@@ -116,32 +122,37 @@ export default function Profile() {
                     .from("Images_Projects")
                     .getPublicUrl(`banners/${sanitizedName}`);
 
-                const projectBannerUrl = urlData?.publicUrl || "";
-                console.log(projectBannerUrl);
-
-                if (!projectBannerUrl) {
-                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                if (!urlData?.publicUrl) {
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen"
+                    );
                 }
-                producer.profile_banner_url = projectBannerUrl;
+                producer.profile_banner_url = urlData.publicUrl;
             }
 
-            const { error } = await supabase
-                .from("producer")
-                .insert(producer);
+            // Insertar los datos en la tabla producer_requests
+            const { error } = await supabase.from("producer_requests").insert({
+                user_id: producer.user_id,
+                username: username,
+                profile_image_url: producer.profile_image_url,
+                profile_banner_url: producer.profile_banner_url,
+                biography: producer.biography,
+                location: producer.location,
+                status: "pending",
+            });
 
             if (error) {
                 throw error;
             }
 
-            setAlertType('success');
+            setAlertType("success");
             setTimeout(() => {
                 setAlertType(null);
-                router.push("/dashboard/emprendedores");
+                router.push("/dashboard/profileInversor");
             }, 3000);
-            
         } catch (error) {
-            console.error("Error creating producer:", error);
-            setAlertType('error');
+            console.error("Error creando solicitud de productor:", error);
+            setAlertType("error");
             setTimeout(() => {
                 setAlertType(null);
             }, 3000);
@@ -158,7 +169,9 @@ export default function Profile() {
                         Crea tu perfil de productor
                     </h1>
                     <div className="space-y-2 mb-8">
-                        <p className="text-gray-700 font-semibold">Ubicación:</p>
+                        <p className="text-gray-700 font-semibold">
+                            Ubicación:
+                        </p>
                         <input
                             id="location"
                             name="location"
@@ -216,7 +229,9 @@ export default function Profile() {
                             disabled={loading}
                             className="text-white p-3 rounded-lg bg-orange-500 hover:bg-orange-600 w-2/5 h-15"
                         >
-                            {loading ? "Creando..." : "Crear perfil de productor"}
+                            {loading
+                                ? "Creando..."
+                                : "Crear perfil de productor"}
                         </Button>
                     </div>
                 </div>
@@ -226,23 +241,23 @@ export default function Profile() {
                 <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
                     <Alert
                         className={`w-80 ${
-                            alertType === 'success'
-                                ? 'border-green-500 bg-green-50 text-green-800'
-                                : 'border-red-500 bg-red-50 text-red-800'
+                            alertType === "success"
+                                ? "border-green-500 bg-green-50 text-green-800"
+                                : "border-red-500 bg-red-50 text-red-800"
                         }`}
                     >
-                        {alertType === 'success' ? (
+                        {alertType === "success" ? (
                             <CheckCircle2 className="h-4 w-4 text-green-500" />
                         ) : (
                             <XCircle className="h-4 w-4 text-red-500" />
                         )}
                         <AlertTitle>
-                            {alertType === 'success' ? '¡Éxito!' : '¡Error!'}
+                            {alertType === "success" ? "¡Éxito!" : "¡Error!"}
                         </AlertTitle>
                         <AlertDescription>
-                            {alertType === 'success'
-                                ? 'El perfil fue creado correctamente.'
-                                : 'Ocurrió un error al crear el perfil. Por favor inténtalo de nuevo.'}
+                            {alertType === "success"
+                                ? "El perfil fue creado correctamente."
+                                : "Ocurrió un error al crear el perfil. Por favor inténtalo de nuevo."}
                         </AlertDescription>
                     </Alert>
                 </div>
