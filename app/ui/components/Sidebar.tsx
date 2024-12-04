@@ -31,10 +31,9 @@ export default function Sidebar() {
                 // Fetch projects for the logged-in user using their user_id
                 const producerStatus = await isProducer(data.user_id); // Verificamos si es productor
                 setIsUserProducer(producerStatus);
-                 // Fetch notifications
-          const userNotifications = await getNotifications(data.user_id);
-          setNotifications(userNotifications);
-
+                // Fetch notifications
+                const userNotifications = await getNotifications(data.user_id);
+                setNotifications(userNotifications);
             } catch (err) {
                 console.error(err); // Log the error
                 if (err instanceof Error) {
@@ -53,14 +52,18 @@ export default function Sidebar() {
     return (
         <Card className="w-full lg:w-1/4 mr-4 md:mb-0 mb-4">
             <CardHeader className="flex-row items-center justify-between">
-      <div className="w-8"> {/* Placeholder to balance the layout */}
-        {/* You can remove this div if you don't need a perfect balance */}
-      </div>
-      <CardTitle className="flex-grow text-center">Perfil</CardTitle>
-      <div className="w-8"> {/* Ensure the bell has consistent width */}
-        <BellNotification notifications={notifications} />
-      </div>
-    </CardHeader>
+                <div className="w-8">
+                    {" "}
+                    {/* Placeholder to balance the layout */}
+                    {/* You can remove this div if you don't need a perfect balance */}
+                </div>
+                <CardTitle className="flex-grow text-center">Perfil</CardTitle>
+                <div className="w-8">
+                    {" "}
+                    {/* Ensure the bell has consistent width */}
+                    <BellNotification notifications={notifications} />
+                </div>
+            </CardHeader>
             <CardContent className="flex flex-col items-center">
                 <div
                     key={userData.auth_id}
