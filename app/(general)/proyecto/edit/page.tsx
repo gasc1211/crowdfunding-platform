@@ -270,7 +270,7 @@ export default function EditProject() {
       console.log('Project data:', project)
       console.log('Selected categories:', selectedCategories)
 
-      router.push(`/dashboard/inversor?userId=${encodeURIComponent(JSON.stringify(project.producer_id))}`);
+      router.push(`/proyecto?project=${encodeURIComponent(JSON.stringify(project))}`);
 
       toast({
         title: "Success",

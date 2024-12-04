@@ -28,6 +28,30 @@ export async function getUserData(): Promise<Users> {
   return data
 }
 
+export async function getUserDataNav() {
+  // Get the user's Clerk session
+  const { userId }: { userId: string | null } = await auth()
+  console.log("id de usuario " + userId);
+  if (!userId) {
+        console.warn("Usuario no autenticado");
+        return null;
+  }
+
+
+  // Query Supabase for the user's data
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('auth_id', userId)
+    .single()
+  if (error) {
+    console.error('Error fetching user data:', error)
+    throw new Error('Failed to fetch user data')
+  }
+
+  return data
+}
+
 export async function isProducer(userId: string): Promise<boolean> {
   // Buscamos si el `user_id` existe en la tabla `producer`
   const { data, error } = await supabase
@@ -47,6 +71,27 @@ export async function isProducer(userId: string): Promise<boolean> {
 
   return !!data; // Si hay datos, el usuario es productor
 }
+
+export async function isAdmin(userId: string): Promise<boolean> {
+  // Buscamos si el `user_id` existe en la tabla `admin`
+  const { data, error } = await supabase
+    .from("admin")
+    .select("user_id")
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      // Retornamos false si no se encuentra el usuario
+      return false;
+    }
+    console.error("Error checking admin status:", error);
+    throw error;
+  }
+
+  return !!data; // Si hay datos, el usuario es admin
+}
+
 
 //Obtener perfil de productor
 export async function getProductorData(userId: string) {
@@ -526,7 +571,6 @@ export async function insertImageUrls(imageUrls: string[], projectId: string) {
   }
 }
 
-
 type ProjectWithInvestments = Omit<Project,
   "beneficios" | "description" | "project_banner_url" | "progress" | "investment_goal" | "total_invested">
   & { investments: Omit<Investments, "project_id" | "payment_id">[] }
@@ -566,4 +610,29 @@ export async function getInvestedProjects(): Promise<ProjectWithInvestments[]> {
   console.log(investorProjectsWithPaymentInfo.error);
   throw new Error("Failed to fetch investor projects");
 
+}
+
+export async function getNotifications(userId: string) {
+  const { data, error } = await supabase
+    .from("notifications") // Your notifications table
+    .select("*")
+    .eq("user_id", userId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data || [];
+}
+
+
+export async function updateRead(notificationId: string) {
+  const { error } = await supabase
+    .from("notifications") // Your notifications table
+    .update({ read: true }) // Set the 'read' field to true
+    .eq("notification_id", notificationId); // Match the notification by its ID
+
+  if (error) {
+    throw error;
+  }
 }
