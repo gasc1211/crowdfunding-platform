@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
     const [userData, setUserData] = useState<Users | null>(null);
+    const [producerData, setProducerData] = useState<Producer | null>(null);
     const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
     const [projects, setProjects] = useState<Project[]>([]); // State to store projects
     const router = useRouter();
@@ -42,7 +43,7 @@ export default function Dashboard() {
                 }
 
                 setUserData(data);
-
+                setProducerData(producer[0]);
                 // Fetch projects for the logged-in user using their user_id
                 const userProjects = await getUserProjects(data.user_id);
 
@@ -64,6 +65,7 @@ export default function Dashboard() {
     }, [router]);
     if (error) return <div>Error: {error.message}</div>;
     if (!userData) return <div>Loading...</div>;
+    if (!producerData) return <div>Loading...</div>;
 
 
   return (
@@ -84,7 +86,7 @@ export default function Dashboard() {
                             key={userData.auth_id}
                             className="flex flex-col items-center justify-between"
                         >
-                            <ProfileImageUpload />
+                            <ProfileImageUpload profileId={producerData!.user_id} type="producer"/>
                             <h2 className="text-2xl font-bold mb-2 text-center">{`${userData?.first_name} ${userData?.last_name}`}</h2>
                             <p className="text-center">{userData.email}</p>
                             <br />

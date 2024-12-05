@@ -29,36 +29,42 @@ export default function Details({ project }: { project: Project }) {
                 <AlertDialogHeader>
                     <AlertDialogTitle>{selectedProject?.name}</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Project progress: {selectedProject?.progress}%
+                        Progreso del Proyecto: {selectedProject?.progress}%
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <p className="py-4">
+                <div className="py-4">
                     <ul>
-                        <li>Nombre del Proyecto: {project.name}</li>
-                        <li>Ubicación: {project.location}</li>
-                        {/* <li>Inversión Projectada: {project.investment_goal}</li> */}
-                        <li>Inversión Projectada: {" "}
-                            {new Intl.NumberFormat("es-HN", {
-                                style: "currency",
-                                currency: "HNL", // Replace with your desired currency
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            }).format(project.investment_goal)}
+                        {[
+                        { label: "Nombre del Proyecto:", value: project.name },
+                        { label: "Ubicación:", value: project.location },
+                        {
+                            label: "Inversión Projectada:",
+                            value: new Intl.NumberFormat("es-HN", {
+                            style: "currency",
+                            currency: "HNL",
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                            }).format(project.investment_goal),
+                        },
+                        {
+                            label: "Inversión Actual:",
+                            value: new Intl.NumberFormat("es-HN", {
+                            style: "currency",
+                            currency: "HNL",
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                            }).format(project.total_invested),
+                        },
+                        { label: "Fecha de Inicio:", value: project.start_date },
+                        { label: "Fecha de Finalización:", value: project.finish_date },
+                        ].map((item, index) => (
+                        <li key={index} className="flex">
+                            {item.label} <div className="font-bold ml-2">{item.value}</div>
                         </li>
-                        <li>
-                            Inversión Actual:{" "}
-                            {new Intl.NumberFormat("es-HN", {
-                                style: "currency",
-                                currency: "HNL", // Replace with your desired currency
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            }).format(project.total_invested)}
-                        </li>
-                        {/* <li>Inversión Actual: {project.total_invested}</li> */}
-                        <li>Fecha de Inicio: {project.start_date}</li>
-                        <li>Fecha de Finalización: {project.finish_date}</li>
+                        ))}
                     </ul>
-                </p>
+                </div>
+
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cerrar</AlertDialogCancel>
                     <AlertDialogAction>

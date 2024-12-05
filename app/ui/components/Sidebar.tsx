@@ -63,7 +63,7 @@ export default function Sidebar() {
                     key={userData.auth_id}
                     className="flex flex-col items-center"
                 >
-                    <ProfileImageUpload />
+                    <ProfileImageUpload profileId={userData.user_id} type="investor"/>
                     <h2 className="text-2xl font-bold mb-2 text-center">
                         {userData.first_name}
                     </h2>
