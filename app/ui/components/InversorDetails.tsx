@@ -18,7 +18,9 @@ export default function InversorDetails({ projects }: {projects: Project[]}) {
 
     // Count the number of projects where progress is  100
     const projectsCompleted = projects.filter(project => project.progress == 100).length;
-  
+
+    // Count unique locations
+    const uniqueLocations = new Set(projects.map((project) => project.location).filter(Boolean)).size;
 
 
     return (
@@ -57,12 +59,12 @@ export default function InversorDetails({ projects }: {projects: Project[]}) {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0">
                         <CardTitle className="text-sm font-bold">
-                            Familias beneficiadas
+                            Comunidades Beneficiadas
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-orange-500 place-self-center">
-                            15
+                        {uniqueLocations}
                         </div>
                     </CardContent>
                 </Card>

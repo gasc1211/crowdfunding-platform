@@ -55,7 +55,7 @@ export default function HomePage() {
                             </p>
                             <div className="mt-4 flex items-center justify-center gap-x-6 lg:justify-start">
                                 <Link
-                                    href="/auth/login"
+                                    href="/proyecto/nuevo"
                                     className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
                                 >
                                     <span>Empezar Campaña</span>

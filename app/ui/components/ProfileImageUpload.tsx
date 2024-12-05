@@ -103,7 +103,7 @@ export default function ProfileImageUpload() {
                 console.log("Proyecto creado:", data);
             }
 
-            router.push("/dashboard/emprendedores"); // Redirect to projects list page
+            router.push("/dashboard/profileInversor"); // Redirect to projects list page
         } catch (error) {
             console.error("Error creating project:", error);
             alert("Error creating project. Please try again.");

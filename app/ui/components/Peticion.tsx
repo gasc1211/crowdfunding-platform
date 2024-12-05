@@ -6,6 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { getUserId } from "@/app/api/handler";
+import { CheckCircle2, XCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+type AlertType = "approved" | "rejected" | null;
 
 interface ProducerRequest {
     id: string;
@@ -18,16 +22,13 @@ interface ProducerRequest {
 }
 
 export default function Peticion() {
+    const [alertType, setAlertType] = useState<AlertType>(null);
     const [producerRequests, setProducerRequests] = useState<ProducerRequest[]>(
         []
     );
-    const [notification, setNotification] = useState<{ message: string }>({
-        message: "",
-    }); // Initialize state with message
-    const [errors, setErrors] = useState<
-        Partial<Record<keyof NotificationsInsert, string>>
-    >({});
-    const [userData, setUserData] = useState<Users["user_id"] | null>(null);
+    const [notifications, setNotifications] = useState<Record<string, string>>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [userData, setUserData] = useState<Users['user_id'] | null>(null);
     const supabase = createClient();
 
     // Función para obtener solicitudes de productores desde Supabase
@@ -63,13 +64,11 @@ export default function Peticion() {
         fetchProducerRequests();
     }, [supabase]);
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        const { name, value } = e.target;
-        setNotification({ ...notification!, [name]: value });
-        if (errors[name as keyof NotificationsInsert]) {
-            setErrors({ ...errors, [name]: "" });
+     // Handle textarea change
+     const handleChange = (id: string, value: string) => {
+        setNotifications((prev) => ({ ...prev, [id]: value }));
+        if (errors[id]) {
+            setErrors((prev) => ({ ...prev, [id]: '' }));
         }
     };
 
@@ -98,16 +97,25 @@ export default function Peticion() {
                 .update({ status: "approved" })
                 .eq("id", id);
 
-            await supabase.from("notifications").insert({
-                user_id: request.user_id,
-                admin_id: userData,
-                message: notification?.message,
-            });
+            await supabase
+                .from("notifications")
+                .insert({ 
+                    user_id: request.user_id, 
+                    admin_id: userData, 
+                    message: notifications[id] || "",
+                 });
 
             // Actualizar la interfaz
             setProducerRequests(
                 producerRequests.filter((req) => req.id !== id)
             );
+
+            setAlertType("approved");
+
+            setTimeout(() => {
+                setAlertType(null);
+            }, 3000);
+
             console.log(`Approved producer ${id}`);
         } catch (error) {
             console.error("Error approving producer:", error);
@@ -124,6 +132,13 @@ export default function Peticion() {
             setProducerRequests(
                 producerRequests.filter((req) => req.id !== id)
             );
+
+            setAlertType("rejected");
+
+            setTimeout(() => {
+                setAlertType(null);
+            }, 3000);
+
             console.log(`Rejected producer ${id}`);
         } catch (error) {
             console.error("Error rejecting producer:", error);
@@ -183,13 +198,12 @@ export default function Peticion() {
                                         Comentario
                                     </label>
                                     <textarea
-                                        id="message"
-                                        name="message"
-                                        value={notification?.message}
-                                        onChange={handleChange}
+                                        id={`message-${request.id}`}
+                                        name={`message-${request.id}`}
+                                        value={notifications[request.id] || ""}
+                                        onChange={(e) => handleChange(request.id, e.target.value)}
                                         className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         rows={4}
-                                        required
                                     />
                                     {errors.message && (
                                         <p className="mt-1 text-sm text-red-600">
@@ -221,6 +235,31 @@ export default function Peticion() {
                             </CardContent>
                         </Card>
                     ))}
+                </div>
+            )}
+            {alertType && (
+                <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+                    <Alert
+                        className={`w-80 ${
+                            alertType === "approved"
+                                ? "border-green-500 bg-green-50 text-green-800"
+                                : "border-red-500 bg-red-50 text-red-800"
+                        }`}
+                    >
+                        {alertType === "approved" ? (
+                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        ) : (
+                            <XCircle className="h-4 w-4 text-red-500" />
+                        )}
+                        <AlertTitle>
+                            {alertType === "approved" ? "¡Exito!" : "¡Exito!"}
+                        </AlertTitle>
+                        <AlertDescription>
+                            {alertType === "approved"
+                                ? "Se acepto la peticion."
+                                : "Se rechazo la peticion."}
+                        </AlertDescription>
+                    </Alert>
                 </div>
             )}
         </div>
