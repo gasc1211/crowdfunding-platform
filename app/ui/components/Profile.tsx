@@ -206,6 +206,16 @@ export default function Profile() {
                         />
                     </div>
                     <div className="space-y-2 mb-8">
+                        <p className="text-gray-700 font-semibold">
+                            Imagen de ID o RTN:
+                        </p>
+                        <input
+                            type="file"
+                            className="w-full p-4 border border-gray-300 rounded-lg mb-8"
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="space-y-2 mb-8">
                         <label
                             htmlFor="descripcion"
                             className="block text-gray-600 font-semibold"
