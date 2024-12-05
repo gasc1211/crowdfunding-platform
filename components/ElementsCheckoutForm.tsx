@@ -72,14 +72,16 @@ function CheckoutForm({ project }: { project: Project }) {
     const name = e.target.name;
     const value = e.target.value;
 
-    if (name === "amount")
-      elements?.update({ amount: form.getValues().amount * 100 });
-
     if (name === "amount" || name === "cardholderName")
       form.setValue(name, value, {
         shouldValidate: true,
         shouldDirty: true
       });
+
+    if (name === "amount") {
+      if (parseInt(value) > 0)
+        elements?.update({ amount: form.getValues().amount * 100 });
+    }
   };
 
   const handleSubmit = async (values: z.infer<typeof checkoutFormSchema>) => {
