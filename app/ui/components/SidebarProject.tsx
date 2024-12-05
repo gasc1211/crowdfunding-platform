@@ -50,7 +50,7 @@ export default function SidebarProject({ producerId }: SidebarProjectProps) {
       </CardHeader>
       <CardContent className="flex flex-col items-center">
         <div key={userData.auth_id} className="flex flex-col items-center">
-          <ProfileImageUpload />
+          <ProfileImageUpload profileId={producerId!} type="projectUserId"/>
           <h2 className="text-2xl font-bold mb-2 text-center">{userData.first_name}</h2>
           <p className="text-gray-500 mb-4 text-center">Edad: {calculateAge(new Date(userData.birth_date!))} Años</p>
           <br />
