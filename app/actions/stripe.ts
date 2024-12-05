@@ -6,10 +6,10 @@ import * as config from "@/config";
 const domain = process.env.DOMAIN || "http://localhost:3000";
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY as string;
 
-const stripe = new Stripe(stripeSecretKey); 
+const stripe = new Stripe(stripeSecretKey);
 
 // Crear sesión en la API de stripe para aceptar el pago
-export async function createCheckoutSession(values: {amount: number, embedded: boolean}, projectData: Project) {
+export async function createCheckoutSession(values: { amount: number, embedded: boolean }, projectData: Project) {
 
   const { amount, embedded } = values;
   const { name, description, project_banner_url } = projectData;
@@ -22,24 +22,24 @@ export async function createCheckoutSession(values: {amount: number, embedded: b
         product_data: {
           name: name,
           description: description || "",
-          images: [project_banner_url ? project_banner_url: ""]
+          images: [project_banner_url ? project_banner_url : ""]
         },
         unit_amount: formatAmountForStripe(amount, config.CURRENCY)
       },
     }],
     mode: "payment",
-    ui_mode: embedded ? "embedded": "hosted",
+    ui_mode: embedded ? "embedded" : "hosted",
     return_url: `${domain}/return?session_id={CHECKOUT_SESSION_ID}`
   };
 
   const session: Stripe.Response<Stripe.Checkout.Session> = await stripe.checkout.sessions.create(params);
-  
+
   return session;
 }
 
 export async function createPaymentIntent(
   values: { amount: number, projectData: Project },
-): Promise<{ client_secret: string }> {
+): Promise<{ client_secret: string, payment_intent_id: string }> {
   const paymentIntent: Stripe.PaymentIntent =
     await stripe.paymentIntents.create({
       amount: formatAmountForStripe(
@@ -48,8 +48,11 @@ export async function createPaymentIntent(
       ),
       automatic_payment_methods: { enabled: true },
       currency: config.CURRENCY,
-      metadata: {...values.projectData}
+      metadata: { ...values.projectData }
     });
 
-  return { client_secret: paymentIntent.client_secret as string };
+  return {
+    payment_intent_id: paymentIntent.id,
+    client_secret: paymentIntent.client_secret as string,
+  };
 }

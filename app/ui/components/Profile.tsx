@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { UUID } from "crypto";
+// import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { getUserData } from "@/app/api/handler";
 import { createClient } from "@/utils/supabase/client";
@@ -12,7 +12,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function Profile() {
     const router = useRouter();
-    const [userId, setUserId] = useState<UUID>();
+    const [userId, setUserId] = useState<string>();
     const [username, setUsername] = useState<string>("");
     const [, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState(false);
@@ -74,62 +74,62 @@ export default function Profile() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
-    
+
         try {
             if (profileImg) {
                 const uniqueProfileName = `${Date.now()}-${Math.random()
                     .toString(36)
                     .substring(7)}-${profileImg.name
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .replace(/\s+/g, "_")
-                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
-    
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .replace(/\s+/g, "_")
+                        .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
                     .upload(`profiles/${uniqueProfileName}`, profileImg);
-    
+
                 if (uploadError) {
                     throw new Error("Error al subir la imagen de perfil");
                 }
-    
+
                 const { data: urlData } = supabase.storage
                     .from("Images_Projects")
                     .getPublicUrl(`profiles/${uniqueProfileName}`);
-    
+
                 if (!urlData?.publicUrl) {
                     throw new Error("Error: No se pudo obtener la URL de la imagen");
                 }
                 producer.profile_image_url = urlData.publicUrl;
             }
-    
+
             if (banner) {
                 const uniqueBannerName = `${Date.now()}-${Math.random()
                     .toString(36)
                     .substring(7)}-${banner.name
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .replace(/\s+/g, "_")
-                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
-    
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .replace(/\s+/g, "_")
+                        .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
                     .upload(`banners/${uniqueBannerName}`, banner);
-    
+
                 if (uploadError) {
                     throw new Error("Error al subir la imagen de banner");
                 }
-    
+
                 const { data: urlData } = supabase.storage
                     .from("Images_Projects")
                     .getPublicUrl(`banners/${uniqueBannerName}`);
-    
+
                 if (!urlData?.publicUrl) {
                     throw new Error("Error: No se pudo obtener la URL de la imagen");
                 }
                 producer.profile_banner_url = urlData.publicUrl;
             }
-    
+
             // Insertar los datos en la tabla producer_requests
             const { error } = await supabase.from("producer_requests").insert({
                 user_id: producer.user_id,
@@ -140,11 +140,11 @@ export default function Profile() {
                 location: producer.location,
                 status: "pending",
             });
-    
+
             if (error) {
                 throw error;
             }
-    
+
             setAlertType("success");
             setTimeout(() => {
                 setAlertType(null);
@@ -160,7 +160,7 @@ export default function Profile() {
             setLoading(false);
         }
     };
-    
+
 
     return (
         <div className="relative">
@@ -206,6 +206,16 @@ export default function Profile() {
                         />
                     </div>
                     <div className="space-y-2 mb-8">
+                        <p className="text-gray-700 font-semibold">
+                            Imagen de ID o RTN:
+                        </p>
+                        <input
+                            type="file"
+                            className="w-full p-4 border border-gray-300 rounded-lg mb-8"
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="space-y-2 mb-8">
                         <label
                             htmlFor="descripcion"
                             className="block text-gray-600 font-semibold"
@@ -241,11 +251,10 @@ export default function Profile() {
             {alertType && (
                 <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
                     <Alert
-                        className={`w-80 ${
-                            alertType === "success"
-                                ? "border-green-500 bg-green-50 text-green-800"
-                                : "border-red-500 bg-red-50 text-red-800"
-                        }`}
+                        className={`w-80 ${alertType === "success"
+                            ? "border-green-500 bg-green-50 text-green-800"
+                            : "border-red-500 bg-red-50 text-red-800"
+                            }`}
                     >
                         {alertType === "success" ? (
                             <CheckCircle2 className="h-4 w-4 text-green-500" />
