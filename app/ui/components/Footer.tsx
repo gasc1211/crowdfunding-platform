@@ -17,7 +17,7 @@ export default function Footer() {
                     </Link>
                 </div>
                 <div className="text-sm [&>*]:px-2">
-                    <Link href="#" className="hover:underline">
+                    <Link href="/contact" className="hover:underline">
                         Contacto
                     </Link>{" "}
                     |
