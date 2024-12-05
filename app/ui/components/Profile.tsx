@@ -18,6 +18,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(false);
     const [profileImg, setProfileImg] = useState<File | null>(null);
     const [banner, setBanner] = useState<File | null>(null);
+    const [dniImage, setDniImage] = useState<File | null>(null);
     const [alertType, setAlertType] = useState<"success" | "error" | null>(
         null
     );
@@ -71,6 +72,13 @@ export default function Profile() {
         }
     };
 
+    // Manejar cambios en el input de imagen de DNI
+    const handleDniImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setDniImage(e.target.files[0]);
+        }
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -80,10 +88,10 @@ export default function Profile() {
                 const uniqueProfileName = `${Date.now()}-${Math.random()
                     .toString(36)
                     .substring(7)}-${profileImg.name
-                        .normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "")
-                        .replace(/\s+/g, "_")
-                        .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
 
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
@@ -98,7 +106,9 @@ export default function Profile() {
                     .getPublicUrl(`profiles/${uniqueProfileName}`);
 
                 if (!urlData?.publicUrl) {
-                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen"
+                    );
                 }
                 producer.profile_image_url = urlData.publicUrl;
             }
@@ -107,10 +117,10 @@ export default function Profile() {
                 const uniqueBannerName = `${Date.now()}-${Math.random()
                     .toString(36)
                     .substring(7)}-${banner.name
-                        .normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "")
-                        .replace(/\s+/g, "_")
-                        .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
 
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
@@ -125,9 +135,42 @@ export default function Profile() {
                     .getPublicUrl(`banners/${uniqueBannerName}`);
 
                 if (!urlData?.publicUrl) {
-                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen"
+                    );
                 }
                 producer.profile_banner_url = urlData.publicUrl;
+            }
+
+            let dniImageUrl = null;
+            if (dniImage) {
+                const uniqueDniName = `${Date.now()}-${Math.random()
+                    .toString(36)
+                    .substring(7)}-${dniImage.name
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from("Images_Projects")
+                    .upload(`dni/${uniqueDniName}`, dniImage);
+
+                if (uploadError) {
+                    throw new Error("Error al subir la imagen del DNI");
+                }
+
+                const { data: urlData } = supabase.storage
+                    .from("Images_Projects")
+                    .getPublicUrl(`dni/${uniqueDniName}`);
+
+                if (!urlData?.publicUrl) {
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen del DNI"
+                    );
+                }
+
+                dniImageUrl = urlData.publicUrl;
             }
 
             // Insertar los datos en la tabla producer_requests
@@ -136,6 +179,7 @@ export default function Profile() {
                 username: username,
                 profile_image_url: producer.profile_image_url,
                 profile_banner_url: producer.profile_banner_url,
+                dni_image_url: dniImageUrl,
                 biography: producer.biography,
                 location: producer.location,
                 status: "pending",
@@ -160,7 +204,6 @@ export default function Profile() {
             setLoading(false);
         }
     };
-
 
     return (
         <div className="relative">
@@ -211,6 +254,7 @@ export default function Profile() {
                         </p>
                         <input
                             type="file"
+                            onChange={handleDniImageChange}
                             className="w-full p-4 border border-gray-300 rounded-lg mb-8"
                             accept="image/*"
                         />
@@ -251,10 +295,11 @@ export default function Profile() {
             {alertType && (
                 <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
                     <Alert
-                        className={`w-80 ${alertType === "success"
-                            ? "border-green-500 bg-green-50 text-green-800"
-                            : "border-red-500 bg-red-50 text-red-800"
-                            }`}
+                        className={`w-80 ${
+                            alertType === "success"
+                                ? "border-green-500 bg-green-50 text-green-800"
+                                : "border-red-500 bg-red-50 text-red-800"
+                        }`}
                     >
                         {alertType === "success" ? (
                             <CheckCircle2 className="h-4 w-4 text-green-500" />
