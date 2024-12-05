@@ -17,12 +17,12 @@ export function formatAmountForStripe(amount: number, currency: string): number 
 
   const parts: Intl.NumberFormatPart[] = numberFormat.formatToParts(amount);
   let zeroDecimalCurrency: boolean = true;
-  
-  parts.forEach( (part: Intl.NumberFormatPart) => {
+
+  parts.forEach((part: Intl.NumberFormatPart) => {
     if (part.type === "decimal") {
       zeroDecimalCurrency = false;
     }
   });
 
-  return zeroDecimalCurrency ? amount: Math.round(amount * 100);
+  return zeroDecimalCurrency ? amount : Math.round(amount * 100);
 }

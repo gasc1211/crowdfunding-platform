@@ -12,7 +12,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { createPaymentIntent } from "@/app/actions/stripe";
 import { StripeError } from "@stripe/stripe-js";
-import { updateProjectTotalInvested } from "@/app/api/handler";
+import { newProjectInvestment } from "@/app/api/handler";
 
 function CheckoutForm({ project }: { project: Project }) {
 
@@ -72,14 +72,16 @@ function CheckoutForm({ project }: { project: Project }) {
     const name = e.target.name;
     const value = e.target.value;
 
-    if (name === "amount")
-      elements?.update({ amount: form.getValues().amount * 100 });
-
     if (name === "amount" || name === "cardholderName")
       form.setValue(name, value, {
         shouldValidate: true,
         shouldDirty: true
       });
+
+    if (name === "amount") {
+      if (parseInt(value) > 0)
+        elements?.update({ amount: form.getValues().amount * 100 });
+    }
   };
 
   const handleSubmit = async (values: z.infer<typeof checkoutFormSchema>) => {
@@ -100,17 +102,13 @@ function CheckoutForm({ project }: { project: Project }) {
       }
 
       // Create a PaymentIntent with the specified amount.
-      const { client_secret: clientSecret } = await createPaymentIntent({
+      const { client_secret: clientSecret, payment_intent_id: paymentId } = await createPaymentIntent({
         amount: values.amount,
         projectData: project,
       });
 
       // Update project on database
-      const newProject = project;
-      newProject.total_invested += values.amount;
-
-      console.log(newProject);
-      await updateProjectTotalInvested(newProject);
+      await newProjectInvestment(project, values.amount, paymentId);
 
       // Use your card Element with other Stripe.js APIs
       const { error: confirmError } = await stripe!.confirmPayment({

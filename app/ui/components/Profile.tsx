@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { UUID } from "crypto";
+// import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { getUserData } from "@/app/api/handler";
 import { createClient } from "@/utils/supabase/client";
@@ -12,12 +12,13 @@ import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function Profile() {
     const router = useRouter();
-    const [userId, setUserId] = useState<UUID>();
+    const [userId, setUserId] = useState<string>();
     const [username, setUsername] = useState<string>("");
     const [, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState(false);
     const [profileImg, setProfileImg] = useState<File | null>(null);
     const [banner, setBanner] = useState<File | null>(null);
+    const [dniImage, setDniImage] = useState<File | null>(null);
     const [alertType, setAlertType] = useState<"success" | "error" | null>(
         null
     );
@@ -71,10 +72,17 @@ export default function Profile() {
         }
     };
 
+    // Manejar cambios en el input de imagen de DNI
+    const handleDniImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setDniImage(e.target.files[0]);
+        }
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
-    
+
         try {
             if (profileImg) {
                 const uniqueProfileName = `${Date.now()}-${Math.random()
@@ -84,25 +92,27 @@ export default function Profile() {
                     .replace(/[\u0300-\u036f]/g, "")
                     .replace(/\s+/g, "_")
                     .replace(/[^a-zA-Z0-9._-]/g, "")}`;
-    
+
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
                     .upload(`profiles/${uniqueProfileName}`, profileImg);
-    
+
                 if (uploadError) {
                     throw new Error("Error al subir la imagen de perfil");
                 }
-    
+
                 const { data: urlData } = supabase.storage
                     .from("Images_Projects")
                     .getPublicUrl(`profiles/${uniqueProfileName}`);
-    
+
                 if (!urlData?.publicUrl) {
-                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen"
+                    );
                 }
                 producer.profile_image_url = urlData.publicUrl;
             }
-    
+
             if (banner) {
                 const uniqueBannerName = `${Date.now()}-${Math.random()
                     .toString(36)
@@ -111,40 +121,74 @@ export default function Profile() {
                     .replace(/[\u0300-\u036f]/g, "")
                     .replace(/\s+/g, "_")
                     .replace(/[^a-zA-Z0-9._-]/g, "")}`;
-    
+
                 const { error: uploadError } = await supabase.storage
                     .from("Images_Projects")
                     .upload(`banners/${uniqueBannerName}`, banner);
-    
+
                 if (uploadError) {
                     throw new Error("Error al subir la imagen de banner");
                 }
-    
+
                 const { data: urlData } = supabase.storage
                     .from("Images_Projects")
                     .getPublicUrl(`banners/${uniqueBannerName}`);
-    
+
                 if (!urlData?.publicUrl) {
-                    throw new Error("Error: No se pudo obtener la URL de la imagen");
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen"
+                    );
                 }
                 producer.profile_banner_url = urlData.publicUrl;
             }
-    
+
+            let dniImageUrl = null;
+            if (dniImage) {
+                const uniqueDniName = `${Date.now()}-${Math.random()
+                    .toString(36)
+                    .substring(7)}-${dniImage.name
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(/[^a-zA-Z0-9._-]/g, "")}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from("Images_Projects")
+                    .upload(`dni/${uniqueDniName}`, dniImage);
+
+                if (uploadError) {
+                    throw new Error("Error al subir la imagen del DNI");
+                }
+
+                const { data: urlData } = supabase.storage
+                    .from("Images_Projects")
+                    .getPublicUrl(`dni/${uniqueDniName}`);
+
+                if (!urlData?.publicUrl) {
+                    throw new Error(
+                        "Error: No se pudo obtener la URL de la imagen del DNI"
+                    );
+                }
+
+                dniImageUrl = urlData.publicUrl;
+            }
+
             // Insertar los datos en la tabla producer_requests
             const { error } = await supabase.from("producer_requests").insert({
                 user_id: producer.user_id,
                 username: username,
                 profile_image_url: producer.profile_image_url,
                 profile_banner_url: producer.profile_banner_url,
+                dni_image_url: dniImageUrl,
                 biography: producer.biography,
                 location: producer.location,
                 status: "pending",
             });
-    
+
             if (error) {
                 throw error;
             }
-    
+
             setAlertType("success");
             setTimeout(() => {
                 setAlertType(null);
@@ -160,7 +204,6 @@ export default function Profile() {
             setLoading(false);
         }
     };
-    
 
     return (
         <div className="relative">
@@ -211,6 +254,7 @@ export default function Profile() {
                         </p>
                         <input
                             type="file"
+                            onChange={handleDniImageChange}
                             className="w-full p-4 border border-gray-300 rounded-lg mb-8"
                             accept="image/*"
                         />
