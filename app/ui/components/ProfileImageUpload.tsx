@@ -1,7 +1,7 @@
 'use client'
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { getUserData } from "@/app/api/handler";
+import { getProductorData, getUserData } from "@/app/api/handler";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,24 +15,35 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
+//import { useUser } from "@clerk/nextjs";
+type ProfileImageUploadProps = {
+    profileId: string;
+    type: "investor" | "producer" | "projectUserId";
+  };
 
-
-export default function ProfileImageUpload() {
+export default function ProfileImageUpload({ profileId, type }: ProfileImageUploadProps) {
     const [error, setError] = useState<Error | null>(null);
     const supabase = createClient();
     const [loading, setLoading] = useState(false);
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
     const [userUpdate, setUserUpdate] = useState<UserUpdate>()
+    const [producerUpdate, setProducerUpdate] = useState<ProducerUpdate>()
     const router = useRouter();
 
-    const { user } = useUser();
+    //const { user } = useUser();
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const data = await getUserData();
-                setUserUpdate(data);
+                if (type == "investor") {
+                    const data = await getUserData();
+                    setUserUpdate(data);
+                }
+                else {
+                    const data = await getProductorData(profileId);
+                    setProducerUpdate(data[0]);
+                }
+                
 
             } catch (err) {
                 console.error(err);
@@ -40,10 +51,11 @@ export default function ProfileImageUpload() {
             }
         }
         fetchData();
-    }, []);
+    }, [profileId, type]);
     //console.log("UserUpdate", userUpdate)
     if (error) return <div>Error: {error.message}</div>;
-    if (!userUpdate) return <div>Loading...</div>;
+    /* if (type=="investor" && !userUpdate) return <div>Loading...</div>;
+    if ((type=="producer" || type == "projectUserId") && !userUpdate) return <div>Loading...</div>; */
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -88,22 +100,45 @@ export default function ProfileImageUpload() {
                 setLoading(false);
                 return;
             }
-            userUpdate.profileImg = userImgUrl;
+            if(userUpdate) {
+                userUpdate.profileImg = userImgUrl;
+            }
+            else {
+                producerUpdate!.profile_image_url = userImgUrl
+            }
+            
         }
 
         try {
-            const { data, error } = await supabase
-                .from("users")
-                .update({ profileImg: userUpdate.profileImg })
-                .eq("user_id", userUpdate.user_id);
+            if (userUpdate) {
+                    const { data, error } = await supabase
+                    .from("users")
+                    .update({ profileImg: userUpdate.profileImg })
+                    .eq("user_id", userUpdate.user_id);
 
-            if (error) {
-                console.error("Error al crear el proyecto:", error.message);
-            } else {
-                console.log("Proyecto creado:", data);
+                if (error) {
+                    console.error("Error al actualizar imagen de perfil:", error.message);
+                } else {
+                    console.log("Imagen Actualizada:", data);
+                }
             }
+            else{
+                const { data, error } = await supabase
+                    .from("producer")
+                    .update({ profile_image_url: producerUpdate?.profile_image_url })
+                    .eq("user_id", producerUpdate?.user_id);
 
-            router.push("/dashboard/profileInversor"); // Redirect to projects list page
+                if (error) {
+                    console.error("Error al actualizar imagen de perfil:", error.message);
+                } else {
+                    console.log("Imagen Actualizada:", data);
+                }
+            }
+            
+            if (userUpdate) {
+                router.push("/dashboard/profileInversor"); // Redirect to projects list page
+            } else router.push("/dashboard/emprendedores"); // Redirect to projects list page
+            
         } catch (error) {
             console.error("Error creating project:", error);
             alert("Error creating project. Please try again.");
@@ -118,26 +153,39 @@ export default function ProfileImageUpload() {
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <button>
-                        <div className="mb-4 mx-auto">
+                        <div className="relative w-32 h-32 mb-4 mx-auto">
                             <Image
-                                src={user?.imageUrl ? user.imageUrl : (userUpdate.profileImg || "/avatar.png")}  // Default to "/avatar.png" if no profile image
+                                src={
+                                    type === "investor"
+                                        ? userUpdate?.profileImg || "/avatar.png"
+                                        : (type === "producer" || type === "projectUserId")
+                                        ? producerUpdate?.profile_image_url || "/avatar.png"
+                                        : "/avatar.png"
+                                }
                                 alt="Profile picture"
-                                width={120}
-                                height={120}
+                                sizes="(max-width: 768px) 50vw, 25vw"
+                                fill
                                 className="rounded-full object-cover"
                             />
                         </div>
                     </button>
                 </AlertDialogTrigger>
+                {type !== "projectUserId" && (
                 <AlertDialogContent>
                     <AlertDialogHeader className="flex justify-center items-center">
                         <AlertDialogTitle>Seleccionar Imagen de Perfil</AlertDialogTitle>
-                        <AlertDialogDescription>
-                        </AlertDialogDescription>
+                        <AlertDialogDescription></AlertDialogDescription>
                     </AlertDialogHeader>
+
                     <div className="flex justify-center mb-4">
                         <Image
-                            src={userUpdate.profileImg || "/avatar.png"}  // Default to "/avatar.png" if no profile image
+                            src={
+                                type === "investor"
+                                    ? userUpdate?.profileImg || "/avatar.png"
+                                    : (type === "producer")
+                                    ? producerUpdate?.profile_image_url || "/avatar.png"
+                                    : "/avatar.png"
+                            }
                             alt="Profile picture"
                             width={400}
                             height={400}
@@ -153,10 +201,11 @@ export default function ProfileImageUpload() {
                             </AlertDialogAction>
                         </AlertDialogFooter>
                     </form>
-
                 </AlertDialogContent>
+            )}
             </AlertDialog>
         </>
     );
+    
 }
 

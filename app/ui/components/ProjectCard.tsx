@@ -24,7 +24,9 @@ export default function ProjectCard({ project }: { project: Project }) {
                     <div className="w-2/3 mr-4">
                         <Progress value={project.progress} className="w-full h-4" />
                     </div>
-                    <Details key={project.project_id} project={project} />
+                    <div>
+                        <Details key={project.project_id} project={project} />
+                    </div>
                 </div>
             </div>
         </Card>

@@ -140,6 +140,15 @@ export default function Peticion() {
             }, 3000);
 
             console.log(`Rejected producer ${id}`);
+
+            await supabase
+                .from("notifications")
+                .insert({ 
+                    user_id: id, 
+                    admin_id: userData, 
+                    message: notifications[id] || "",
+                 });
+
         } catch (error) {
             console.error("Error rejecting producer:", error);
         }

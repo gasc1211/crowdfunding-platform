@@ -73,24 +73,18 @@ export async function isAdmin(userId: string): Promise<boolean> {
 
 
 //Obtener perfil de productor
-export async function getProductorData( userId: string ) { 
-  // Query Supabase
+export async function getProductorData(userId: string): Promise<Producer[]> { 
   const { data, error } = await supabase
-    .from('producer')
-    .select()
-    .eq('user_id', userId)
+    .from("producer")
+    .select("*")
+    .eq("user_id", userId);
   
   if (error) {
-    console.error('Error fetching user data:', error)
-    throw new Error('Failed to fetch user data')
+    console.error("Error fetching productor data:", error);
+    throw new Error("Failed to fetch productor data");
   }
 
-  // Verificar si el usuario no existe en la tabla
-  if (!data || data.length === 0) {
-    console.warn('User does not exist in the producer table');
-  }
-
-  return data
+  return data || [];
 }
 
 export async function getInversorData() {
