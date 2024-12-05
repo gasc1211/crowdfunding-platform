@@ -636,3 +636,20 @@ export async function updateRead(notificationId: string) {
     throw error;
   }
 }
+
+
+export async function getUserInvestments(userId: string) {
+
+  // Query Supabase for the projects of the current user
+  const { data, error } = await supabase
+    .from('investments')
+    .select('*')
+    .eq('investor_id', userId); 
+
+  if (error) {
+    console.error('Error fetching user investments:', error);
+    throw new Error('Failed to fetch user investments');
+  }
+
+  return data;
+}
