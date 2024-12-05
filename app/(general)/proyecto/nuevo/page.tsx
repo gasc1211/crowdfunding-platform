@@ -131,11 +131,10 @@ export default function CreateProjectForm() {
         }
     };
 
-
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
-    
+
         if (bannerFile) {
             // Generar un nombre único para el archivo del banner
             const uniqueBannerName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${bannerFile.name
@@ -143,45 +142,44 @@ export default function CreateProjectForm() {
                 .replace(/[\u0300-\u036f]/g, "") // Elimina los acentos
                 .replace(/\s+/g, "_") // Reemplaza espacios con guiones bajos
                 .replace(/[^a-zA-Z0-9._-]/g, "")}`; // Elimina caracteres no permitidos
-    
+
             // Sube la imagen al bucket de Supabase
             const { error: uploadError } = await supabase.storage
                 .from("Images_Projects")
                 .upload(`banners/${uniqueBannerName}`, bannerFile);
-    
+
             if (uploadError) {
                 console.error("Error al subir la imagen:", uploadError.message);
                 setLoading(false);
                 setAlertType("error");
-    
+
                 setTimeout(() => {
                     setAlertType(null);
                 }, 3000);
                 return;
             }
-    
+
             // Obtener la URL pública de la imagen
             const { data: urlData } = supabase.storage
                 .from("Images_Projects")
                 .getPublicUrl(`banners/${uniqueBannerName}`);
-    
+
             const projectBannerUrl = urlData?.publicUrl || "";
             console.log(projectBannerUrl);
-    
+
             if (!projectBannerUrl) {
                 console.error("Error: No se pudo obtener la URL de la imagen");
                 setLoading(false);
                 setAlertType("error");
-    
+
                 setTimeout(() => {
                     setAlertType(null);
                 }, 3000);
                 return;
             }
-    
+
             project.project_banner_url = projectBannerUrl;
         }
-    
 
         // Inserta los datos del proyecto en la tabla, incluyendo la URL de la imagen
         // Antes de la inserción, ajusta el valor de progress
@@ -235,53 +233,54 @@ export default function CreateProjectForm() {
                 }
             }
 
-
             const createdProject = projectData[0];
 
+            // Upload images
+            // Upload images
+            // Inside handleSubmit function
+            const uploadedImageUrls: string[] = [];
+            for (const image of images) {
+                // Generate a unique filename
+                const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${image.name
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, "_")
+                    .replace(
+                        /[^a-zA-Z0-9._-]/g,
+                        ""
+                    )}.${image.name.split(".").pop()}`;
 
-// Upload images
-// Upload images
-// Inside handleSubmit function
-const uploadedImageUrls: string[] = [];
-for (const image of images) {
-  // Generate a unique filename
-  const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${image.name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, "_")
-    .replace(/[^a-zA-Z0-9._-]/g, "")}.${image.name.split('.').pop()}`;
+                const { error: imageError } = await supabase.storage
+                    .from("Images_Projects")
+                    .upload(`projectImages/${uniqueFileName}`, image);
 
-  const { error: imageError } = await supabase.storage
-    .from("Images_Projects")
-    .upload(`projectImages/${uniqueFileName}`, image);
+                if (!imageError) {
+                    const { data: imageUrlData } = supabase.storage
+                        .from("Images_Projects")
+                        .getPublicUrl(`projectImages/${uniqueFileName}`);
 
-  if (!imageError) {
-    const { data: imageUrlData } = supabase.storage
-      .from("Images_Projects")
-      .getPublicUrl(`projectImages/${uniqueFileName}`);
+                    if (imageUrlData?.publicUrl) {
+                        uploadedImageUrls.push(imageUrlData.publicUrl);
+                    }
+                }
+            }
 
-    if (imageUrlData?.publicUrl) {
-      uploadedImageUrls.push(imageUrlData.publicUrl);
-    }
-  }
-}
+            // Insert image URLs into project_images table
+            if (uploadedImageUrls.length > 0) {
+                const imageInserts = uploadedImageUrls.map((url) => ({
+                    project_id: createdProject.project_id,
+                    image_url: url,
+                }));
 
-// Insert image URLs into project_images table
-if (uploadedImageUrls.length > 0) {
-  const imageInserts = uploadedImageUrls.map((url) => ({
-    project_id: createdProject.project_id,
-    image_url: url,
-  }));
+                const { error: imageInsertError } = await supabase
+                    .from("project_images")
+                    .insert(imageInserts);
 
-  const { error: imageInsertError } = await supabase
-    .from("project_images")
-    .insert(imageInserts);
-
-  if (imageInsertError) {
-    console.error("Error saving image URLs", imageInsertError);
-    throw new Error("Error saving image URLs");
-  }
-}
+                if (imageInsertError) {
+                    console.error("Error saving image URLs", imageInsertError);
+                    throw new Error("Error saving image URLs");
+                }
+            }
             setAlertType("success");
 
             setTimeout(() => {
@@ -301,8 +300,8 @@ if (uploadedImageUrls.length > 0) {
     };
 
     return (
-        <div className="flex md:items-stretch md:justify-around flex-col md:flex-row mx-4 lg:mx-8 mb-8">
-            <div className="md:w-1/2">
+        <div className="flex md:items-stretch md:justify-around flex-col md:flex-row mx-4 lg:mx-8 mb-8 ">
+            <div className="md:w-1/2 ">
                 <Card className="w-full max-w-2xl mx-auto m-0">
                     <CardHeader>
                         <CardTitle>Crear Un Nuevo Proyecto</CardTitle>
@@ -443,21 +442,30 @@ if (uploadedImageUrls.length > 0) {
                                 />
                             </div>
                             <div className="space-y-2">
-
+                                <Label className="block">
+                                    Seleccionar Categoria
+                                </Label>
                                 <select
                                     className="h-10 px-4 py-2 bg-white border border-gray-300 rounded-md"
                                     value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    onChange={(e) =>
+                                        setSelectedCategory(e.target.value)
+                                    }
                                 >
-                                    <option value="">Seleccionar Categoria</option>
+                                    <option value="">
+                                        Seleccionar Categoria
+                                    </option>
                                     {categories.map((category) => (
-                                        <option key={category.category_id} value={category.category_id}>
+                                        <option
+                                            key={category.category_id}
+                                            value={category.category_id}
+                                        >
                                             {category.name}
                                         </option>
                                     ))}
                                 </select>
                             </div>
-                            <CardFooter className="p-0">
+                            <CardFooter className="p-0 place-self-center">
                                 <Button type="submit" disabled={loading}>
                                     {loading
                                         ? "Creando Nuevo Proyecto..."
