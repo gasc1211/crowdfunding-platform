@@ -5,12 +5,42 @@ import { CardHeader } from "@/components/ui/card";
 import { CardTitle } from "@/components/ui/card";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getUserId, getUserInvestments } from "@/app/api/handler";
+import { useEffect, useState } from "react";
+import { UUID } from "crypto";
 
 
 export default function InversorDetails({ projects }: {projects: Project[]}) {
-
+    const [userId, setUserId] = useState<UUID>();
+    const [invest, setInvest] = useState<Investments[]>();
     // Sum the total_invested values from all projects
-    const totalInvested = projects.reduce((acc, project) => acc + (project.total_invested || 0), 0);
+   
+    useEffect(() => {
+        async function fetchId() {
+            try {
+                    const data = await getUserId();
+                    setUserId(data.user_id);
+                } catch (err) {
+                console.error(err);
+            }
+        }
+        fetchId();
+    }, []);
+
+    useEffect(() => {
+        async function fetchInvestments() {
+          if (!userId) return; // Avoid calling API when userId is undefined
+          try {
+            const data = await getUserInvestments(userId);
+            setInvest(data);
+          } catch (err) {
+            console.error(err);
+          }
+        }
+        fetchInvestments();
+      }, [userId]); // Fetch investments only when userId is defined
+
+      const totalInvested = invest?.reduce((acc, inv) => acc + (inv.investment_amount || 0), 0) || 0;
 
 
     // Count the number of projects where progress is not 100
