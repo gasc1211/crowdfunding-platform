@@ -71,26 +71,24 @@ export default function InversorDetails() {
         fetchProjects();
     }, []);
 
-    // Calculations based on investments and projects
+    const totalInvested = investments?.reduce((acc, inv) => acc + (inv.investment_amount || 0), 0) || 0;
+
+    // Count the number of unique projects based on project_id
     const uniqueProjects = new Set(investments.map((investment) => investment.project_id));
     const numberOfProjectsInvested = uniqueProjects.size;
-    const totalInvested = investments.reduce((acc, inv) => acc + (inv.investment_amount || 0), 0);
-    const numberOfInvestments = investments.length;
 
-    const completedProjects = allProjects.filter(project =>
+    // Count the number of completed projects (progress = 100) that the user has invested in
+    const completedProjects = allProjects?.filter(project =>
         project.progress === 100 && uniqueProjects.has(project.project_id)
-    ).length;
+    ).length || 0;
 
-    const projectsInProcess = allProjects.filter(project =>
-        project.progress < 100 && uniqueProjects.has(project.project_id)
-    ).length;
+    // Count the number of projects with progress less than 100 that the user has invested in
+    const projectsInProcess = allProjects?.filter(project =>
+        project.progress! < 100 && uniqueProjects.has(project.project_id)
+    ).length || 0;
 
-    const uniqueLocations = new Set(
-        allProjects
-            .filter(project => uniqueProjects.has(project.project_id))
-            .map(project => project.location)
-            .filter(Boolean)
-    ).size;
+    // Count the unique number of investments made by the user (counting each investment even if it was made more than once in the same project)
+    const numberOfInvestments = investments?.length || 0;
 
     // Pagination helper function
     const getPaginatedProjects = (projectList: Project[]) => {
@@ -213,10 +211,14 @@ export default function InversorDetails() {
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                        <CardTitle className="text-sm font-bold">Comunidades Beneficiadas</CardTitle>
+                        <CardTitle className="text-sm font-bold">
+                            Inversiones Realizadas
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold text-orange-500">{uniqueLocations}</div>
+                        <div className="text-3xl font-bold text-orange-500 place-self-center">
+                            {numberOfInvestments} {/* Display number of investments made */}
+                        </div>
                     </CardContent>
                 </Card>
             </div>
