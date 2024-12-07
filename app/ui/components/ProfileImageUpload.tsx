@@ -137,7 +137,7 @@ export default function ProfileImageUpload({ profileId, type }: ProfileImageUplo
             
             if (userUpdate) {
                 router.push("/dashboard/profileInversor"); // Redirect to projects list page
-            } //else router.push("/dashboard/emprendedores"); // Redirect to projects list page
+            } else router.push("/dashboard/emprendedores"); // Redirect to projects list page
             
         } catch (error) {
             console.error("Error creating project:", error);
