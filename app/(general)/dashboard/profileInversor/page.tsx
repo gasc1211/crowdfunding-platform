@@ -44,7 +44,7 @@ export default function ProfileInversor() {
             <div className="bg-gray-100">
                 <HeroInversor userName = {userData.first_name || 'Guest'}/>
                 <br />
-                <div className="flex flex-col lg:flex-row justify-between mt-4">
+                <div className="flex flex-col lg:flex-row justify-between mt-4 items-center">
                         <Sidebar />
                         <InversorDetails />
                 </div>

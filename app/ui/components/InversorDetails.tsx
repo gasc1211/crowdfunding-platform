@@ -183,7 +183,7 @@ export default function InversorDetails() {
     );
 
     return (
-        <main className="w-full lg:w-3/4 h-full px-4">
+        <main className="w-full h-full lg:w-3/4 px-4">
             <h2 className="text-2xl font-bold mb-4 ml-4">Resumen de inversiones</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <Card>
@@ -191,7 +191,7 @@ export default function InversorDetails() {
                         <CardTitle className="text-sm font-bold">Proyectos Financiados</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold text-orange-500">{numberOfProjectsInvested}</div>
+                        <div className="text-3xl font-bold text-orange-500 text-center">{numberOfProjectsInvested}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -199,7 +199,7 @@ export default function InversorDetails() {
                         <CardTitle className="text-sm font-bold">Total invertido</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold text-orange-500">
+                        <div className="text-3xl font-bold text-orange-500 text-center">
                             {new Intl.NumberFormat("es-HN", {
                                 style: "currency",
                                 currency: "HNL",
@@ -210,7 +210,7 @@ export default function InversorDetails() {
                     </CardContent>
                 </Card>
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-bold">
                             Inversiones Realizadas
                         </CardTitle>
@@ -222,7 +222,7 @@ export default function InversorDetails() {
                     </CardContent>
                 </Card>
             </div>
-
+                            
             <h2 className="text-2xl font-bold mb-4 ml-4">Progreso de Inversiones</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedSection === "overview" && (
@@ -236,7 +236,7 @@ export default function InversorDetails() {
                                     Proyectos que aún están a la espera de poder lograr
                                     su meta para ser completados.
                                 </p>
-                                <div className="text-4xl font-bold text-orange-500 mb-4">{projectsInProcess}</div>
+                                <div className="text-4xl font-bold text-orange-500 mb-4 text-center">{projectsInProcess}</div>
                                 <Button
                                     className="bg-orange-500 hover:bg-orange-600"
                                     onClick={() => handleChangeSection("projectsInProgress")}
@@ -254,7 +254,8 @@ export default function InversorDetails() {
                                     Proyectos culminados con éxito en los que usted
                                     realizó inversión.
                                 </p>
-                                <div className="text-4xl font-bold text-orange-500 mb-4">{completedProjects}</div>
+                                <br />
+                                <div className="text-4xl font-bold text-orange-500 mb-4 text-center">{completedProjects}</div>
                                 <Button
                                     className="bg-orange-500 hover:bg-orange-600"
                                     onClick={() => handleChangeSection("projectsCompleted")}
