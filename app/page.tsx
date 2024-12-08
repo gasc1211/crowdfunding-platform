@@ -132,10 +132,10 @@ export default function HomePage() {
                     </div>
                     <div>
                         <Cartas />
-                        {/* <Mision /> */}
+                        
                     </div>
                 </main>
-                {/*               <Footer /> */}
+            
             </div>
         </>
     );
