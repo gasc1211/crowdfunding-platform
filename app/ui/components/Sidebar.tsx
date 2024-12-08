@@ -82,9 +82,9 @@ export default function Sidebar() {
                                 </Link>
                             </div>
                         </Button>
-                        <Button className="w-full">
+                        {/* <Button className="w-full">
                             <div> Ver Proyectos Completados </div>
-                        </Button>
+                        </Button> */}
                         {isUserProducer ? (
                             <Button className="w-full">
                                 <Link href={"/dashboard/emprendedores"}>

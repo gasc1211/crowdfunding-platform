@@ -75,7 +75,7 @@ export default function Historial() {
         </TableHeader>
       </Table>
       <Button>
-        <Link href={"/dashboard/inversor"}>Volver al Dashboard</Link>
+        <Link href={"/dashboard/profileInversor"}>Volver al Dashboard</Link>
       </Button>
       {/* <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
         <h1 className="text-2xl font-bold mb-4">Pago Exitoso</h1>

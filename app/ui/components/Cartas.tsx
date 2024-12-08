@@ -55,7 +55,7 @@ const personas = [
         author: {
             name: "Ada Pinto",
             href: "#",
-            imageUrl: "/apicultor.jpg",
+            imageUrl: "/ada.jpg",
         },
     },
     // More posts...
@@ -133,7 +133,7 @@ export default function Cartas() {
                             <div className="mx-auto grid max-w-2x1 grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                                 <Link href="#">
                                     <Image
-                                        className="rounded-t-lg  w-[250px] h-[200px] ml-5 mt-5"
+                                        className="rounded-t-lg  w-[220px] h-[200px] ml-5 mt-5"
                                         src={post.author.imageUrl}
                                         width={250}
                                         height={200}
