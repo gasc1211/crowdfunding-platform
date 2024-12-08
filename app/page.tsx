@@ -9,10 +9,13 @@ import Cartas from "./ui/components/Cartas";
 import Navbar from "./ui/components/Navbar";
 import Carrousel from "./ui/components/Carrousel";
 import { createClient } from "@/utils/supabase/client";
+import { getUserDataNav, isProducer } from "@/app/api/handler";
 
 export default function HomePage() {
-
     const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
+    const [userData, setUserData] = useState<Users | null>(null);
+    const [isUserProducer, setIsUserProducer] = useState<boolean>(false);
+    const [error, setError] = useState<Error | null>(null); // Updated type to Error | null
 
     useEffect(() => {
         const fetchProjectsData = async () => {
@@ -26,6 +29,31 @@ export default function HomePage() {
 
         fetchProjectsData();
     }, [featuredProjects]);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                console.log("Fetching user data...");
+                const data = await getUserDataNav();
+
+                if (data) {
+                    setUserData(data);
+                    const producerStatus = await isProducer(data.user_id);
+                    setIsUserProducer(producerStatus);
+                } else {
+                    console.log("No user data found (not authenticated)");
+                }
+            } catch (err) {
+                console.error(err);
+                setError(
+                    err instanceof Error ? err : new Error("Unknown error")
+                );
+            }
+        }
+
+        fetchData();
+    }, []);
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
         <>
@@ -54,12 +82,31 @@ export default function HomePage() {
                                 patrocinador
                             </p>
                             <div className="mt-4 flex items-center justify-center gap-x-6 lg:justify-start">
-                                <Link
-                                    href="/proyecto/nuevo"
-                                    className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-                                >
-                                    <span>Empezar Campaña</span>
-                                </Link>
+                                {userData ? (
+                                    // Renderizado para usuarios autenticados
+                                    <div>
+                                        <Link
+                                            href={
+                                                isUserProducer
+                                                    ? "/proyecto/nuevo"
+                                                    : "/productor/editar"
+                                            }
+                                            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+                                        >
+                                            <span>Empezar Campaña</span>
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    // Renderizado para usuarios no autenticados
+                                    <div>
+                                        <Link
+                                            href="/auth/sign-in"
+                                            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+                                        >
+                                            <span>Empezar Campaña</span>
+                                        </Link>
+                                    </div>
+                                )}
                                 <Link
                                     href="/dashboard/inversor"
                                     className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
@@ -85,10 +132,10 @@ export default function HomePage() {
                     </div>
                     <div>
                         <Cartas />
-                        {/* <Mision /> */}
+                        
                     </div>
                 </main>
-  {/*               <Footer /> */}
+            
             </div>
         </>
     );
