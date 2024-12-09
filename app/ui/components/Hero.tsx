@@ -1,57 +1,31 @@
-import { Input } from "@/components/ui/input";
+/* import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Menu } from "lucide-react";
+import { Search, Menu } from "lucide-react"; */
+
+type HeroInversorProps = {
+    userName: string;
+};
 
 export default function Hero() {
     return (
-        <div
-            className="bg-white py-12 px-4"
-            style={{
-                backgroundImage: "url('/banner2.png')",
-            }}
-        >
-            <div className="container mx-auto text-center">
-                <h1 className="text-4xl font-bold mb-4">
-                    ¡Bienvenido, Daniel!
-                </h1>
-                <p className="text-xl mb-8">
-                    Estos son los proyectos en los que puedes invertir
-                </p>
-                <div className="flex justify-center items-center space-x-4">
-                    <Input
-                        className="max-w-md"
-                        placeholder="Buscar proyectos..."
-                    />
-                    <Button variant="default">
-                        <Search className="w-5 h-5" />
-                    </Button>
-                    <Button variant="outline">
-                        <Menu className="w-5 h-5" />
-                    </Button>
-                </div>
-            </div>
+        <div className="mx-auto">
+
+          <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner2.png')] bg-cover">
+            <h1 className="text-primary text-4xl md:text-6xl font-bold text-center px-4">Proyectos Para Invertir</h1>
+          </div>
+
         </div>
     );
 }
 
-export function HeroInversor() {
+export function HeroInversor({ userName }: HeroInversorProps) {
     return (
-        <section
-            className="relative h-64 bg-cover bg-center"
-            style={{
-                backgroundImage: "url('/banner3.png')",
-            }}
-        >
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                <div className="text-center text-white">
-                    <h1 className="text-4xl font-bold mb-2">
-                        ¡Bienvenido, Juan!
-                    </h1>
-                    <p className="text-xl">
-                        ¿Listo para ayudar a crear un mejor futuro?
-                    </p>
-                </div>
+        <div className="mx-auto">
+            <div className="h-[20vh] flex items-center justify-center rounded-xl bg-[url('/banner3.png')] bg-cover">
+                <h1 className="text-white text-4xl font-bold text-center px-4">
+                    Bienvenido a tu Dashboard {userName}
+                </h1>
             </div>
-        </section>
+        </div>
     );
 }

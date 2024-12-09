@@ -3,45 +3,22 @@ export interface NavigationItem {
   href: string;
 }
 
+export interface NavigationUser {
+  name: string;
+  href: string;
+}
+
 export const mainNavigationItems: NavigationItem[] = [
   { name: "Inicio", href: "/" },
-  { name: "Empezar una Campaña", href: "/empezar" },
-  { name: "Acerca de", href: "/acerca-de" },
+  { name: "Mi Perfil", href: "/dashboard/profileInversor" },
+  { name: "Empezar una Campaña", href: "/productor/editar" },
+  { name: "Acerca de", href: "/about" },
+  { name: "Contáctanos", href: "/contact" },
+];
+
+export const NavigationUsers: NavigationUser[] = [
+  { name: "Inicio", href: "/" },
+  { name: "Acerca de", href: "/about" },
   { name: "Contáctanos", href: "/contacto" },
 ];
 
-export const userNavigationItems: NavigationItem[] = [
-  { name: "Perfil", href: "/profile" },
-  { name: "Opciones", href: "/profile" },
-  { name: "Iniciar Sesión", href: "/sign-in" },
-];
-
-/* export type UsuarioProductor = {
-  idusuario: number;
-  descripcion: string;
-  nombre: string;
-  fechaNacimiento: Date;
-  email: string;
-}; */
-
-export type ProjectCardData = {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  progress: number;
-};
-
-export type Project = {
-  id: number;
-  name: string;
-  info: string;
-  progress: number;
-};
-
-export type ProjectInversor = {
-  title: string;
-  description: string;
-  image: string;
-  progress: number;
-};
