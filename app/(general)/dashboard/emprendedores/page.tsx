@@ -101,11 +101,11 @@ export default function Dashboard() {
                                         Ver Proyectos Completados 🧑‍🌾
                                     </Link>
                                 </Button>
-                                <Button className="w-full">
+                                {/* <Button className="w-full">
                                     <Link href={"/productor/actualizar"}>
                                         Editar Perfil
                                     </Link>
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
                     </CardContent>
